@@ -2,6 +2,7 @@ import os
 from abc import ABC, abstractmethod
 from sklearn.model_selection import train_test_split
 from distutils.dir_util import copy_tree
+import re
 
 
 # from tools.sph2wav import SPHFile
@@ -111,8 +112,10 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
         transcripts_path = os.path.join(path, 'files', 'TEDx_Spanish.transcription')
 
         with open(files_path) as f1:
-            files = f1.read().splitlines()
-            files = [os.path.join(audio_files_dir, file_path[1:]) for file_path in files]
+            files = list()
+            _files = f1.read().splitlines()
+            for _ in _files:
+                files.append(os.path.join(audio_files_dir, _[9:]))
 
         with open(transcripts_path) as f2:
             transcripts = f2.read().splitlines()
@@ -134,11 +137,3 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
     def split_train_test(self, *args, test_proportion):
         train_test_args = train_test_split(*args, test_size=test_proportion, random_state=42)
         return train_test_args
-
-
-if __name__ == '__main__':
-    transformer = TEDxSpanish2KaldiTransformer()
-    transformer.transform(
-        raw_data_path='/home/stanislav/y-data/gong/Domain-specific-ESPnet/data/TEDxSpanish/decompressed/tedx_spanish_corpus',
-        kaldi_data_dir='/home/stanislav/y-data/gong/Domain-specific-ESPnet/kaldi_eg/data',
-        kaldi_audio_files_dir='/home/stanislav/y-data/gong/Domain-specific-ESPnet/kaldi_eg/downloads')

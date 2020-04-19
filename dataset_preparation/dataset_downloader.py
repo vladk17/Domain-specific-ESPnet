@@ -1,4 +1,5 @@
 import os
+import re
 import tarfile
 import urllib
 from tqdm import tqdm
@@ -19,7 +20,6 @@ def download_url(url, output_path):
 
 
 def download_and_extract_data(dataset_url: str, dataset_name: str):
-
     data_dir = os.path.join(PROJECT_ROOT, 'data')
 
     if not os.path.exists(data_dir):
@@ -39,14 +39,11 @@ def download_and_extract_data(dataset_url: str, dataset_name: str):
     else:
         print("Tarfile already exists.")
 
-    if not os.path.exists(os.path.join(dataset_dir,'decompressed')):
+    if not os.path.exists(os.path.join(dataset_dir, 'decompressed')):
         print("Decompressing data")
         tar = tarfile.open(dataset_path)
-        tar.extractall(os.path.join(dataset_dir,'decompressed'))
+        tar.extractall(os.path.join(dataset_dir, 'decompressed'))
     else:
         print("Tarfile has been already decompressed")
 
-
-if __name__ == '__main__':
-    download_and_extract_data(dataset_url='http://www.openslr.org/resources/67/tedx_spanish_corpus.tgz',
-                              dataset_name='TEDxSpanish')
+    return os.path.join(dataset_dir, 'decompressed', re.match('(.*?)(?=\.)', dataset_url.split('/')[-1])[0])
