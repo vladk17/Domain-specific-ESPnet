@@ -1,5 +1,7 @@
 data
 espnet
+kaldi
+kaldi_eg
 .idea
 notebooks/.ipynb_checkpoints
 
