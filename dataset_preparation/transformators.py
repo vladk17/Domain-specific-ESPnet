@@ -135,5 +135,5 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
         return wavscp, text, utt2spk
 
     def split_train_test(self, *args, test_proportion):
-        train_test_args = train_test_split(*args, test_size=test_proportion, random_state=42)
+        train_test_args = train_test_split(*args, test_size=test_proportion, random_state=42, shuffle=False)
         return train_test_args
