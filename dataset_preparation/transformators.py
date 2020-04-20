@@ -34,14 +34,14 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
         text = text[:TRAIN_TEST_SIZE]
         utt2spk = utt2spk[:TRAIN_TEST_SIZE]
 
-        wavscp_train, text_test, utt2spk_train, wavscp_test, text_train, utt2spk_test = \
+        wavscp_train, wavscp_test, text_train, text_test, utt2spk_train,  utt2spk_test = \
             self.split_train_test(wavscp,
                                   text,
                                   utt2spk,
                                   test_proportion=0.25)
 
-        self.create_files(wavscp_train, utt2spk_train, text_train, os.path.join(kaldi_data_dir, 'train'))
-        self.create_files(wavscp_test, utt2spk_test, text_test, os.path.join(kaldi_data_dir, 'test'))
+        self.create_files(wavscp_train, text_train, utt2spk_train, os.path.join(kaldi_data_dir, 'train'))
+        self.create_files(wavscp_test, text_test, utt2spk_test, os.path.join(kaldi_data_dir, 'test'))
 
     def create_files(self, wavscp, text, utt2spk, directory):
         if not os.path.exists(directory):

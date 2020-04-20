@@ -1,5 +1,5 @@
 data
-espnet
+espnet/tools
 kaldi
 kaldi_eg
 .idea
