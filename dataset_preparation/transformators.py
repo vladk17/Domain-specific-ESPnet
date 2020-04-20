@@ -5,6 +5,7 @@ from distutils.dir_util import copy_tree
 import re
 
 # from tools.sph2wav import SPHFile
+from settings import TRAIN_TEST_SIZE
 
 
 class AbstractDataTransformer(ABC):
@@ -28,6 +29,11 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
         copy_tree(fromDirectory, toDirectory)
         print("Generating train and test files")
         wavscp, text, utt2spk = self.generate_arrays(raw_data_path, kaldi_audio_files_dir)
+
+        wavscp = wavscp[:TRAIN_TEST_SIZE]
+        text = text[:TRAIN_TEST_SIZE]
+        utt2spk = utt2spk[:TRAIN_TEST_SIZE]
+
         wavscp_train, text_test, utt2spk_train, wavscp_test, text_train, utt2spk_test = \
             self.split_train_test(wavscp,
                                   text,
@@ -62,11 +68,12 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
             files = list()
             _files = f1.read().splitlines()
             for _ in _files:
-                files.append(os.path.join(audio_files_dir, _[9:]))
+                files.append(os.path.join('downloads', _[9:]))
 
         with open(transcripts_path) as f2:
             transcripts = f2.read().splitlines()
         assert len(files) == len(transcripts), "Number of files is not "
+
         for idx, transcript in enumerate(transcripts):
             tokens = transcript.lower().split(' ')
             transcript = ' '.join(tokens[:-1])
@@ -142,4 +149,3 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
 #                               'end': right_idx,
 #                               'transcript': the_transcript})
 #         return _segments
-
