@@ -10,5 +10,4 @@ if __name__ == '__main__':
     transformer = TEDxSpanish2KaldiTransformer()
     transformer.transform(
         raw_data_path=dataset_location,
-        kaldi_data_dir='/home/stanislav/y-data/gong/Domain-specific-ESPnet/espnet/egs/tedx_spanish/asr1/data',
-        kaldi_audio_files_dir='/home/stanislav/y-data/gong/Domain-specific-ESPnet/espnet/egs/tedx_spanish/asr1/downloads')
+        espnet_kaldi_eg_directory='/home/stanislav/y-data/gong/Domain-specific-ASR-ESPnet/espnet/egs/tedx_spanish/asr1')
