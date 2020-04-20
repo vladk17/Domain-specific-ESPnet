@@ -42,10 +42,13 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
             os.makedirs(directory)
         with open(os.path.join(directory, 'wav.scp'), 'w') as f1:
             f1.write('\n'.join(wavscp))
+            f1.write('\n')
         with open(os.path.join(directory, 'text'), 'w') as f2:
             f2.write('\n'.join(text))
+            f2.write('\n')
         with open(os.path.join(directory, 'utt2spk'), 'w') as f3:
             f3.write('\n'.join(utt2spk))
+            f3.write('\n')
 
     def generate_arrays(self, path, audio_files_dir):
         wavscp = list()

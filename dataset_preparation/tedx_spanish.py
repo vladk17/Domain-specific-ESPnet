@@ -10,4 +10,4 @@ if __name__ == '__main__':
     transformer = TEDxSpanish2KaldiTransformer()
     transformer.transform(
         raw_data_path=dataset_location,
-        espnet_kaldi_eg_directory='/home/stanislav/y-data/gong/Domain-specific-ASR-ESPnet/espnet/egs/tedx_spanish/asr1')
+        espnet_kaldi_eg_directory='/home/stanislav/y-data/gong/Domain-specific-ESPnet/espnet/egs/tedx_spanish/asr1')
