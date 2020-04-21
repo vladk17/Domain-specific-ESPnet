@@ -3,4 +3,7 @@ kaldi
 kaldi_eg
 .idea
 notebooks/.ipynb_checkpoints
-
+espnet/tools
+__pycache__
+*.pyc
+espnet/egs/tedx_spanish/asr1/temp_downloads/

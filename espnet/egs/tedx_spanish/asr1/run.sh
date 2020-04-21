@@ -68,8 +68,8 @@ set -o pipefail
 
 # train_set=train_960
 # train_dev=dev
-train_set="train"
-train_dev="train"
+train_set="train_set"
+train_dev="train_dev"
 recog_set="test"
 
 #if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
@@ -82,7 +82,7 @@ recog_set="test"
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    ### Task dependent. You have to make data the following preparation part by yourself.
    ### But you can utilize Kaldi recipes in most cases
-   echo "stage 0: Data preparation"
+   echo "stage 0: Data download and preparation"
 
     ./local/data_preparation.sh
 
@@ -98,7 +98,8 @@ feat_dt_dir=${dumpdir}/${train_dev}/delta${do_delta}; mkdir -p ${feat_dt_dir}
 if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     ### Task dependent. You have to design training and dev sets by yourself.
     ### But you can utilize Kaldi recipes in most cases
-    echo "stage 1: Feature Generation"
+    printf "]n"
+    echo "STAGE 1: Feature Generation"
     fbankdir=fbank
     # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
 
@@ -108,19 +109,16 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
        utils/fix_data_dir.sh data/${x}
    done
 
-#    utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_clean_100 data/train_clean_360 data/train_other_500
-#    utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_org data/dev_clean data/dev_other
+    # make a dev set
+    echo "Creating dev subset from train dataset"
+    utils/subset_data_dir.sh --first data/train 2 data/${train_dev}
+    n=$(($(wc -l < data/train/text) - 2))
+    utils/subset_data_dir.sh --last data/train ${n} data/${train_set}
 
-    # # make a dev set
-    # echo "Creating dev subset from train dataset"
-    # utils/subset_data_dir.sh --first data/train 100 data/${train_dev}
-    # n=$(($(wc -l < data/train/text) - 100))
-    # utils/subset_data_dir.sh --last data/train ${n} data/${train_set}
-
-    # # remove utt having more than 3000 frames
-    # # remove utt having more than 400 characters
-    # remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_set} data/${train_set}
-    # remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev} data/${train_dev}
+    # remove utt having more than 3000 frames
+    # remove utt having more than 400 characters
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_set} data/${train_set}
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev} data/${train_dev}
 
     # Remove features with too long frames in training data
     max_len=3000
@@ -161,11 +159,12 @@ bpemodel=data/lang_char/${train_set}_${bpemode}${nbpe}
 echo "dictionary: ${dict}"
 if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
     ### Task dependent. You have to check non-linguistic symbols used in the corpus.
-    echo "stage 2: Dictionary and Json Data Preparation"
+    printf "\n"
+    echo "STAGE 2: Dictionary and Json Data Preparation"
     mkdir -p data/lang_char/
     echo "<unk> 1" > ${dict} # <unk> must be 1, 0 will be used for "blank" in CTC
     cut -f 2- -d" " data/${train_set}/text > data/lang_char/input.txt
-    spm_train --input=data/lang_char/input.txt --vocab_size=${nbpe} --model_type=${bpemode} --model_prefix=${bpemodel} --input_sentence_size=100000000
+    spm_train --input=data/lang_char/input.txt --hard_vocab_limit=false --vocab_size=${nbpe} --model_type=${bpemode} --model_prefix=${bpemodel} --input_sentence_size=100000000
     spm_encode --model=${bpemodel}.model --output_format=piece < data/lang_char/input.txt | tr ' ' '\n' | sort | uniq | awk '{print $0 " " NR+1}' >> ${dict}
     wc -l ${dict}
 
@@ -191,21 +190,21 @@ lmexpdir=exp/${lmexpname}
 mkdir -p ${lmexpdir}
 
 if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
-    echo "stage 3: LM Preparation"
+    printf "\n"
+    echo "STAGE 3: LM Preparation"
     lmdatadir=data/local/lm_train_${bpemode}${nbpe}
-    # use external data
-    if [ ! -e data/local/lm_train/tedx_spanish-lm-norm.txt.gz ]; then
-        wget http://www.openslr.org/resources/11/tedx_spanish-lm-norm.txt.gz -P data/local/lm_train/
-    fi
+
+    # Here we use only transcripts, encoded with bpe model, 
+    # later we can add more external spanish text data and merge with transcripts as it was done in librispeech recipe
+
     if [ ! -e ${lmdatadir} ]; then
         mkdir -p ${lmdatadir}
-        cut -f 2- -d" " data/${train_set}/text | gzip -c > data/local/lm_train/${train_set}_text.gz
-        # combine external text and transcriptions and shuffle them with seed 777
-        zcat data/local/lm_train/tedx_spanish-lm-norm.txt.gz data/local/lm_train/${train_set}_text.gz |\
-            spm_encode --model=${bpemodel}.model --output_format=piece > ${lmdatadir}/train.txt
+        cut -f 2- -d" " data/${train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+        > ${lmdatadir}/train.txt
         cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
-                                                            > ${lmdatadir}/valid.txt
+        > ${lmdatadir}/valid.txt
     fi
+
     ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
         lm_train.py \
         --config ${lm_config} \

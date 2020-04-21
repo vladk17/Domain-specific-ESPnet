@@ -1,5 +1,5 @@
-from dataset_preparation.dataset_downloader import download_and_extract_data
-from dataset_preparation.transformators import TEDxSpanish2KaldiTransformer
+from .dataset_downloader import download_and_extract_data
+from .transformators import TEDxSpanish2KaldiTransformer
 
 if __name__ == '__main__':
     dataset_location = download_and_extract_data(
