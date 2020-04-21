@@ -22,7 +22,7 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
         print("Copying files to kaldi download directory")
         fromDirectory = os.path.join(raw_data_path, 'speech')
         toDirectory = kaldi_audio_files_dir
-        copy_tree(fromDirectory, toDirectory)
+        copy_tree(fromDirectory, toDirectory) 
         print("Generating train and test files")
         wavscp, text, utt2spk = self.generate_arrays(raw_data_path, kaldi_audio_files_dir)
 

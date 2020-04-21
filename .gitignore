@@ -6,4 +6,9 @@ notebooks/.ipynb_checkpoints
 espnet/tools
 __pycache__
 *.pyc
-espnet/egs/tedx_spanish/asr1/temp_downloads/
+espnet/egs/tedx_spanish/asr1/raw_data/
+espnet/egs/tedx_spanish/asr1/dump/
+espnet/egs/tedx_spanish/asr1/downloads/
+espnet/egs/tedx_spanish/asr1/exp/
+espnet/egs/tedx_spanish/asr1/fbank
+espnet/egs/tedx_spanish/asr1/tensorboard/

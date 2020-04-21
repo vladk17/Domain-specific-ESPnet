@@ -52,7 +52,7 @@ use_lm_valbest_average=false # if true, the validation `lm_n_average`-best langu
 #data_url=www.openslr.org/resources/12
 
 # bpemode (unigram or bpe)
-nbpe=5000
+nbpe=50000
 bpemode=unigram
 
 # exp tag
@@ -82,7 +82,8 @@ recog_set="test"
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    ### Task dependent. You have to make data the following preparation part by yourself.
    ### But you can utilize Kaldi recipes in most cases
-   echo "stage 0: Data download and preparation"
+   printf "\n\n"
+   echo "STAGE 0: Data download and preparation"
 
     ./local/data_preparation.sh
 
@@ -98,12 +99,12 @@ feat_dt_dir=${dumpdir}/${train_dev}/delta${do_delta}; mkdir -p ${feat_dt_dir}
 if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     ### Task dependent. You have to design training and dev sets by yourself.
     ### But you can utilize Kaldi recipes in most cases
-    printf "]n"
+    printf "\n\n"
     echo "STAGE 1: Feature Generation"
     fbankdir=fbank
     # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
 
-   for x in test train; do
+   for x in train test; do
        steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj ${nj} --write_utt2num_frames true \
            data/${x} exp/make_fbank/${x} ${fbankdir}
        utils/fix_data_dir.sh data/${x}
@@ -111,14 +112,22 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     # make a dev set
     echo "Creating dev subset from train dataset"
-    utils/subset_data_dir.sh --first data/train 2 data/${train_dev}
-    n=$(($(wc -l < data/train/text) - 2))
-    utils/subset_data_dir.sh --last data/train ${n} data/${train_set}
+    train_dev_proportion=0.2
+    echo "train_dev proportion is ${train_dev_proportion}"
+    train_size=$(($(wc -l < data/train/text)))
+    train_dev_size=$(python -c "print (round($train_dev_proportion*$train_size))")
+    echo "train_dev size is ${train_dev_size}"
+
+    utils/subset_data_dir.sh --first data/train $train_dev_size data/${train_dev}_tmp
+    train_set_size=$(($(wc -l < data/train/text) - $train_dev_size))
+    utils/subset_data_dir.sh --last data/train ${train_set_size} data/${train_set}_tmp
 
     # remove utt having more than 3000 frames
     # remove utt having more than 400 characters
-    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_set} data/${train_set}
-    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev} data/${train_dev}
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_set}_tmp data/${train_set}
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev}_tmp data/${train_dev}
+    rm -rf data/${train_set}_tmp
+    rm -rf data/${train_dev}_tmp
 
     # Remove features with too long frames in training data
     max_len=3000
@@ -159,7 +168,7 @@ bpemodel=data/lang_char/${train_set}_${bpemode}${nbpe}
 echo "dictionary: ${dict}"
 if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
     ### Task dependent. You have to check non-linguistic symbols used in the corpus.
-    printf "\n"
+    printf "\n\n"
     echo "STAGE 2: Dictionary and Json Data Preparation"
     mkdir -p data/lang_char/
     echo "<unk> 1" > ${dict} # <unk> must be 1, 0 will be used for "blank" in CTC
@@ -190,7 +199,7 @@ lmexpdir=exp/${lmexpname}
 mkdir -p ${lmexpdir}
 
 if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
-    printf "\n"
+    printf "\n\n"
     echo "STAGE 3: LM Preparation"
     lmdatadir=data/local/lm_train_${bpemode}${nbpe}
 
