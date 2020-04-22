@@ -13,7 +13,7 @@ class AbstractDataTransformer(ABC):
 
 class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
 
-    def transform(self, raw_data_path, espnet_kaldi_eg_directory, train_test_size):
+    def transform(self, raw_data_path, espnet_kaldi_eg_directory, subset_size=None):
 
         kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
@@ -26,9 +26,11 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
         print("Generating train and test files")
         wavscp, text, utt2spk = self.generate_arrays(raw_data_path, kaldi_audio_files_dir)
 
-        wavscp = wavscp[:train_test_size]
-        text = text[:train_test_size]
-        utt2spk = utt2spk[:train_test_size]
+        if subset_size:
+            print("Subset size:", subset_size)
+            wavscp = wavscp[:subset_size]
+            text = text[:subset_size]
+            utt2spk = utt2spk[:subset_size]
 
         wavscp_train, wavscp_test, text_train, text_test, utt2spk_train,  utt2spk_test = \
             self.split_train_test(wavscp,
