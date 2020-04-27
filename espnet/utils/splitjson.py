@@ -61,11 +61,13 @@ if __name__ == '__main__':
         new_dic = dict()
         for utt_id in utt_id_list:
             new_dic[utt_id] = j['utts'][utt_id]
+        print('C')
         jsonstring = json.dumps({'utts': new_dic},
                                 indent=4,
                                 ensure_ascii=False,
                                 sort_keys=True,
                                 separators=(',', ': '))
+        print('D')
         fl = '{}/{}.{}.json'.format(dirname, filename, i + 1)
         sys.stdout = codecs.open(fl, "w+", encoding="utf-8")
         print(jsonstring)
