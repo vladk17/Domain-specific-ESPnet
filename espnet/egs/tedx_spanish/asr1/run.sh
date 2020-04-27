@@ -328,8 +328,8 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
             --result-label ${expdir}/${decode_dir}/data.JOB.json \
             --model ${expdir}/results/${recog_model}  \
             --api v2 \
-            --rnnlm ${lmexpdir}/${lang_model} \
-        echo "Decoding finished"
+            --rnnlm ${lmexpdir}/${lang_model}
+
         score_sclite.sh --bpe ${nbpe} --bpemodel ${bpemodel}.model --wer true ${expdir}/${decode_dir} ${dict}
 
     ) &
