@@ -315,6 +315,7 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
         ngpu=0
         echo "Decode cmd: ${decode_cmd}"
         # set batchsize 0 to disable batch decoding
+
         ${decode_cmd} JOB=1:${nj} ${expdir}/${decode_dir}/log/decode.JOB.log \
             asr_recog.py \
             --config ${decode_config} \
