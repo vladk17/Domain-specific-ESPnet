@@ -125,7 +125,7 @@ def get_parser():
 
 
 def main(args):
-    logging.info("start asr_recog.py")
+
     """Run the main decoding function."""
     parser = get_parser()
     args = parser.parse_args(args)
@@ -144,6 +144,8 @@ def main(args):
         logging.basicConfig(
             level=logging.WARN, format="%(asctime)s (%(module)s:%(lineno)d) %(levelname)s: %(message)s")
         logging.warning("Skip DEBUG/INFO messages")
+
+    logging.info("start asr_recog.py")
 
     # check CUDA_VISIBLE_DEVICES
     if args.ngpu > 0:
