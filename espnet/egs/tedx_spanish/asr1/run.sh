@@ -9,7 +9,7 @@
 # general configuration
 backend=pytorch
 stage=2     # start from -1 if you need to start from data download
-stop_stage=2
+stop_stage=3
 ngpu=1         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
@@ -52,7 +52,7 @@ use_lm_valbest_average=false # if true, the validation `lm_n_average`-best langu
 #data_url=www.openslr.org/resources/12
 
 # bpemode (unigram or bpe)
-nbpe=1000
+nbpe=5000
 bpemode=unigram
 
 # exp tag
@@ -189,6 +189,7 @@ if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
             data/${rtask} ${dict} > ${feat_recog_dir}/data_${bpemode}${nbpe}.json
     done
 fi
+
 
 # You can skip this and remove --rnnlm option in the recognition (stage 5)
 if [ -z ${lmtag} ]; then
