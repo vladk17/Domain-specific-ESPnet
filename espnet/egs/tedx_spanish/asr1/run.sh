@@ -310,6 +310,7 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
         # split data
         splitjson.py --parts ${nj} ${feat_recog_dir}/data_${bpemode}${nbpe}.json
         echo "Success splitting"
+
         #### use CPU for decoding
         ngpu=0
         echo "Decode cmd: ${decode_cmd}"
