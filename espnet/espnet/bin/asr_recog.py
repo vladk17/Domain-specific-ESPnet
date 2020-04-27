@@ -185,6 +185,7 @@ def main(args):
             if args.num_encs == 1:
                 # Experimental API that supports custom LMs
                 if args.api == "v2":
+                    logging.info("Using api v2")
                     from espnet.asr.pytorch_backend.recog import recog_v2
                     recog_v2(args)
                 else:
