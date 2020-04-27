@@ -45,6 +45,7 @@ if __name__ == '__main__':
     dirname = '{}/split{}utt'.format(dirname, args.parts)
     if not os.path.exists(dirname):
         os.makedirs(dirname)
+    print('file prefix', '{}/{}.json'.format(dirname, filename))
 
     # load json and split keys
     j = json.load(codecs.open(args.json, 'r', encoding="utf-8"))
@@ -61,7 +62,6 @@ if __name__ == '__main__':
         new_dic = dict()
         for utt_id in utt_id_list:
             new_dic[utt_id] = j['utts'][utt_id]
-        print('C')
         jsonstring = json.dumps({'utts': new_dic},
                                 indent=4,
                                 ensure_ascii=False,
@@ -71,4 +71,3 @@ if __name__ == '__main__':
         sys.stdout = codecs.open(fl, "w+", encoding="utf-8")
         print(jsonstring)
         sys.stdout.close()
-        print(jsonstring)
