@@ -128,6 +128,7 @@ def main(args):
     """Run the main decoding function."""
     parser = get_parser()
     args = parser.parse_args(args)
+    print('Start')
 
     if args.ngpu == 0 and args.dtype == "float16":
         raise ValueError(f"--dtype {args.dtype} does not support the CPU backend.")
