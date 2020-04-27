@@ -321,6 +321,7 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
             --config ${decode_config} \
             --ngpu ${ngpu} \
             --backend ${backend} \
+            --debugmode ${debugmode} \
             --batchsize 0 \
             --verbose 1 \
             --recog-json ${feat_recog_dir}/split${nj}utt/data_${bpemode}${nbpe}.JOB.json \
