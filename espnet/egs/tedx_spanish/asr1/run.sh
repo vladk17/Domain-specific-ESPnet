@@ -241,6 +241,7 @@ else
 fi
 expdir=exp/${expname}
 mkdir -p ${expdir}
+debugmode=1
 
 if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
     echo "stage 4: Network Training"
