@@ -55,9 +55,9 @@ if __name__ == '__main__':
         logging.error("#utterances < #splits. Use smaller split number.")
         sys.exit(1)
     utt_id_lists = np.array_split(utt_ids, args.parts)
-    print('A')
+
     utt_id_lists = [utt_id_list.tolist() for utt_id_list in utt_id_lists]
-    print('B')
+
     for i, utt_id_list in enumerate(utt_id_lists):
         new_dic = dict()
         for utt_id in utt_id_list:
