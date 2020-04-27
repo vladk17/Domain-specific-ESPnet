@@ -67,8 +67,8 @@ if __name__ == '__main__':
                                 ensure_ascii=False,
                                 sort_keys=True,
                                 separators=(',', ': '))
-        print('D')
         fl = '{}/{}.{}.json'.format(dirname, filename, i + 1)
         sys.stdout = codecs.open(fl, "w+", encoding="utf-8")
         print(jsonstring)
         sys.stdout.close()
+        print(jsonstring)
