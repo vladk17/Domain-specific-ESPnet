@@ -110,7 +110,6 @@ def recog_v2(args):
             feat = load_inputs_and_targets(batch)[0][0]
             enc = model.encode(torch.as_tensor(feat).to(device=device, dtype=dtype))
             nbest_hyps = beam_search(x=enc, maxlenratio=args.maxlenratio, minlenratio=args.minlenratio)
-            logging.info()
             nbest_hyps = [h.asdict() for h in nbest_hyps[:min(len(nbest_hyps), args.nbest)]]
             new_js[name] = add_results_to_json(js[name], nbest_hyps, train_args.char_list)
 
