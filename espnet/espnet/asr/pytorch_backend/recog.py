@@ -20,6 +20,8 @@ from espnet.utils.io_utils import LoadInputsAndTargets
 
 
 def recog_v2(args):
+    logging.info('Starting inference')
+
     """Decode with custom models that implements ScorerInterface.
 
     Notes:

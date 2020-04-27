@@ -45,7 +45,6 @@ if __name__ == '__main__':
     dirname = '{}/split{}utt'.format(dirname, args.parts)
     if not os.path.exists(dirname):
         os.makedirs(dirname)
-    print('file prefix', '{}/{}.json'.format(dirname, filename))
 
     # load json and split keys
     j = json.load(codecs.open(args.json, 'r', encoding="utf-8"))

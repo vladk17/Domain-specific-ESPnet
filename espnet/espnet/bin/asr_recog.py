@@ -178,6 +178,8 @@ def main(args):
             from espnet.asr.chainer_backend.asr import recog
             recog(args)
         elif args.backend == "pytorch":
+            logging.info('Using pytorch backend')
+            logging.info("num encs", args.num_encs)
             if args.num_encs == 1:
                 # Experimental API that supports custom LMs
                 if args.api == "v2":
