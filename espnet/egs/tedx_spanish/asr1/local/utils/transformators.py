@@ -23,8 +23,10 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
         fromDirectory = os.path.join(raw_data_path, 'speech')
         toDirectory = kaldi_audio_files_dir
         copy_tree(fromDirectory, toDirectory) 
-        print("Generating train and test files")
+
         wavscp, text, utt2spk = self.generate_arrays(raw_data_path, kaldi_audio_files_dir)
+
+        print("Total dataset size", len(wavscp))
 
         if subset_size:
             print("Subset size:", subset_size)
@@ -32,6 +34,7 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
             text = text[:subset_size]
             utt2spk = utt2spk[:subset_size]
 
+        print("Splitting train-test")
         wavscp_train, wavscp_test, text_train, text_test, utt2spk_train,  utt2spk_test = \
             self.split_train_test(wavscp,
                                   text,
