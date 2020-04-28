@@ -8,9 +8,9 @@
 
 # general configuration
 backend=pytorch
-stage=2     # start from -1 if you need to start from data download
-stop_stage=3
-ngpu=1         # number of gpus ("0" uses cpu, otherwise use gpu)
+stage=1     # start from -1 if you need to start from data download
+stop_stage=999
+ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
 dumpdir=dump   # directory to dump full features
@@ -18,12 +18,14 @@ N=0            # number of minibatches to be used (mainly for debugging). "0" us
 verbose=0      # verbose option
 resume=        # Resume the training from snapshot
 
+
 # feature configuration
 do_delta=false
 
 preprocess_config=conf/specaug.yaml
 train_config=conf/train.yaml # current default recipe requires 4 gpus.
-                             # if you do not have 4 gpus, please reconfigure the `batch-bins` and `accum-grad` parameters in config.
+                             # if you do not have 4 gpus, please reconfigure the `batch-bins`
+                             # and `accum-grad` parameters in config.
 lm_config=conf/lm.yaml
 decode_config=conf/decode.yaml
 
@@ -52,7 +54,7 @@ use_lm_valbest_average=false # if true, the validation `lm_n_average`-best langu
 #data_url=www.openslr.org/resources/12
 
 # bpemode (unigram or bpe)
-nbpe=5000
+nbpe=1000
 bpemode=unigram
 
 # exp tag
@@ -66,18 +68,11 @@ set -e
 set -u
 set -o pipefail
 
-# train_set=train_960
-# train_dev=dev
 train_set="train_set"
 train_dev="train_dev"
 recog_set="test"
 
-#if [ ${stage} -le -1 ] && [ ${stop_stage} -ge -1 ]; then
-#    echo "stage -1: Data Download"
-#    for part in dev-clean test-clean dev-other test-other train-clean-100 train-clean-360 train-other-500; do
-#        local/download_and_untar.sh ${datadir} ${data_url} ${part}
-#    done
-#fi
+train_dev_proportion=0.01
 
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    ### Task dependent. You have to make data the following preparation part by yourself.
@@ -112,7 +107,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     # make a dev set
     echo "Creating dev subset from train dataset"
-    train_dev_proportion=0.2
+
     echo "train_dev proportion is ${train_dev_proportion}"
     train_size=$(($(wc -l < data/train/text)))
     train_dev_size=$(python -c "print (round($train_dev_proportion*$train_size))")
