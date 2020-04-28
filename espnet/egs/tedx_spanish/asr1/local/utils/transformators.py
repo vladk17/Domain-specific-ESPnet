@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from distutils.dir_util import copy_tree
 import re
 
+
 class AbstractDataTransformer(ABC):
 
     @abstractmethod
@@ -22,12 +23,15 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
         print("Copying files to kaldi download directory")
         fromDirectory = os.path.join(raw_data_path, 'speech')
         toDirectory = kaldi_audio_files_dir
-        copy_tree(fromDirectory, toDirectory) 
+        copy_tree(fromDirectory, toDirectory)
 
         wavscp, text, utt2spk = self.generate_arrays(raw_data_path, kaldi_audio_files_dir)
 
-        print("Total dataset size", len(wavscp))
-
+        print("Total dataset size", len(text))
+        if len(text) < subset_size:
+            print(
+                f"ATTENTION! Provided subset size ({subset_size}) is less than overall dataset size ({len(text)}). "
+                f"Taking all dataset")
         if subset_size:
             print("Subset size:", subset_size)
             wavscp = wavscp[:subset_size]
@@ -35,7 +39,7 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
             utt2spk = utt2spk[:subset_size]
 
         print("Splitting train-test")
-        wavscp_train, wavscp_test, text_train, text_test, utt2spk_train,  utt2spk_test = \
+        wavscp_train, wavscp_test, text_train, text_test, utt2spk_train, utt2spk_test = \
             self.split_train_test(wavscp,
                                   text,
                                   utt2spk,
