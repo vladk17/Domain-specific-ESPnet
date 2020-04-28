@@ -105,6 +105,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
        utils/fix_data_dir.sh data/${x}
    done
 
+
     # make a dev set
     echo "Creating dev subset from train dataset"
 
