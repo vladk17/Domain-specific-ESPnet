@@ -1,5 +1,5 @@
 # This configuration requires 4 gpus with 12GB memory
-accum-grad: 1
+accum-grad: 4
 adim: 512
 aheads: 8
 backend: pytorch
