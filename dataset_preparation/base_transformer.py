@@ -1,6 +1,9 @@
 import os
 from abc import ABC, abstractmethod
+import re
+
 from sklearn.model_selection import train_test_split
+from num2words import num2words
 
 
 class AbstractDataTransformer(ABC):
@@ -25,6 +28,12 @@ class AbstractDataTransformer(ABC):
             f3.write('\n'.join(utt2spk))
             f3.write('\n')
 
-    def split_train_test(self, *args, test_proportion):
+    def split_train_test(self, *args, test_proportion=0.2):
         train_test_args = train_test_split(*args, test_size=test_proportion, random_state=42, shuffle=False)
         return train_test_args
+
+    def clean_text(self, text):
+        text = text.lower()
+        # for now only removing punctuation, should add number2word later and other cleansing if relevant
+        clean = re.sub("\W+", ' ', text)
+        return clean

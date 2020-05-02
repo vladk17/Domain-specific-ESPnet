@@ -1,7 +1,7 @@
 import os
 from distutils.dir_util import copy_tree
 
-from transformators import AbstractDataTransformer
+from base_transformer import AbstractDataTransformer
 
 
 class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
