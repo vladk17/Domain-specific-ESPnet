@@ -9,7 +9,6 @@ download_folder = '../raw_data'
 subset_size = int(os.environ.get('ESPNET_SUBSET_SIZE'))
 
 if __name__ == '__main__':
-
     
     dataset_location = download_and_extract_data(
         dataset_url=dataset_url,
