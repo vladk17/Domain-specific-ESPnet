@@ -1,8 +1,8 @@
 import os
-import re
 import tarfile
 import urllib.request
 from tqdm import tqdm
+import pathlib
 
 
 class DownloadProgressBar(tqdm):
@@ -45,5 +45,5 @@ def download_and_extract_data(dataset_url: str, dataset_name: str, download_fold
     else:
         print("Tarfile has been already decompressed")
 
-    final_path = os.path.join(dataset_dir, 'decompressed', re.match('(.*?)(?=\.)', dataset_url.split('/')[-1])[0])
-    return final_path
+    final_path = os.path.join(dataset_dir, 'decompressed')
+    return pathlib.Path(final_path).absolute()
