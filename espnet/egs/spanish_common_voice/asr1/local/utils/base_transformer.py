@@ -1,7 +1,9 @@
+from __future__ import unicode_literals
+
+import codecs
 import os
 from abc import ABC, abstractmethod
 import re
-
 from sklearn.model_selection import train_test_split
 from num2words import num2words
 
@@ -21,7 +23,7 @@ class AbstractDataTransformer(ABC):
         with open(os.path.join(directory, 'wav.scp'), 'w') as f1:
             f1.write('\n'.join(wavscp))
             f1.write('\n')
-        with open(os.path.join(directory, 'text'), 'w') as f2:
+        with codecs.open(os.path.join(directory, 'text'), "w", encoding='utf-8') as f2:
             f2.write('\n'.join(text))
             f2.write('\n')
         with open(os.path.join(directory, 'utt2spk'), 'w') as f3:
@@ -36,4 +38,5 @@ class AbstractDataTransformer(ABC):
         text = text.lower()
         # for now only removing punctuation, should add number2word later and other cleansing if relevant
         clean = re.sub("\W+", ' ', text)
+        clean = clean.strip()
         return clean

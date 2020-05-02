@@ -34,8 +34,8 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         if os.path.exists(kaldi_audio_files_dir):
             pass
         else:
-            print("Transforming audio to .wav and copying to eg directory")
             os.makedirs(kaldi_audio_files_dir)
+        print("Transforming audio to .wav and copying to eg directory")
         for file in tqdm(audio_files):
             joined_path = os.path.join(origin_audiofiles_dir, file)
             self.convert_to_wav_from_mp3(joined_path, kaldi_audio_files_dir)
@@ -54,7 +54,6 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         self.create_files(wavscp_test, text_test, utt2spk_test, os.path.join(kaldi_data_dir, 'test'))
 
     def convert_to_wav_from_mp3(self, source_path: str, destination_folder: str):
-
         new_file_name = source_path.split("/")[-1][:-4] + '.wav'
         destination_path = Path(destination_folder, new_file_name)
         sound = AudioSegment.from_mp3(source_path)
