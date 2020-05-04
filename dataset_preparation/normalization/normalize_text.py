@@ -150,5 +150,5 @@ if __name__ == '__main__':
     _inFile = args.in_txt_file
     _lang = args.lang
     _format = args.format
-    backup(_inFile)
+    # backup(_inFile)
     normalize(_inFile, _format, _lang)
