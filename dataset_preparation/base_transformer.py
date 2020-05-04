@@ -33,7 +33,7 @@ class AbstractDataTransformer(ABC):
         return train_test_args
 
     def clean_text(self, text):
-        text = text.lower()
-        # for now only removing punctuation, should add number2word later and other cleansing if relevant
-        clean = re.sub("\W+", ' ', text)
-        return clean
+        # text = text.lower()
+        # # for now only removing punctuation, should add number2word later and other cleansing if relevant
+        # text = re.sub("\W+", ' ', text).strip()
+        return text
