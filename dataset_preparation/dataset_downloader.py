@@ -21,19 +21,19 @@ def download_url(url, output_path):
         urllib.request.urlretrieve(url, filename=output_path, reporthook=t.update_to)
 
 
-def download_and_extract_data(dataset_urls: List[str], dataset_name: str, download_folder: str):
+def download_and_extract_data(dataset_urls: List[str], dataset_name: str, download_folder: str, force_download=False,
+                              force_decompress=False):
     data_dir = download_folder
 
     if not os.path.exists(data_dir):
         os.mkdir(data_dir)
     dataset_dir = os.path.join(data_dir, dataset_name)
 
-    for dataset_url in dataset_urls:
+    for idx, dataset_url in enumerate(dataset_urls):
         dataset_path = os.path.join(dataset_dir, dataset_url.split('/')[-1])
         print('Dataset path:', dataset_path)
 
-        if not os.path.exists(dataset_path):
-
+        if force_download or not os.path.exists(dataset_path):
             print(f"Downloading {dataset_url}")
             if not os.path.exists(dataset_dir):
                 os.mkdir(dataset_dir)
@@ -43,8 +43,8 @@ def download_and_extract_data(dataset_urls: List[str], dataset_name: str, downlo
             print("Archive already exists.")
 
         try:
-            if not os.path.exists(os.path.join(dataset_dir, 'decompressed')):
-                directory_name = os.path.join(dataset_dir, 'decompressed')
+            if force_decompress or not os.path.exists(os.path.join(dataset_dir, f'decompressed_url_{idx+1}')):
+                directory_name = os.path.join(dataset_dir, f'decompressed_url_{idx+1}')
                 print("Decompressing data")
                 if dataset_path.endswith('zip'):
                     with zipfile.ZipFile(dataset_path, 'r') as zip_ref:
