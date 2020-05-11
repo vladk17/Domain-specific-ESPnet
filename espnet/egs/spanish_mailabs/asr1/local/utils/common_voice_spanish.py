@@ -60,6 +60,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         print("destination path", destination_path)
         sound = AudioSegment.from_mp3(source_path)
         sound.export(destination_path, format="wav")
+        print("export to wav successful", destination_path)
 
     def generate_arrays(self, data: pd.DataFrame):
 
