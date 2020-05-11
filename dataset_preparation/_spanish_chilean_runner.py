@@ -1,5 +1,5 @@
 from dataset_downloader import download_and_extract_data
-from transformers.spanish_mailabs import MailabsKaldiTransformer
+from transformers.spanish_crowdsource_openasr import CrowdsourcedOpenASR
 
 if __name__ == '__main__':
     dataset_location = download_and_extract_data(
