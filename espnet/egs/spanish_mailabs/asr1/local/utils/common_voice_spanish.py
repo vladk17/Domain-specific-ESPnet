@@ -54,19 +54,19 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         self.create_files(wavscp_test, text_test, utt2spk_test, os.path.join(kaldi_data_dir, 'test'))
 
     def convert_to_wav_from_mp3(self, source_path: str, destination_folder: str):
-        print("source_path", source_path)
-        print("source_path absolute", Path(source_path).absolute())
+        # print("source_path", source_path)
+        # print("source_path absolute", Path(source_path).absolute())
         new_file_name = source_path.split("/")[-1][:-4] + '.wav'
-        print("new file name", new_file_name)
+        # print("new file name", new_file_name)
 
         sound = AudioSegment.from_mp3(source_path)
-        print("source file loaded", source_path)
+        # print("source file loaded", source_path)
 
         destination_path = Path(destination_folder, new_file_name)
-        print("destination path", destination_path)
+        # print("destination path", destination_path)
 
         sound.export(destination_path, format="wav")
-        print("export to wav successful", destination_path)
+        # print("export to wav successful", destination_path)
 
     def generate_arrays(self, data: pd.DataFrame):
 
