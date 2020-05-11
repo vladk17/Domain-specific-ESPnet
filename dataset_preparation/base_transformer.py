@@ -1,6 +1,8 @@
 import os
 from abc import ABC, abstractmethod
 import re
+from distutils.dir_util import copy_tree
+from typing import List
 
 from sklearn.model_selection import train_test_split
 from num2words import num2words
@@ -37,3 +39,13 @@ class AbstractDataTransformer(ABC):
         # # for now only removing punctuation, should add number2word later and other cleansing if relevant
         # text = re.sub("\W+", ' ', text).strip()
         return text
+
+    def copy_audio_files_to_kaldi_dir(self, origin_paths: List[str], destination_path):
+
+        print("Copying audio files to kaldi downloads directory...")
+        if os.path.exists(destination_path):
+            pass
+        else:
+            os.makedirs(destination_path)
+        for path in origin_paths:
+            copy_tree(path, destination_path)

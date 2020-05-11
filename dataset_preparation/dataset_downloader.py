@@ -43,8 +43,8 @@ def download_and_extract_data(dataset_urls: List[str], dataset_name: str, downlo
             print("Archive already exists.")
 
         try:
-            if force_decompress or not os.path.exists(os.path.join(dataset_dir, f'decompressed_url_{idx+1}')):
-                directory_name = os.path.join(dataset_dir, f'decompressed_url_{idx+1}')
+            if force_decompress or not os.path.exists(os.path.join(dataset_dir, 'decompressed')):
+                directory_name = os.path.join(dataset_dir, 'decompressed', f'decompressed_{idx + 1}')
                 print("Decompressing data")
                 if dataset_path.endswith('zip'):
                     with zipfile.ZipFile(dataset_path, 'r') as zip_ref:

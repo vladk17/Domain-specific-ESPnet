@@ -13,9 +13,15 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
 
         kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
-        origin_audiofiles_dir = os.path.join(raw_data_path, 'clips')
 
-        data = pd.read_csv(Path(raw_data_path, 'validated.tsv'), delimiter='\t')
+        subdirs = ["decompressed_1", "decompressed_2"]
+
+        audio_dirs = [os.path.join(raw_data_path, subdir) for subdir in subdirs]
+        self.copy_audio_files_to_kaldi_dir(audio_dirs, kaldi_audio_files_dir)
+
+        dfs = [pd.read_csv(Path(audio_dir, 'line_index.tsv'), delimiter='\t', header=None) for audio_dir in audio_dirs]
+        data = pd.concat(dfs, axis=0)
+        data.columns = ['path', 'transcript']
         dataset_size = data.shape[0]
 
         print("Total dataset size", dataset_size)
@@ -30,16 +36,6 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
             self.SUBSET_SIZE = subset_size
             data = data[:subset_size]
 
-        audio_files = data['path'].tolist()
-        if os.path.exists(kaldi_audio_files_dir):
-            pass
-        else:
-            print("Transforming audio to .wav and copying to eg directory")
-            os.makedirs(kaldi_audio_files_dir)
-        for file in tqdm(audio_files):
-            joined_path = os.path.join(origin_audiofiles_dir, file)
-            self.convert_to_wav_from_mp3(joined_path, kaldi_audio_files_dir)
-
         print("Generating train and test files")
 
         wavscp, text, utt2spk = self.generate_arrays(data)
@@ -52,13 +48,6 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
 
         self.create_files(wavscp_train, text_train, utt2spk_train, os.path.join(kaldi_data_dir, 'train'))
         self.create_files(wavscp_test, text_test, utt2spk_test, os.path.join(kaldi_data_dir, 'test'))
-
-    def convert_to_wav_from_mp3(self, source_path: str, destination_folder: str):
-
-        new_file_name = source_path.split("/")[-1][:-4] + '.wav'
-        destination_path = Path(destination_folder, new_file_name)
-        sound = AudioSegment.from_mp3(source_path)
-        sound.export(destination_path, format="wav")
 
     def generate_arrays(self, data: pd.DataFrame):
 

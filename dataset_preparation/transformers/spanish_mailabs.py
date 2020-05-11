@@ -47,16 +47,6 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
         wavscp, text, utt2spk = self.generate_arrays(data)
         self.create_files(wavscp, text, utt2spk, os.path.join(kaldi_data_dir, 'train_test'))
 
-    def copy_audio_files_to_kaldi_dir(self, origin_paths: List[str], destination_path):
-
-        print("Copying audio files to kaldi downloads directory...")
-        if os.path.exists(destination_path):
-            pass
-        else:
-            os.makedirs(destination_path)
-        for path in origin_paths:
-            copy_tree(path, destination_path)
-
     def get_data_dirs(self, root_dir):
         gender_dirs = ['female', 'male']
 

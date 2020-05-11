@@ -8,12 +8,12 @@ if __name__ == '__main__':
                       ],
         dataset_name='crowdsource_chilean',
         download_folder="/home/stanislav/y-data/industry-project/Domain-specific-ESPnet/data",
-        force_decompress=True)
+        force_decompress=False)
 
     print("Dataset location:", dataset_location)
 
-    # transformer = CrowdsourcedOpenASR()
-    # transformer.transform(
-    #     raw_data_path=dataset_location,
-    #     espnet_kaldi_eg_directory='/home/stanislav/y-data/industry-project/Domain-specific-ESPnet/'
-    #                               'espnet_emulation/egs/crowdsource_chilean/asr1')
+    transformer = CrowdsourcedOpenASR()
+    transformer.transform(
+        raw_data_path=dataset_location,
+        espnet_kaldi_eg_directory='/home/stanislav/y-data/industry-project/Domain-specific-ESPnet/'
+                                  'espnet_emulation/egs/crowdsource_chilean/asr1')
