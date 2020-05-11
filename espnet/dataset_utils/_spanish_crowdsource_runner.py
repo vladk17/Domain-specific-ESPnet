@@ -1,5 +1,5 @@
-from dataset_downloader import download_and_extract_data
-from transformers.spanish_crowdsource_openasr import CrowdsourcedOpenASR
+from dataset_utils.dataset_downloader import download_and_extract_data
+from dataset_utils.transformers.spanish_crowdsource_openasr import CrowdsourcedOpenASR
 
 if __name__ == '__main__':
     dataset_location = download_and_extract_data(

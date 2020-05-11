@@ -3,12 +3,20 @@ from pathlib import Path
 from pydub import AudioSegment
 from tqdm import tqdm
 import pandas as pd
+
 from dataset_utils.base_transformer import AbstractDataTransformer
+
+SUBSET_SIZE = os.environ.get("ESPNET_SUBSET_SIZE", None)
 
 
 class CommonVoiceKaldiTransformer(AbstractDataTransformer):
 
-    def transform(self, raw_data_path, espnet_kaldi_eg_directory, subset_size=None, *args, **kwargs):
+    def __init__(self):
+        super().__init__()
+        if self.SUBSET_SIZE:
+            self.SUBSET_SIZE = int(self.SUBSET_SIZE)
+
+    def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
 
         kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
@@ -19,15 +27,14 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
 
         print("Total dataset size", dataset_size)
 
-        if subset_size:
-            print("Subset size:", subset_size)
-            if dataset_size < subset_size:
+        if self.SUBSET_SIZE:
+            print("Subset size:", self.SUBSET_SIZE)
+            if dataset_size < self.SUBSET_SIZE:
                 print(
-                    f"ATTENTION! Provided subset size ({subset_size}) is less "
+                    f"ATTENTION! Provided subset size ({self.SUBSET_SIZE}) is less "
                     f"than overall dataset size ({dataset_size}). "
                     f"Taking all dataset")
-            self.SUBSET_SIZE = subset_size
-            data = data[:subset_size]
+            data = data[:self.SUBSET_SIZE]
 
         audio_files = data['path'].tolist()
         if os.path.exists(kaldi_audio_files_dir):

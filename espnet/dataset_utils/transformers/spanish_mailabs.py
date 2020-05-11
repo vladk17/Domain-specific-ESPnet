@@ -14,7 +14,7 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
         if SUBSET_SIZE:
             self.SUBSET_SIZE = int(SUBSET_SIZE)
 
-    def transform(self, raw_data_path, espnet_kaldi_eg_directory, subset_size=None, *args, **kwargs):
+    def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
 
         kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
@@ -34,7 +34,7 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
         dataset_size = data.shape[0]
         print("Total dataset size", dataset_size)
 
-        # self.copy_audio_files_to_kaldi_dir(origin_paths=audio_dirs, destination_path=kaldi_audio_files_dir)
+        self.copy_audio_files_to_kaldi_dir(origin_paths=audio_dirs, destination_path=kaldi_audio_files_dir)
 
         if self.SUBSET_SIZE:
             print("Subset size:", self.SUBSET_SIZE)

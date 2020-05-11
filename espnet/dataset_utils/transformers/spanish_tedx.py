@@ -1,12 +1,19 @@
 import os
 from distutils.dir_util import copy_tree
 
-from base_transformer import AbstractDataTransformer
+from dataset_utils.base_transformer import AbstractDataTransformer
+
+SUBSET_SIZE = os.environ.get("ESPNET_SUBSET_SIZE", None)
 
 
 class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
 
-    def transform(self, raw_data_path, espnet_kaldi_eg_directory, subset_size=None):
+    def __init__(self):
+        super().__init__()
+        if self.SUBSET_SIZE:
+            self.SUBSET_SIZE = int(self.SUBSET_SIZE)
+
+    def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
 
         kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
@@ -17,18 +24,18 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
         toDirectory = kaldi_audio_files_dir
         copy_tree(fromDirectory, toDirectory)
 
-        wavscp, text, utt2spk = self.generate_arrays(raw_data_path, kaldi_audio_files_dir)
+        wavscp, text, utt2spk = self.generate_arrays(raw_data_path)
 
         print("Total dataset size", len(text))
-        if len(text) < subset_size:
+        if len(text) < self.SUBSET_SIZE:
             print(
-                f"ATTENTION! Provided subset size ({subset_size}) is less than overall dataset size ({len(text)}). "
+                f"ATTENTION! Provided subset size ({self.SUBSET_SIZE}) is less than overall dataset size ({len(text)}). "
                 f"Taking all dataset")
-        if subset_size:
-            print("Subset size:", subset_size)
-            wavscp = wavscp[:subset_size]
-            text = text[:subset_size]
-            utt2spk = utt2spk[:subset_size]
+        if self.SUBSET_SIZE:
+            print("Subset size:", self.SUBSET_SIZE)
+            wavscp = wavscp[:self.SUBSET_SIZE]
+            text = text[:self.SUBSET_SIZE]
+            utt2spk = utt2spk[:self.SUBSET_SIZE]
 
         print("Splitting train-test")
         wavscp_train, wavscp_test, text_train, text_test, utt2spk_train, utt2spk_test = \
@@ -40,8 +47,7 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
         self.create_files(wavscp_train, text_train, utt2spk_train, os.path.join(kaldi_data_dir, 'train'))
         self.create_files(wavscp_test, text_test, utt2spk_test, os.path.join(kaldi_data_dir, 'test'))
 
-
-    def generate_arrays(self, path, audio_files_dir):
+    def generate_arrays(self, path):
         wavscp = list()
         text = list()
         utt2spk = list()
