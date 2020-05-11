@@ -8,9 +8,9 @@ espnet_emulation
 __pycache__
 *.pyc
 
-asr1/raw_data/
-asr1/dump/
-asr1/downloads/
-asr1/exp/
-asr1/fbank
-asr1/tensorboard/
+**/asr1/raw_data/
+**/asr1/dump/
+**/asr1/downloads/
+**/asr1/exp/
+**/asr1/fbank/
+**/asr1/tensorboard/
