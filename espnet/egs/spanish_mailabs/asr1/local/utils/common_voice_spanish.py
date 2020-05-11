@@ -79,7 +79,8 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         for idx, row in data.iterrows():
             transcript = self.clean_text(row['sentence'])
             file_path = row['path']
-            speaker_id = row['client_id']
+            # speaker_id = row['client_id']
+            speaker_id = f'speaker_{idx}'
             segment_id = idx
             utterance_id = f'{speaker_id}-{segment_id}'
             wavscp.append(f'{utterance_id} {file_path}')
