@@ -1,11 +1,12 @@
 import os
 from pathlib import Path
 import pandas as pd
-
 from dataset_utils.base_transformer import AbstractDataTransformer
+import dotenv
+
+dotenv.load_dotenv()
 
 SUBSET_SIZE = os.environ.get("ESPNET_SUBSET_SIZE", None)
-
 
 class CrowdsourcedOpenASR(AbstractDataTransformer):
 
@@ -31,13 +32,13 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
         print("Total dataset size", dataset_size)
 
         if self.SUBSET_SIZE:
-            print("self.SUBSET_SIZE size:", self.SUBSET_SIZE)
+            print("Subset size:", self.SUBSET_SIZE)
             if dataset_size < self.SUBSET_SIZE:
                 print(
                     f"ATTENTION! Provided self.SUBSET_SIZE size ({self.SUBSET_SIZE}) is less "
                     f"than overall dataset size ({dataset_size}). "
                     f"Taking all dataset")
-            self.self.SUBSET_SIZE = self.SUBSET_SIZE
+            self.SUBSET_SIZE = self.SUBSET_SIZE
             data = data[:self.SUBSET_SIZE]
 
         print("Generating train and test files")
@@ -59,16 +60,15 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
         text = list()
         utt2spk = list()
 
-        data['path'] = data['path'].apply(lambda x: "downloads/" + x[:-4] + '.wav')
+        data['path'] = data['path'].apply(lambda x: "downloads/" + x + '.wav')
 
         for idx, row in data.iterrows():
-            transcript = self.clean_text(row['sentence'])
+            transcript = self.clean_text(row['transcript'])
             file_path = row['path']
-            speaker_id = row['client_id']
-            segment_id = idx
-            utterance_id = f'{speaker_id}-{segment_id}'
+            utterance_id = f'utterance{idx}'
             wavscp.append(f'{utterance_id} {file_path}')
-            utt2spk.append(f'{utterance_id} {speaker_id}')
+            utt2spk.append(f'{utterance_id} {utterance_id}')
+
             text.append(f'{utterance_id} {transcript}')
 
         return wavscp, text, utt2spk

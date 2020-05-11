@@ -18,9 +18,10 @@ def download_url(url, output_path):
         urllib.request.urlretrieve(url, filename=output_path, reporthook=t.update_to)
 
 
-def download_and_extract_data(dataset_url: str, dataset_name: str, download_folder: str):
+def download_and_extract_data(dataset_urls: str, dataset_name: str, download_folder: str):
 
     data_dir = download_folder
+    dataset_url = dataset_urls[0]
 
     if not os.path.exists(data_dir):
         os.mkdir(data_dir)
