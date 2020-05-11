@@ -1,18 +1,16 @@
-from __future__ import unicode_literals
-
-import codecs
 import os
-from abc import ABC, abstractmethod
 import re
+from abc import ABC, abstractmethod
+from distutils.dir_util import copy_tree
+from typing import List
 from sklearn.model_selection import train_test_split
-from num2words import num2words
 
 
-class AbstractKaldiDataTransformer(ABC):
+class AbstractDataTransformer(ABC):
 
     def __init__(self):
-        self.SUBSET_SIZE: int = 999999999999999
-        self.kaldi_data_dir: str = ''
+        self.SUBSET_SIZE: int = None
+        self.TESTSET_PROPORTION: float = 0.2
 
     @abstractmethod
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
@@ -24,7 +22,7 @@ class AbstractKaldiDataTransformer(ABC):
         with open(os.path.join(directory, 'wav.scp'), 'w') as f1:
             f1.write('\n'.join(wavscp))
             f1.write('\n')
-        with codecs.open(os.path.join(directory, 'text'), "w", encoding='utf-8') as f2:
+        with open(os.path.join(directory, 'text'), 'w') as f2:
             f2.write('\n'.join(text))
             f2.write('\n')
         with open(os.path.join(directory, 'utt2spk'), 'w') as f3:
@@ -38,6 +36,15 @@ class AbstractKaldiDataTransformer(ABC):
     def clean_text(self, text):
         text = text.lower()
         # for now only removing punctuation, should add number2word later and other cleansing if relevant
-        clean = re.sub("\W+", ' ', text)
-        clean = clean.strip()
-        return clean
+        text = re.sub("[.,:;¡!?\-]+", ' ', text).strip()
+        return text
+
+    def copy_audio_files_to_kaldi_dir(self, origin_paths: List[str], destination_path):
+
+        print("Copying audio files to kaldi downloads directory...")
+        if os.path.exists(destination_path):
+            pass
+        else:
+            os.makedirs(destination_path)
+        for path in origin_paths:
+            copy_tree(path, destination_path)

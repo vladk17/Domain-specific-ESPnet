@@ -11,7 +11,7 @@ backend=pytorch
 stage=0     # start from 0 if you need to start from data download
 stop_stage=1000
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
-nj=32
+nj=8
 debugmode=1
 dumpdir=dump   # directory to dump full features
 N=0            # number of minibatches to be used (mainly for debugging). "0" uses all minibatches.
@@ -85,6 +85,7 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
     for part in test train; do
         # use underscore-separated names in data directories.
         utils/utt2spk_to_spk2utt.pl data/${part}/utt2spk > data/${part}/spk2utt
+        utils/fix_data_dir.sh data/${part}
     done
 fi
 
@@ -242,7 +243,7 @@ mkdir -p ${expdir}
 
 if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
     printf "\n\n"
-    echo "stage 4: Network Training"
+    echo "STAGE 4: Network Training"
     ${cuda_cmd} --gpu ${ngpu} ${expdir}/train.log \
         asr_train.py \
         --config ${train_config} \
@@ -263,7 +264,7 @@ fi
 
 if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
     printf "\n\n"
-    echo "stage 5: Decoding"
+    echo "STAGE 5: Decoding"
     if [[ $(get_yaml.py ${train_config} model-module) = *transformer* ]]; then
         # Average ASR models
         if ${use_valbest_average}; then

@@ -1,5 +1,5 @@
-from dataset_downloader import download_and_extract_data
-from transformers.spanish_mailabs import MailabsKaldiTransformer
+from dataset_utils.dataset_downloader import download_and_extract_data
+from dataset_utils.transformers.spanish_mailabs import MailabsKaldiTransformer
 
 
 if __name__ == '__main__':

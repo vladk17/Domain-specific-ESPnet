@@ -115,6 +115,7 @@ fi
 cd ..
 
 vols="-v ${PWD}/egs:/espnet/egs -v ${PWD}/espnet:/espnet/espnet -v ${PWD}/test:/espnet/test -v ${PWD}/utils:/espnet/utils"
+vols=${vols}" -v ${PWD}/dataset_utils:/espnet/dataset_utils"
 if [ ! -z "${docker_folders}" ]; then
     docker_folders=$(echo ${docker_folders} | tr "," "\n")
     for i in ${docker_folders[@]}
