@@ -3,8 +3,7 @@ from pathlib import Path
 from pydub import AudioSegment
 from tqdm import tqdm
 import pandas as pd
-
-from base_transformer import AbstractDataTransformer
+from dataset_utils.base_transformer import AbstractDataTransformer
 
 
 class CommonVoiceKaldiTransformer(AbstractDataTransformer):
