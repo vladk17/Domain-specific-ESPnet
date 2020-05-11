@@ -55,6 +55,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
 
     def convert_to_wav_from_mp3(self, source_path: str, destination_folder: str):
         print("source_path", source_path)
+        print("source_path absolute", Path(source_path).absolute())
         new_file_name = source_path.split("/")[-1][:-4] + '.wav'
         print("new file name", new_file_name)
 
