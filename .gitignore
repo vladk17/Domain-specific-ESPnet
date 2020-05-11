@@ -8,16 +8,9 @@ espnet_emulation
 __pycache__
 *.pyc
 
-espnet/egs/spanish_tedx/asr1/raw_data/
-espnet/egs/spanish_tedx/asr1/dump/
-espnet/egs/spanish_tedx/asr1/downloads/
-espnet/egs/spanish_tedx/asr1/exp/
-espnet/egs/spanish_tedx/asr1/fbank
-espnet/egs/spanish_tedx/asr1/tensorboard/
-
-espnet/egs/spanish_common_voice/asr1/raw_data/
-espnet/egs/spanish_common_voice/asr1/dump/
-espnet/egs/spanish_common_voice/asr1/downloads/
-espnet/egs/spanish_common_voice/asr1/exp/
-espnet/egs/spanish_common_voice/asr1/fbank
-espnet/egs/spanish_common_voice/asr1/tensorboard/
+*/asr1/raw_data/
+*/asr1/dump/
+*/asr1/downloads/
+*/asr1/exp/
+*/asr1/fbank
+*/asr1/tensorboard/
