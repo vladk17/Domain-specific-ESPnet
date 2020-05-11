@@ -10,6 +10,5 @@ if __name__ == '__main__':
 
     transformer = CommonVoiceKaldiTransformer()
     transformer.transform(
-        subset_size=1000,
         raw_data_path=dataset_location,
         espnet_kaldi_eg_directory='/home/stanislav/y-data/gong/Domain-specific-ESPnet/espnet_emulation/egs/common_voice/asr1')
