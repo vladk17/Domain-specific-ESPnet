@@ -3,15 +3,16 @@ from pathlib import Path
 from pydub import AudioSegment
 from tqdm import tqdm
 import pandas as pd
+from multiprocessing import Pool
 
-from .base_transformer import AbstractDataTransformer
+from .base_transformer import AbstractKaldiDataTransformer
 
 
-class CommonVoiceKaldiTransformer(AbstractDataTransformer):
+class CommonVoiceKaldiTransformer(AbstractKaldiDataTransformer):
 
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, subset_size=None, *args, **kwargs):
 
-        kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
+        self.kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
         origin_audiofiles_dir = os.path.join(raw_data_path, 'clips')
 
@@ -36,9 +37,12 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         else:
             os.makedirs(kaldi_audio_files_dir)
         print("Transforming audio to .wav and copying to eg directory")
+        list_of_files = list()
         for file in tqdm(audio_files):
             joined_path = os.path.join(origin_audiofiles_dir, file)
-            self.convert_to_wav_from_mp3(joined_path, kaldi_audio_files_dir)
+            list_of_files.append(joined_path)
+        p = Pool(processes=os.cpu_count())
+        p.map(self.convert_to_wav_from_mp3, list_of_files)
 
         print("Generating train and test files")
 
@@ -81,8 +85,8 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
             file_path = row['path']
             # speaker_id = row['client_id']
             speaker_id = f'speaker_{idx}'
-            segment_id = idx
-            utterance_id = f'{speaker_id}-{segment_id}'
+            segment_id = f'segment_{idx}'
+            utterance_id = f'utterance{speaker_id}-{segment_id}'
             wavscp.append(f'{utterance_id} {file_path}')
             utt2spk.append(f'{utterance_id} {speaker_id}')
             text.append(f'{utterance_id} {transcript}')

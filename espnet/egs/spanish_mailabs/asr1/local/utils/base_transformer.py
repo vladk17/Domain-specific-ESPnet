@@ -8,10 +8,11 @@ from sklearn.model_selection import train_test_split
 from num2words import num2words
 
 
-class AbstractDataTransformer(ABC):
+class AbstractKaldiDataTransformer(ABC):
 
     def __init__(self):
         self.SUBSET_SIZE: int = 999999999999999
+        self.kaldi_data_dir: str = ''
 
     @abstractmethod
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):

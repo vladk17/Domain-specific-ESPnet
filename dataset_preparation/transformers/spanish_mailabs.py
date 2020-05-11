@@ -31,7 +31,7 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
         dataset_size = data.shape[0]
         print("Total dataset size", dataset_size)
 
-        # self.copy_audio_files_to_kaldi_dir(origin_paths=audio_dirs, destination_path=kaldi_audio_files_dir)
+        self.copy_audio_files_to_kaldi_dir(origin_paths=audio_dirs, destination_path=kaldi_audio_files_dir)
 
         if subset_size:
             print("Subset size:", subset_size)
@@ -48,7 +48,8 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
         self.create_files(wavscp, text, utt2spk, os.path.join(kaldi_data_dir, 'train_test'))
 
     def get_data_dirs(self, root_dir):
-        gender_dirs = ['female', 'male']
+        gender_dirs = list(os.walk(root_dir))[0][1]
+        gender_dirs.remove('mix')
 
         audio_dirs = []
         transcript_paths = []

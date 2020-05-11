@@ -1,17 +1,18 @@
 import os
 from abc import ABC, abstractmethod
-import re
 from distutils.dir_util import copy_tree
 from typing import List
-
 from sklearn.model_selection import train_test_split
-from num2words import num2words
+from dotenv import load_dotenv
 
+load_dotenv()
+
+SUBSET_SIZE = os.environ.get("KALDI_SUBSET_SIZE", 999999999)
 
 class AbstractDataTransformer(ABC):
 
     def __init__(self):
-        self.SUBSET_SIZE: int = 999999999999999
+        self.SUBSET_SIZE: int = SUBSET_SIZE
 
     @abstractmethod
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):

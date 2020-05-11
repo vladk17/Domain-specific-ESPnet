@@ -44,7 +44,10 @@ def download_and_extract_data(dataset_urls: List[str], dataset_name: str, downlo
 
         try:
             if force_decompress or not os.path.exists(os.path.join(dataset_dir, 'decompressed')):
-                directory_name = os.path.join(dataset_dir, 'decompressed', f'decompressed_{idx + 1}')
+                if len(dataset_urls) == 1:
+                    directory_name = os.path.join(dataset_dir, 'decompressed')
+                else:
+                    directory_name = os.path.join(dataset_dir, 'decompressed', f'decompressed_{idx + 1}')
                 print("Decompressing data")
                 if dataset_path.endswith('zip'):
                     with zipfile.ZipFile(dataset_path, 'r') as zip_ref:

@@ -1,5 +1,5 @@
 from .dataset_downloader import download_and_extract_data
-from .common_voice_spanish import CommonVoiceKaldiTransformer
+from .custom_transformer import CommonVoiceKaldiTransformer
 import os
 
 espnet_kaldi_eg_directory = '..'
