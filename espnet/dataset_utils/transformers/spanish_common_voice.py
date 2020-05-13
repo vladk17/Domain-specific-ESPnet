@@ -3,6 +3,8 @@ from pathlib import Path
 from pydub import AudioSegment
 from tqdm import tqdm
 import pandas as pd
+from sklearn import preprocessing
+
 
 from dataset_utils.base_transformer import AbstractDataTransformer
 
@@ -42,10 +44,9 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         else:
             print("Transforming audio to .wav and copying to eg directory")
             os.makedirs(kaldi_audio_files_dir)
-        for file in tqdm(audio_files):
-            joined_path = os.path.join(origin_audiofiles_dir, file)
-            self.convert_to_wav_from_mp3(joined_path, kaldi_audio_files_dir)
-
+        # for file in tqdm(audio_files):
+        #     joined_path = os.path.join(origin_audiofiles_dir, file)
+        #     self.convert_to_wav_from_mp3(joined_path, kaldi_audio_files_dir)
         print("Generating train and test files")
 
         wavscp, text, utt2spk = self.generate_arrays(data)
@@ -73,13 +74,14 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         utt2spk = list()
 
         data['path'] = data['path'].apply(lambda x: "downloads/" + x[:-4] + '.wav')
-
+        le = preprocessing.LabelEncoder()
+        data['client_id'] = le.fit_transform(data['client_id'])
         for idx, row in data.iterrows():
             transcript = self.clean_text(row['sentence'])
             file_path = row['path']
             speaker_id = row['client_id']
             segment_id = idx
-            utterance_id = f'{speaker_id}-{segment_id}'
+            utterance_id = f'speaker{speaker_id}-segmemt{segment_id}'
             wavscp.append(f'{utterance_id} {file_path}')
             utt2spk.append(f'{utterance_id} {speaker_id}')
             text.append(f'{utterance_id} {transcript}')

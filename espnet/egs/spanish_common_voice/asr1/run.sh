@@ -9,7 +9,7 @@
 # general configuration
 backend=pytorch
 stage=0     # start from -1 if you need to start from data download
-stop_stage=0
+stop_stage=1000
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
@@ -85,6 +85,7 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
     for part in test train; do
         # use underscore-separated names in data directories.
         utils/utt2spk_to_spk2utt.pl data/${part}/utt2spk > data/${part}/spk2utt
+        utils/fix_data_dir.sh data/${part}
     done
 fi
 

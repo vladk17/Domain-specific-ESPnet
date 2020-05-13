@@ -4,7 +4,14 @@ from dataset_utils.transformers.spanish_crowdsource_openasr import CrowdsourcedO
 
 EG_NAME = 'spanish_crowdsource'
 dataset_urls = ['http://www.openslr.org/resources/71/es_cl_female.zip',
-                'http://www.openslr.org/resources/71/es_cl_male.zip'
+                'http://www.openslr.org/resources/71/es_cl_male.zip',
+                'http://www.openslr.org/resources/72/es_co_female.zip',
+                'http://www.openslr.org/resources/72/es_co_male.zip',
+                'http://www.openslr.org/resources/73/es_pe_female.zip',
+                'http://www.openslr.org/resources/73/es_pe_male.zip',
+                'http://www.openslr.org/resources/74/es_pr_female.zip',
+                'http://www.openslr.org/resources/75/es_ve_female.zip',
+                'http://www.openslr.org/resources/75/es_ve_male.zip'
                 ]
 eg_dir = Path(f'/espnet/egs/{EG_NAME}/asr1')
 raw_data_folder = Path(eg_dir, 'raw_data')
