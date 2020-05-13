@@ -42,23 +42,20 @@ def download_and_extract_data(dataset_urls: List[str], dataset_name: str, downlo
         else:
             print("Archive already exists.")
 
-        try:
-            if force_decompress or not os.path.exists(os.path.join(dataset_dir, 'decompressed')):
-                if len(dataset_urls) == 1:
-                    directory_name = os.path.join(dataset_dir, 'decompressed')
-                else:
-                    directory_name = os.path.join(dataset_dir, 'decompressed', f'decompressed_{idx + 1}')
-                print("Decompressing data")
-                if dataset_path.endswith('zip'):
-                    with zipfile.ZipFile(dataset_path, 'r') as zip_ref:
-                        zip_ref.extractall(directory_name)
-                else:
-                    with tarfile.open(dataset_path) as tar_ref:
-                        tar_ref.extractall(directory_name)
+        if force_decompress or not os.path.exists(os.path.join(dataset_dir, 'decompressed')):
+            if len(dataset_urls) == 1:
+                directory_name = os.path.join(dataset_dir, 'decompressed')
             else:
-                print("Archive has been already decompressed")
-        except:
-            print("Target file is not archive, nothing to decompress")
+                directory_name = os.path.join(dataset_dir, 'decompressed', f'decompressed_{idx + 1}')
+            print("Decompressing data")
+            if dataset_path.endswith('zip'):
+                with zipfile.ZipFile(dataset_path, 'r') as zip_ref:
+                    zip_ref.extractall(directory_name)
+            else:
+                with tarfile.open(dataset_path) as tar_ref:
+                    tar_ref.extractall(directory_name)
+        else:
+            print("Archive has been already decompressed")
 
     final_path = os.path.join(dataset_dir, 'decompressed')
     return pathlib.Path(final_path).absolute()
