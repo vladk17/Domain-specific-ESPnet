@@ -1,13 +1,21 @@
+from pathlib import Path
 from dataset_utils.dataset_downloader import download_and_extract_data
 from dataset_utils.transformers.spanish_tedx import TEDxSpanish2KaldiTransformer
 
+dataset_urls = ['http://www.openslr.org/resources/67/tedx_spanish_corpus.tgz']
+dataset_name = 'spanish_tedx'
+eg_dir = Path('/espnet/egs/spanish_tedx/asr1')
+raw_data_folder = Path(eg_dir, 'raw_data')
+
 if __name__ == '__main__':
     dataset_location = download_and_extract_data(
-        dataset_urls=['http://www.openslr.org/resources/67/tedx_spanish_corpus.tgz'],
-        dataset_name='TEDxSpanish', download_folder="/home/stanislav/y-data/gong/Domain-specific-ESPnet/data")
+        dataset_urls=dataset_urls,
+        dataset_name=dataset_name,
+        download_folder=raw_data_folder)
+
     print("Dataset location:", dataset_location)
 
     transformer = TEDxSpanish2KaldiTransformer()
     transformer.transform(
         raw_data_path=dataset_location,
-        espnet_kaldi_eg_directory='/home/stanislav/y-data/gong/Domain-specific-ESPnet/espnet/egs/spanish_tedx/asr1')
+        espnet_kaldi_eg_directory=eg_dir)

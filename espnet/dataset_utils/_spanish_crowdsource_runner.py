@@ -8,7 +8,7 @@ if __name__ == '__main__':
                       ],
         dataset_name='crowdsource_chilean',
         download_folder="/home/stanislav/y-data/industry-project/Domain-specific-ESPnet/data",
-        force_decompress=False)
+        force_decompress=True)
 
     print("Dataset location:", dataset_location)
 

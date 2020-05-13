@@ -19,7 +19,7 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
 
         kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
-        subdirs = ["decompressed_1", "decompressed_2"]
+        subdirs = list(os.walk(raw_data_path))[0][1]
 
         audio_dirs = [os.path.join(raw_data_path, subdir) for subdir in subdirs]
         self.copy_audio_files_to_kaldi_dir(audio_dirs, kaldi_audio_files_dir)
