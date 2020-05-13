@@ -2,11 +2,13 @@ import os
 from pathlib import Path
 import pandas as pd
 from dataset_utils.base_transformer import AbstractDataTransformer
-import dotenv
 
-dotenv.load_dotenv()
+# import dotenv
+#
+# dotenv.load_dotenv()
 
 SUBSET_SIZE = os.environ.get("ESPNET_SUBSET_SIZE", None)
+
 
 class CrowdsourcedOpenASR(AbstractDataTransformer):
 
