@@ -17,7 +17,7 @@ cd downloads/
 
 for file in *.wav
 do
-    sox -v 0.99 $file -r 16000 "../resampled_downloads/${file}"
+    sox -v 0.98 $file -r 16000 "../resampled_downloads/${file}"
 done
 
 cd ..
