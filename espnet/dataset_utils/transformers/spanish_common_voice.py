@@ -17,7 +17,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         super().__init__()
         self._prefix = 'comvoice'
         if SUBSET_SIZE:
-            self.SUBSET_SIZE = int(self.SUBSET_SIZE)
+            self.SUBSET_SIZE = int(SUBSET_SIZE)
 
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
 

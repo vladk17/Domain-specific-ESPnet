@@ -11,8 +11,8 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
     def __init__(self):
         super().__init__()
         self._prefix = 'tedx'
-        if self.SUBSET_SIZE:
-            self.SUBSET_SIZE = int(self.SUBSET_SIZE)
+        if SUBSET_SIZE:
+            self.SUBSET_SIZE = int(SUBSET_SIZE)
 
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
 
