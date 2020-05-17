@@ -24,8 +24,8 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
         self.kaldi_preprocessed_audio_folder = kaldi_audio_files_dir
-        origin_audiofiles_dir = os.path.join(raw_data_path, 'clips')
 
+        origin_audiofiles_dir = os.path.join(raw_data_path, 'clips')
         data = pd.read_csv(Path(raw_data_path, 'validated.tsv'), delimiter='\t')
         dataset_size = data.shape[0]
 
@@ -40,7 +40,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
                     f"Taking all dataset")
             data = data[:self.SUBSET_SIZE]
 
-        audio_files = data['path'].tolist()
+        audio_files = [os.path.join(origin_audiofiles_dir, audio_path) for audio_path in data['path'].tolist()]
         if os.path.exists(kaldi_audio_files_dir):
             pass
         else:
