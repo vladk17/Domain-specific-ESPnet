@@ -73,6 +73,7 @@ train_dev="train_dev"
 recog_set="test"
 
 train_dev_proportion=0.02
+train_dev_size=50
 
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    ### Task dependent. You have to make data the following preparation part by yourself.
@@ -108,11 +109,11 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
 
     # make a dev set
-    echo "Creating dev subset from train dataset"
+    #echo "Creating dev subset from train dataset"
 
-    echo "train_dev proportion is ${train_dev_proportion}"
-    train_size=$(($(wc -l < data/train/text)))
-    train_dev_size=$(python -c "print (round($train_dev_proportion*$train_size))")
+    #echo "train_dev proportion is ${train_dev_proportion}"
+    #train_size=$(($(wc -l < data/train/text)))
+    #train_dev_size=$(python -c "print (round($train_dev_proportion*$train_size))")
     echo "train_dev size is ${train_dev_size}"
 
     utils/subset_data_dir.sh --first data/train $train_dev_size data/${train_dev}_tmp
