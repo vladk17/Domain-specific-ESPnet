@@ -24,5 +24,5 @@ cd ..
 rm -rf downloads
 mv resampled_downloads downloads
 
-chmod -R 777 ../data
-chmod -R 777 ../downloads
+chmod -R 777 data
+chmod -R 777 downloads
