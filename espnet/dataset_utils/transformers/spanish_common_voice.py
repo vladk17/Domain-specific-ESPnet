@@ -15,6 +15,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
 
     def __init__(self):
         super().__init__()
+        self._prefix = 'comvoice'
         if self.SUBSET_SIZE:
             self.SUBSET_SIZE = int(self.SUBSET_SIZE)
 
@@ -47,7 +48,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
             os.makedirs(kaldi_audio_files_dir)
 
         pool = multiprocessing.Pool(multiprocessing.cpu_count())
-        for _ in tqdm(pool.map(self.convert_to_wav_from_mp3(audio_files)), total=len(audio_files)):
+        for _ in tqdm(pool.map(self.convert_to_wav_from_mp3, audio_files), total=len(audio_files)):
             pass
 
         # for file in tqdm(audio_files):
@@ -86,8 +87,8 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
             transcript = self.clean_text(row['sentence'])
             file_path = row['path']
             speaker_id = row['client_id']
-            segment_id = idx
-            utterance_id = f'speaker{speaker_id}-segmemt{segment_id}'
+            utterance_id = f'{self.prefix}_sp{speaker_id}-seg{idx+1}'
+            # utterance_id = f'speaker{speaker_id}-segmemt{segment_id}'
             wavscp.append(f'{utterance_id} {file_path}')
             utt2spk.append(f'{utterance_id} {speaker_id}')
             text.append(f'{utterance_id} {transcript}')

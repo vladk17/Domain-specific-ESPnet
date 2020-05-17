@@ -9,8 +9,17 @@ from sklearn.model_selection import train_test_split
 class AbstractDataTransformer(ABC):
 
     def __init__(self):
+        self._prefix = None
         self.SUBSET_SIZE: int = None
         self.TESTSET_PROPORTION: float = 0.2
+
+    @property
+    @abstractmethod
+    def prefix(self):
+        if not self._prefix:
+            raise ValueError("No prefix specified for Data Tranformer")
+        return self._prefix
+
 
     @abstractmethod
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):

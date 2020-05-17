@@ -14,6 +14,7 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
 
     def __init__(self):
         super().__init__()
+        self._prefix = 'crowdsource'
         if SUBSET_SIZE:
             self.SUBSET_SIZE = int(SUBSET_SIZE)
 
@@ -68,7 +69,8 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
         for idx, row in data.iterrows():
             transcript = self.clean_text(row['transcript'])
             file_path = row['path']
-            utterance_id = f'utterance{idx}'
+            utt_id = idx+1
+            utterance_id = f'{self.prefix}_sp{utt_id}-seg{utt_id}'
             wavscp.append(f'{utterance_id} {file_path}')
             utt2spk.append(f'{utterance_id} {utterance_id}')
 

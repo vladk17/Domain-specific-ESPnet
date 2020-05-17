@@ -11,6 +11,7 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
 
     def __init__(self):
         super().__init__()
+        self._prefix = 'mailabs'
         if SUBSET_SIZE:
             self.SUBSET_SIZE = int(SUBSET_SIZE)
 
@@ -106,8 +107,10 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
             transcript = self.clean_text(row['transcript_1'])
             file_path = row['path']
             speaker_id = f"speaker{row['speaker']}"
-            utt_id = f"utterance{idx + 1}"
-            utterance_id = f'{speaker_id}-{utt_id}'
+
+            utt_id = f"{idx + 1}"
+            # utterance_id = f'{speaker_id}-{utt_id}'
+            utterance_id = f'{self.prefix}_sp{speaker_id}-seg{utt_id}'
             wavscp.append(f'{utterance_id} {file_path}')
             if row['speaker'] == -1:
                 utt2spk.append(f'{utterance_id} {utterance_id}')
