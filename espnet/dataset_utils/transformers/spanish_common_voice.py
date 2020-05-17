@@ -44,9 +44,9 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         else:
             print("Transforming audio to .wav and copying to eg directory")
             os.makedirs(kaldi_audio_files_dir)
-        # for file in tqdm(audio_files):
-        #     joined_path = os.path.join(origin_audiofiles_dir, file)
-        #     self.convert_to_wav_from_mp3(joined_path, kaldi_audio_files_dir)
+        for file in tqdm(audio_files):
+            joined_path = os.path.join(origin_audiofiles_dir, file)
+            self.convert_to_wav_from_mp3(joined_path, kaldi_audio_files_dir)
         print("Generating train and test files")
 
         wavscp, text, utt2spk = self.generate_arrays(data)
