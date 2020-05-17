@@ -8,8 +8,8 @@
 
 # general configuration
 backend=pytorch
-stage=0     # start from -1 if you need to start from data download
-stop_stage=1000
+stage=0      # start from -1 if you need to start from data download
+stop_stage=100
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
@@ -54,7 +54,7 @@ use_lm_valbest_average=false # if true, the validation `lm_n_average`-best langu
 #data_url=www.openslr.org/resources/12
 
 # bpemode (unigram or bpe)
-nbpe=1000
+nbpe=5000
 bpemode=unigram
 
 # exp tag
