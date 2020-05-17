@@ -72,7 +72,7 @@ train_set="train_set"
 train_dev="train_dev"
 recog_set="test"
 
-train_dev_proportion=0.1
+train_dev_proportion=0.01
 
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    ### Task dependent. You have to make data the following preparation part by yourself.
