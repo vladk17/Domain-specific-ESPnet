@@ -14,10 +14,9 @@ class AbstractDataTransformer(ABC):
         self.TESTSET_PROPORTION: float = 0.2
 
     @property
-    @abstractmethod
     def prefix(self):
         if not self._prefix:
-            raise ValueError("No prefix specified for Data Tranformer")
+            raise ValueError("No prefix specified for current Data Tranformer")
         return self._prefix
 
 
