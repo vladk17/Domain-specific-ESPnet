@@ -69,6 +69,8 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         new_file_name = source_path.split("/")[-1][:-4] + '.wav'
         destination_path = Path(self.kaldi_preprocessed_audio_folder, new_file_name)
         sound = AudioSegment.from_mp3(source_path)
+        sound.set_frame_rate(16000)
+        sound.set_channels(1)
         sound.export(destination_path, format="wav")
 
     def generate_arrays(self, data: pd.DataFrame):

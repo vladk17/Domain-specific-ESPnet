@@ -9,20 +9,5 @@ apt install -y ffmpeg
 
 python3 make_data.py || exit 1
 
-echo "Downsampling files to 16000 kHz"
-
-cd ..
-mkdir -p resampled_downloads
-cd downloads/
-
-for file in *.wav
-do
-    sox -v 0.98 $file -r 16000 "../resampled_downloads/${file}"
-done
-
-cd ..
-rm -rf downloads
-mv resampled_downloads downloads
-
-chmod -R 777 data
-chmod -R 777 downloads
+chmod -R 777 ../data
+chmod -R 777 ../downloads
