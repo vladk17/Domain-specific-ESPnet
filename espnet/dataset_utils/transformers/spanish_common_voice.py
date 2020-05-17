@@ -4,7 +4,7 @@ from pydub import AudioSegment
 from tqdm import tqdm
 import pandas as pd
 from sklearn import preprocessing
-import multiprocessing
+
 
 from dataset_utils.base_transformer import AbstractDataTransformer
 
@@ -47,7 +47,6 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
             print("Transforming audio to .wav and copying to eg directory")
             os.makedirs(kaldi_audio_files_dir)
 
-        self.pool_progress_bar = tqdm(total=len(audio_files))
         for a_path in tqdm(audio_files):
             self.convert_to_wav_from_mp3(a_path)
 
@@ -69,7 +68,6 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         destination_path = Path(self.kaldi_preprocessed_audio_folder, new_file_name)
         sound = AudioSegment.from_mp3(source_path)
         sound.export(destination_path, format="wav")
-        self.pool_progress_bar.update(1)
 
     def generate_arrays(self, data: pd.DataFrame):
 
