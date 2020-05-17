@@ -67,11 +67,12 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
 
     def convert_to_wav_from_mp3(self, source_path: str):
         new_file_name = source_path.split("/")[-1][:-4] + '.wav'
-        destination_path = Path(self.kaldi_preprocessed_audio_folder, new_file_name)
+        upsampled_wav_path = Path(self.kaldi_preprocessed_audio_folder, new_file_name + '.upsample')
+        downsampled_wav_path = Path(self.kaldi_preprocessed_audio_folder, new_file_name)
         sound = AudioSegment.from_mp3(source_path)
-        sound.set_frame_rate(16000)
-        sound.set_channels(1)
-        sound.export(destination_path, format="wav")
+        sound.export(upsampled_wav_path, format="wav")
+        os.system("sox '%s' -r 16000 -b 16 -c 1 %s" % (upsampled_wav_path, downsampled_wav_path))
+        os.remove(upsampled_wav_path)
 
     def generate_arrays(self, data: pd.DataFrame):
 
