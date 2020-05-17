@@ -83,7 +83,7 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
 
     ./local/data_preparation.sh
 
-    for part in test train; do
+    for part in train test; do
         # use underscore-separated names in data directories.
         utils/utt2spk_to_spk2utt.pl data/${part}/utt2spk > data/${part}/spk2utt
         utils/fix_data_dir.sh data/${part}
