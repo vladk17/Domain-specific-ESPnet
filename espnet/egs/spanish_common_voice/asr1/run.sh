@@ -87,7 +87,7 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
         # use underscore-separated names in data directories.
         utils/fix_data_dir.sh data/${part}
         utils/utt2spk_to_spk2utt.pl data/${part}/utt2spk > data/${part}/spk2utt
-        utils/validate_data_dir.sh --no-feats $dst || exit 1
+        utils/validate_data_dir.sh --no-feats $part || exit 1
     done
 fi
 
