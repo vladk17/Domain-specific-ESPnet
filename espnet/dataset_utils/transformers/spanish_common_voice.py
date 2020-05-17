@@ -48,13 +48,6 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
             os.makedirs(kaldi_audio_files_dir)
 
         self.pool_progress_bar = tqdm(total=len(audio_files))
-        # for segment in self.chunks(audio_files, multiprocessing.cpu_count()):
-        #
-        # pool = multiprocessing.Pool()
-        # pool.map(self.bla, audio_files)
-        # # pool.close()
-        # # pool.join()
-
         for a_path in tqdm(audio_files):
             self.convert_to_wav_from_mp3(a_path)
 
@@ -71,22 +64,13 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         self.create_files(wavscp_train, text_train, utt2spk_train, os.path.join(kaldi_data_dir, 'train'))
         self.create_files(wavscp_test, text_test, utt2spk_test, os.path.join(kaldi_data_dir, 'test'))
 
-    def bla(self, source_path):
-        pass
-
     def convert_to_wav_from_mp3(self, source_path: str):
 
         new_file_name = source_path.split("/")[-1][:-4] + '.wav'
         destination_path = Path(self.kaldi_preprocessed_audio_folder, new_file_name)
         with AudioSegment.from_mp3(source_path) as sound:
-            pass
             sound.export(destination_path, format="wav")
         self.pool_progress_bar.update(1)
-
-    def chunks(self, iterable, chunk_len):
-        for i in range(0, len(iterable), chunk_len):
-            yield iterable[i:i+chunk_len]
-
 
     def generate_arrays(self, data: pd.DataFrame):
 
