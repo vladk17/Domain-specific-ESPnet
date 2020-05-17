@@ -41,10 +41,11 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
             data = data[:self.SUBSET_SIZE]
 
         audio_files = [os.path.join(origin_audiofiles_dir, audio_path) for audio_path in data['path'].tolist()]
+        print("Transforming audio to .wav and copying to eg directory")
         if os.path.exists(kaldi_audio_files_dir):
-            pass
+            print("Data directory already exists")
         else:
-            print("Transforming audio to .wav and copying to eg directory")
+            print("Creating data directory")
             os.makedirs(kaldi_audio_files_dir)
 
         audio_files = audio_files[:1000]
