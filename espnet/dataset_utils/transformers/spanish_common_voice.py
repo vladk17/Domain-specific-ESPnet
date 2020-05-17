@@ -48,7 +48,6 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
             print("Creating data directory")
             os.makedirs(kaldi_audio_files_dir)
 
-        audio_files = audio_files[:1000]
 
         for a_path in tqdm(audio_files):
             self.convert_to_wav_from_mp3(a_path)
