@@ -31,7 +31,7 @@ class AbstractDataTransformer(ABC):
 
     def split_train_test(self, *args, test_proportion=None):
         train_test_args = train_test_split(*args, test_size=test_proportion or self.TESTSET_PROPORTION, random_state=42,
-                                           shuffle=False)
+                                           shuffle=True)
         return train_test_args
 
     def clean_text(self, text):
