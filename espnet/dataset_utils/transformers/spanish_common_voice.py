@@ -47,7 +47,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
             os.makedirs(kaldi_audio_files_dir)
 
         pool = multiprocessing.Pool(multiprocessing.cpu_count())
-        for _ in tqdm.tqdm(pool.map(self.convert_to_wav_from_mp3(audio_files)), total=len(audio_files)):
+        for _ in tqdm(pool.map(self.convert_to_wav_from_mp3(audio_files)), total=len(audio_files)):
             pass
 
         # for file in tqdm(audio_files):
