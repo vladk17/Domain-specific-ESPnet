@@ -85,8 +85,8 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
 
     ./local/data_preparation.sh
 
-    mv /data/train_comvoice /data/train
-    mv /data/test_comvoice /data/test
+    mv data/train_comvoice data/train
+    mv data/test_comvoice data/test
 
     for part in train test; do
         # use underscore-separated names in data directories.
