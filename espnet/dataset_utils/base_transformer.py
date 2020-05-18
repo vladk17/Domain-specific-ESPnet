@@ -11,7 +11,7 @@ class AbstractDataTransformer(ABC):
     def __init__(self):
         self._prefix: str = None
         self.SUBSET_SIZE: int = None
-        self.TESTSET_PROPORTION: float = 0.2
+        self.TESTSET_PROPORTION: float = 0.1
         self.kaldi_data_dir: str = None
 
     @property
