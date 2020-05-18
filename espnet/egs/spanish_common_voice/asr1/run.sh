@@ -85,6 +85,9 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
 
     ./local/data_preparation.sh
 
+    mv /data/train_comvoice /data/train
+    mv /data/test_comvoice /data/test
+
     for part in train test; do
         # use underscore-separated names in data directories.
         utils/fix_data_dir.sh data/${part}
@@ -93,8 +96,7 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
     done
 fi
 
-mv /data/train_comvoice /data/train
-mv /data/test_comvoice /data/test
+
 
 feat_tr_dir=${dumpdir}/${train_set}/delta${do_delta}; mkdir -p ${feat_tr_dir}
 feat_dt_dir=${dumpdir}/${train_dev}/delta${do_delta}; mkdir -p ${feat_dt_dir}
