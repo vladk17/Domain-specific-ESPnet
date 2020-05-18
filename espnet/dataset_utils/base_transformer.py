@@ -9,9 +9,10 @@ from sklearn.model_selection import train_test_split
 class AbstractDataTransformer(ABC):
 
     def __init__(self):
-        self._prefix = None
+        self._prefix: str = None
         self.SUBSET_SIZE: int = None
         self.TESTSET_PROPORTION: float = 0.2
+        self.kaldi_data_dir: str = None
 
     @property
     def prefix(self):
@@ -19,12 +20,19 @@ class AbstractDataTransformer(ABC):
             raise ValueError("No prefix specified for current Data Tranformer")
         return self._prefix
 
-
     @abstractmethod
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
         pass
 
-    def create_files(self, wavscp, text, utt2spk, directory):
+    def create_files(self, wavscp, text, utt2spk, dataset_part):
+        if dataset_part == 'train':
+            directory = os.path.join(self.kaldi_data_dir, f'train_{self.prefix}')
+            self._create_files(directory, wavscp, text, utt2spk)
+        if dataset_part == 'test':
+            directory = os.path.join(self.kaldi_data_dir, f'test_{self.prefix}')
+            self._create_files(directory, wavscp, text, utt2spk)
+
+    def _create_files(self, directory, wavscp, text, utt2spk):
         if not os.path.exists(directory):
             os.makedirs(directory)
         with open(os.path.join(directory, 'wav.scp'), 'w') as f1:

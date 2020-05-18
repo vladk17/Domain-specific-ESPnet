@@ -21,7 +21,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
 
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, force_transform_audio=False, *args, **kwargs):
 
-        kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
+        self.kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
         self.kaldi_preprocessed_audio_folder = kaldi_audio_files_dir
 
@@ -63,8 +63,8 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
                                   utt2spk,
                                   test_proportion=0.2)
 
-        self.create_files(wavscp_train, text_train, utt2spk_train, os.path.join(kaldi_data_dir, 'train'))
-        self.create_files(wavscp_test, text_test, utt2spk_test, os.path.join(kaldi_data_dir, 'test'))
+        self.create_files(wavscp_train, text_train, utt2spk_train, 'train')
+        self.create_files(wavscp_test, text_test, utt2spk_test, 'test')
 
     def convert_to_wav_from_mp3(self, source_path: str):
         new_file_name = source_path.split("/")[-1][:-4] + '.wav'

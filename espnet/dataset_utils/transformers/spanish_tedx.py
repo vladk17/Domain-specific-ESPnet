@@ -16,7 +16,7 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
 
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
 
-        kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
+        self.kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
 
         # copy audio files to separate directory according to kaldi directory conventions
@@ -45,8 +45,8 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
                                   utt2spk,
                                   test_proportion=0.25)
 
-        self.create_files(wavscp_train, text_train, utt2spk_train, os.path.join(kaldi_data_dir, 'train'))
-        self.create_files(wavscp_test, text_test, utt2spk_test, os.path.join(kaldi_data_dir, 'test'))
+        self.create_files(wavscp_train, text_train, utt2spk_train, 'train')
+        self.create_files(wavscp_test, text_test, utt2spk_test, 'test')
 
     def generate_arrays(self, path):
         wavscp = list()

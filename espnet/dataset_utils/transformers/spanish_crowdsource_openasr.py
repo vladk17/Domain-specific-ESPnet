@@ -20,7 +20,7 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
 
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
 
-        kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
+        self.kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
         print(raw_data_path)
         subdirs = list(os.walk(raw_data_path))[0][1]
@@ -55,8 +55,8 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
                                   utt2spk,
                                   test_proportion=0.2)
 
-        self.create_files(wavscp_train, text_train, utt2spk_train, os.path.join(kaldi_data_dir, 'train'))
-        self.create_files(wavscp_test, text_test, utt2spk_test, os.path.join(kaldi_data_dir, 'test'))
+        self.create_files(wavscp_train, text_train, utt2spk_train, 'train')
+        self.create_files(wavscp_test, text_test, utt2spk_test, 'test')
 
     def generate_arrays(self, data: pd.DataFrame):
 

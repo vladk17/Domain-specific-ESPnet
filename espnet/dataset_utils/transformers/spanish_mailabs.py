@@ -17,7 +17,7 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
 
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
 
-        kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
+        self.kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
         root_dir = os.path.join(raw_data_path, 'es_ES', 'by_book')
 
@@ -54,8 +54,8 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
                                   text,
                                   utt2spk)
 
-        self.create_files(wavscp_train, text_train, utt2spk_train, os.path.join(kaldi_data_dir, 'train'))
-        self.create_files(wavscp_test, text_test, utt2spk_test, os.path.join(kaldi_data_dir, 'test'))
+        self.create_files(wavscp_train, text_train, utt2spk_train, 'train')
+        self.create_files(wavscp_test, text_test, utt2spk_test, 'test')
 
     def get_data_dirs(self, root_dir):
         gender_dirs = list(os.walk(root_dir))[0][1]
