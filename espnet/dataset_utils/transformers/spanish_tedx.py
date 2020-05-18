@@ -16,12 +16,13 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
 
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
 
+        raw_data_path = os.path.join(raw_data_path, 'tedx_spanish_corpus')
         self.kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
 
         # copy audio files to separate directory according to kaldi directory conventions
         print("Copying files to kaldi download directory")
-        fromDirectory = os.path.join(raw_data_path, 'tedx_spanish_corpus', 'speech')
+        fromDirectory = os.path.join(raw_data_path, 'speech')
         toDirectory = kaldi_audio_files_dir
         copy_tree(fromDirectory, toDirectory)
 
