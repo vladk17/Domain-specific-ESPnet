@@ -40,18 +40,18 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
                     f"Taking all dataset")
             data = data[:self.SUBSET_SIZE]
 
-        audio_files = [os.path.join(origin_audiofiles_dir, audio_path) for audio_path in data['path'].tolist()]
-        print("Transforming audio to .wav and copying to eg directory")
-        if os.path.exists(kaldi_audio_files_dir):
-            print("Data directory already exists")
-            if force_transform_audio:
-                for a_path in tqdm(audio_files):
-                    self.convert_to_wav_from_mp3(a_path)
-        else:
-            print("Creating data directory")
-            os.makedirs(kaldi_audio_files_dir)
-            for a_path in tqdm(audio_files):
-                self.convert_to_wav_from_mp3(a_path)
+        # audio_files = [os.path.join(origin_audiofiles_dir, audio_path) for audio_path in data['path'].tolist()]
+        # print("Transforming audio to .wav and copying to eg directory")
+        # if os.path.exists(kaldi_audio_files_dir):
+        #     print("Data directory already exists")
+        #     if force_transform_audio:
+        #         for a_path in tqdm(audio_files):
+        #             self.convert_to_wav_from_mp3(a_path)
+        # else:
+        #     print("Creating data directory")
+        #     os.makedirs(kaldi_audio_files_dir)
+        #     for a_path in tqdm(audio_files):
+        #         self.convert_to_wav_from_mp3(a_path)
 
         print("Generating train and test files")
 
