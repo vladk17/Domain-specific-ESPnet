@@ -26,12 +26,16 @@ raw_data_folder = Path(eg_dir, 'raw_data')
 
 def run_factory(datasets: List[DataSet]):
     for dataset in datasets:
+
+        print(f"\nDownloading and extracting data for '{dataset.name}' dataset\n")
+
         dataset_location = download_and_extract_data(
             dataset_urls=dataset.urls,
             dataset_name=dataset.name,
             download_folder=raw_data_folder)
 
         print("Dataset location:", dataset_location)
+        print(f"Using class {dataset.transformer_class}")
 
         transformer = dataset.transformer_class
         transformer.transform(
