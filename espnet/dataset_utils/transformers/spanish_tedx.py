@@ -21,7 +21,7 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
 
         # copy audio files to separate directory according to kaldi directory conventions
         print("Copying files to kaldi download directory")
-        fromDirectory = os.path.join(raw_data_path, 'speech')
+        fromDirectory = os.path.join(raw_data_path, 'tedx_spanish_corpus', 'speech')
         toDirectory = kaldi_audio_files_dir
         copy_tree(fromDirectory, toDirectory)
 
