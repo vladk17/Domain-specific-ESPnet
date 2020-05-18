@@ -8,10 +8,10 @@
 
 # general configuration
 backend=pytorch
-stage=0     # start from 0 if you need to start from data download
-stop_stage=1000
+stage=0      # start from -1 if you need to start from data download
+stop_stage=100
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
-nj=8
+nj=32
 debugmode=1
 dumpdir=dump   # directory to dump full features
 N=0            # number of minibatches to be used (mainly for debugging). "0" uses all minibatches.
@@ -54,7 +54,7 @@ use_lm_valbest_average=false # if true, the validation `lm_n_average`-best langu
 #data_url=www.openslr.org/resources/12
 
 # bpemode (unigram or bpe)
-nbpe=1000
+nbpe=5000
 bpemode=unigram
 
 # exp tag
@@ -72,7 +72,8 @@ train_set="train_set"
 train_dev="train_dev"
 recog_set="test"
 
-train_dev_proportion=0.01
+train_dev_proportion=0.1
+
 
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    ### Task dependent. You have to make data the following preparation part by yourself.
@@ -80,12 +81,15 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    printf "\n\n"
    echo "STAGE 0: Data download and preparation"
 
+    rm -rf data/
+
     ./local/data_preparation.sh
 
-    for part in test train; do
+    for part in train test; do
         # use underscore-separated names in data directories.
-        utils/utt2spk_to_spk2utt.pl data/${part}/utt2spk > data/${part}/spk2utt
         utils/fix_data_dir.sh data/${part}
+        utils/utt2spk_to_spk2utt.pl data/${part}/utt2spk > data/${part}/spk2utt
+        utils/validate_data_dir.sh --no-feats data/$part || exit 1
     done
 fi
 
@@ -201,7 +205,7 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     echo "STAGE 3: LM Preparation"
     lmdatadir=data/local/lm_train_${bpemode}${nbpe}
 
-    # Here we use only transcripts, encoded with bpe model, 
+    # Here we use only transcripts, encoded with bpe model,
     # later we can add more external spanish text data and merge with transcripts as it was done in librispeech recipe
 
     if [ ! -e ${lmdatadir} ]; then
@@ -243,7 +247,7 @@ mkdir -p ${expdir}
 
 if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
     printf "\n\n"
-    echo "STAGE 4: Network Training"
+    echo "stage 4: Network Training"
     ${cuda_cmd} --gpu ${ngpu} ${expdir}/train.log \
         asr_train.py \
         --config ${train_config} \
@@ -264,7 +268,7 @@ fi
 
 if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
     printf "\n\n"
-    echo "STAGE 5: Decoding"
+    echo "stage 5: Decoding"
     if [[ $(get_yaml.py ${train_config} model-module) = *transformer* ]]; then
         # Average ASR models
         if ${use_valbest_average}; then

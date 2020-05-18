@@ -6,7 +6,7 @@ if __name__ == '__main__':
         dataset_urls=['http://www.openslr.org/resources/71/es_cl_female.zip',
                       'http://www.openslr.org/resources/71/es_cl_male.zip'
                       ],
-        dataset_name='crowdsource_chilean',
+        dataset_name='Crowdsource',
         download_folder="/home/stanislav/y-data/industry-project/Domain-specific-ESPnet/data",
         force_decompress=True)
 
