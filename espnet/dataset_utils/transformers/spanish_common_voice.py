@@ -19,7 +19,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         if SUBSET_SIZE:
             self.SUBSET_SIZE = int(SUBSET_SIZE)
 
-    def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
+    def transform(self, raw_data_path, espnet_kaldi_eg_directory, force_transform_audio=False, *args, **kwargs):
 
         kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
@@ -44,13 +44,14 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         print("Transforming audio to .wav and copying to eg directory")
         if os.path.exists(kaldi_audio_files_dir):
             print("Data directory already exists")
+            if force_transform_audio:
+                for a_path in tqdm(audio_files):
+                    self.convert_to_wav_from_mp3(a_path)
         else:
             print("Creating data directory")
             os.makedirs(kaldi_audio_files_dir)
-
-
-        for a_path in tqdm(audio_files):
-            self.convert_to_wav_from_mp3(a_path)
+            for a_path in tqdm(audio_files):
+                self.convert_to_wav_from_mp3(a_path)
 
         print("Generating train and test files")
 
