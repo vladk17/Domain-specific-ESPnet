@@ -57,6 +57,9 @@ use_lm_valbest_average=false # if true, the validation `lm_n_average`-best langu
 nbpe=1000
 bpemode=unigram
 
+mv data/test_tedx data/test
+mv data/train_tedx data/train
+
 # exp tag
 tag="" # tag for managing experiments.
 
