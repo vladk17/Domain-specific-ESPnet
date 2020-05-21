@@ -4,7 +4,7 @@ from dataset_utils.transformers.spanish_tedx import TEDxSpanish2KaldiTransformer
 import logging
 
 logger = logging.root
-logger.addHandler(logging.StreamHandler)
+logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.INFO)
 
 dataset_urls = ['http://www.openslr.org/resources/67/tedx_spanish_corpus.tgz']
