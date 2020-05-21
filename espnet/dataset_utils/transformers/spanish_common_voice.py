@@ -1,3 +1,4 @@
+import logging
 import os
 from pathlib import Path
 from pydub import AudioSegment
@@ -9,7 +10,7 @@ from sklearn import preprocessing
 from dataset_utils.base_transformer import AbstractDataTransformer
 
 SUBSET_SIZE = os.environ.get("ESPNET_SUBSET_SIZE", None)
-
+logger = logging.root
 
 class CommonVoiceKaldiTransformer(AbstractDataTransformer):
 
@@ -29,31 +30,31 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         data = pd.read_csv(Path(raw_data_path, 'validated.tsv'), delimiter='\t')
         dataset_size = data.shape[0]
 
-        print("Total dataset size", dataset_size)
+        logger.info(f"Total dataset size : {dataset_size}")
 
         if self.SUBSET_SIZE:
-            print("Subset size:", self.SUBSET_SIZE)
+            logger.info(f"Subset size: {self.SUBSET_SIZE}")
             if dataset_size < self.SUBSET_SIZE:
-                print(
+                logger.info(
                     f"ATTENTION! Provided subset size ({self.SUBSET_SIZE}) is less "
                     f"than overall dataset size ({dataset_size}). "
                     f"Taking all dataset")
             data = data[:self.SUBSET_SIZE]
 
-        # audio_files = [os.path.join(origin_audiofiles_dir, audio_path) for audio_path in data['path'].tolist()]
-        # print("Transforming audio to .wav and copying to eg directory")
-        # if os.path.exists(kaldi_audio_files_dir):
-        #     print("Data directory already exists")
-        #     if force_transform_audio:
-        #         for a_path in tqdm(audio_files):
-        #             self.convert_to_wav_from_mp3(a_path)
-        # else:
-        #     print("Creating data directory")
-        #     os.makedirs(kaldi_audio_files_dir)
-        #     for a_path in tqdm(audio_files):
-        #         self.convert_to_wav_from_mp3(a_path)
+        audio_files = [os.path.join(origin_audiofiles_dir, audio_path) for audio_path in data['path'].tolist()]
+        logger.info("Transforming audio to .wav and copying to eg directory")
+        if os.path.exists(kaldi_audio_files_dir):
+            logger.info("Data directory already exists")
+            if force_transform_audio:
+                for a_path in tqdm(audio_files):
+                    self.convert_to_wav_from_mp3(a_path)
+        else:
+            logger.info("Creating data directory")
+            os.makedirs(kaldi_audio_files_dir)
+            for a_path in tqdm(audio_files):
+                self.convert_to_wav_from_mp3(a_path)
 
-        print("Generating train and test files")
+        logger.info("Generating train and test files")
 
         wavscp, text, utt2spk = self.generate_arrays(data)
 

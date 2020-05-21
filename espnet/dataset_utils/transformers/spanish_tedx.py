@@ -1,10 +1,11 @@
+import logging
 import os
 from distutils.dir_util import copy_tree
 
 from dataset_utils.base_transformer import AbstractDataTransformer
 
 SUBSET_SIZE = os.environ.get("ESPNET_SUBSET_SIZE", None)
-
+logger = logging.root
 
 class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
 
@@ -21,25 +22,25 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
 
         # copy audio files to separate directory according to kaldi directory conventions
-        print("Copying files to kaldi download directory")
+        logger.info("Copying files to kaldi download directory")
         fromDirectory = os.path.join(raw_data_path, 'speech')
         toDirectory = kaldi_audio_files_dir
         copy_tree(fromDirectory, toDirectory)
 
         wavscp, text, utt2spk = self.generate_arrays(raw_data_path)
 
-        print("Total dataset size", len(text))
+        logger.info(f"Total dataset size: {len(text)}")
         if len(text) < self.SUBSET_SIZE:
-            print(
+            logger.info(
                 f"ATTENTION! Provided subset size ({self.SUBSET_SIZE}) is less than overall dataset size ({len(text)}). "
                 f"Taking all dataset")
         if self.SUBSET_SIZE:
-            print("Subset size:", self.SUBSET_SIZE)
+            logger.info(f"Subset size: {self.SUBSET_SIZE}")
             wavscp = wavscp[:self.SUBSET_SIZE]
             text = text[:self.SUBSET_SIZE]
             utt2spk = utt2spk[:self.SUBSET_SIZE]
 
-        print("Splitting train-test")
+        logger.info("Splitting train-test")
         wavscp_train, wavscp_test, text_train, text_test, utt2spk_train, utt2spk_test = \
             self.split_train_test(wavscp,
                                   text,
