@@ -1,3 +1,4 @@
+import logging
 import sys
 from pathlib import Path
 from typing import List
@@ -10,6 +11,11 @@ from dataset_utils.transformers.spanish_crowdsource_openasr import CrowdsourcedO
 from collections import namedtuple
 
 DataSet = namedtuple('DataSet', ['name', 'urls', 'transformer_class'])
+
+logger = logging.root
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.INFO)
+
 
 datasets = [('Mailabs', ['http://www.caito.de/data/Training/stt_tts/es_ES.tgz'], MailabsKaldiTransformer()),
             # ('CommonVoiceSpanish', [
@@ -34,15 +40,16 @@ raw_data_folder = Path(eg_dir, 'raw_data')
 
 def run_factory(datasets: List[DataSet]):
     for dataset in datasets:
-        print(f"\nDownloading and extracting data for '{dataset.name}' dataset\n")
+        
+        logger.info(f"\nDownloading and extracting data for '{dataset.name}' dataset\n")
 
         dataset_location = download_and_extract_data(
             dataset_urls=dataset.urls,
             dataset_name=dataset.name,
             download_folder=raw_data_folder)
 
-        print("Dataset location:", dataset_location)
-        print(f"Using class {dataset.transformer_class}")
+        logger.info(f"Dataset location: {dataset_location}")
+        logger.info(f"Using class {dataset.transformer_class}")
 
         transformer = dataset.transformer_class
         transformer.transform(
