@@ -74,8 +74,8 @@ recog_set="test"
 
 train_dev_proportion=0.05
 
-mv data/test_comvoice data/test
-mv data/train_comvoice data/train
+#mv data/test_comvoice data/test
+#mv data/train_comvoice data/train
 
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    ### Task dependent. You have to make data the following preparation part by yourself.
