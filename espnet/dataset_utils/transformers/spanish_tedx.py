@@ -22,9 +22,11 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
 
         # copy audio files to separate directory according to kaldi directory conventions
         logger.info("Copying files to kaldi download directory")
-        fromDirectory = os.path.join(raw_data_path, 'speech')
-        toDirectory = kaldi_audio_files_dir
-        self.copy_audio_files_to_kaldi_dir([fromDirectory], toDirectory)
+
+        origin_audio_dir = [os.path.join(raw_data_path, 'speech')]
+        destination_audio_dir = os.path.join(kaldi_audio_files_dir, self.prefix)
+        self.copy_audio_files_to_kaldi_dir(origin_paths=origin_audio_dir,
+                                           destination_path=destination_audio_dir)
 
         wavscp, text, utt2spk = self.generate_arrays(raw_data_path)
 
@@ -69,7 +71,8 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
         for idx, transcript in enumerate(transcripts):
             tokens = transcript.lower().split(' ')
             transcript = ' '.join(tokens[:-1])
-            file_path = files[idx]
+
+            file_path = os.path.join(self.prefix, files[idx])
             utterance_tokens = tokens[-1][5:].split('_')
 
             utt_id = idx + 1

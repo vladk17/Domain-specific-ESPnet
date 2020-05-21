@@ -23,8 +23,10 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
         logger.info(raw_data_path)
         subdirs = list(os.walk(raw_data_path))[0][1]
 
-        audio_dirs = [os.path.join(raw_data_path, subdir) for subdir in subdirs]
-        self.copy_audio_files_to_kaldi_dir(audio_dirs, kaldi_audio_files_dir)
+        origin_audio_dir = [os.path.join(raw_data_path, subdir) for subdir in subdirs]
+        destination_audio_dir = os.path.join(kaldi_audio_files_dir, self.prefix)
+        self.copy_audio_files_to_kaldi_dir(origin_paths=origin_audio_dir,
+                                           destination_path=destination_audio_dir)
 
         dfs = [pd.read_csv(Path(audio_dir, 'line_index.tsv'), delimiter='\t', header=None) for audio_dir in audio_dirs]
         data = pd.concat(dfs, axis=0)
@@ -65,7 +67,7 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
 
         for idx, row in data.iterrows():
             transcript = self.clean_text(row['transcript'])
-            file_path = row['path']
+            file_path = os.path.join(self.prefix, row['path'])
 
             utt_id = idx+1
             speaker_id = f"{self.prefix}sp{utt_id}"

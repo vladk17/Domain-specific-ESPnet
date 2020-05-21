@@ -37,7 +37,9 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
         dataset_size = data.shape[0]
         logger.info(f"Total dataset size: {dataset_size}")
 
-        self.copy_audio_files_to_kaldi_dir(origin_paths=audio_dirs, destination_path=kaldi_audio_files_dir)
+        destination_audio_dir = os.path.join(kaldi_audio_files_dir, self.prefix)
+        self.copy_audio_files_to_kaldi_dir(origin_paths=audio_dirs,
+                                           destination_path=destination_audio_dir)
 
         if self.SUBSET_SIZE:
             logger.info(f"Subset size: {self.SUBSET_SIZE}")
@@ -107,7 +109,7 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
 
         for idx, row in tqdm(data.iterrows(), total=data.shape[0]):
             transcript = self.clean_text(row['transcript_1'])
-            file_path = row['path']
+            file_path = os.path.join(self.prefix, row['path'])
 
             utt_id = idx+1
             speaker_id = f"{self.prefix}sp{row['speaker']}"

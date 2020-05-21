@@ -41,7 +41,8 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
                     f"Taking all dataset")
             data = data[:self.SUBSET_SIZE]
 
-        self.transform_audio(origin_audiofiles_dir, kaldi_audio_files_dir, data, force_transform_audio)
+        destination_audio_dir = os.path.join(kaldi_audio_files_dir, self.prefix)
+        self.transform_audio(origin_audiofiles_dir, destination_audio_dir, data, force_transform_audio)
 
         logger.info("Generating train and test files")
 
@@ -89,7 +90,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         data['client_id'] = le.fit_transform(data['client_id'])
         for idx, row in data.iterrows():
             transcript = self.clean_text(row['sentence'])
-            file_path = row['path']
+            file_path = os.path.join(self.prefix, row['path'])
 
             utt_id = idx + 1
             speaker_id = f"{self.prefix}sp{row['client_id']}"
