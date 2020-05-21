@@ -41,7 +41,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
                     f"Taking all dataset")
             data = data[:self.SUBSET_SIZE]
 
-        # self.transform_audio(origin_audiofiles_dir, kaldi_audio_files_dir, data, force_transform_audio)
+        self.transform_audio(origin_audiofiles_dir, kaldi_audio_files_dir, data, force_transform_audio)
 
         logger.info("Generating train and test files")
 
