@@ -37,7 +37,7 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
         dataset_size = data.shape[0]
         logger.info(f"Total dataset size: {dataset_size}")
 
-        # self.copy_audio_files_to_kaldi_dir(origin_paths=audio_dirs, destination_path=kaldi_audio_files_dir)
+        self.copy_audio_files_to_kaldi_dir(origin_paths=audio_dirs, destination_path=kaldi_audio_files_dir)
 
         if self.SUBSET_SIZE:
             logger.info(f"Subset size: {self.SUBSET_SIZE}")

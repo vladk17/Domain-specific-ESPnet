@@ -59,9 +59,9 @@ class AbstractDataTransformer(ABC):
     def copy_audio_files_to_kaldi_dir(self, origin_paths: List[str], destination_path):
 
         print("Copying audio files to kaldi downloads directory...")
-        if os.path.exists(destination_path):
-            pass
-        else:
-            os.makedirs(destination_path)
-        for path in origin_paths:
-            copy_tree(path, destination_path)
+        # if os.path.exists(destination_path):
+        #     pass
+        # else:
+        #     os.makedirs(destination_path)
+        # for path in origin_paths:
+        #     copy_tree(path, destination_path)
