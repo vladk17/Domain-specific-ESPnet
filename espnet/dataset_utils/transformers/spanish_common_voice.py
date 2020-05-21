@@ -75,7 +75,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         downsampled_wav_path = Path(kaldi_audio_files_dir, new_file_name)
         sound = AudioSegment.from_mp3(source_path)
         sound.export(upsampled_wav_path, format="wav")
-        os.system("sox --norm '%s' -r 16000 -b 16 -c 1 %s" % (upsampled_wav_path, downsampled_wav_path))
+        os.system("sox '%s' -r 16000 -b 16 -c 1 %s" % (upsampled_wav_path, downsampled_wav_path))
         os.remove(upsampled_wav_path)
 
     def generate_arrays(self, data: pd.DataFrame):
