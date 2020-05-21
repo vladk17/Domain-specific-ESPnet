@@ -111,7 +111,7 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
             speaker_id = row['speaker']
 
             utt_id = idx+1
-            utterance_id = f'{self.prefix}-{self.prefix}_{utt_id}'
+            utterance_id = f'{self.prefix}{speaker_id}-{self.prefix}{utt_id}'
             wavscp.append(f'{utterance_id} {file_path}')
             if row['speaker'] == -1:
                 utt2spk.append(f'{utterance_id} {utterance_id}')
