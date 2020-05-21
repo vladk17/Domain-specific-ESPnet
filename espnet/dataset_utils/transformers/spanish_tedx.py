@@ -25,7 +25,7 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
         logger.info("Copying files to kaldi download directory")
         fromDirectory = os.path.join(raw_data_path, 'speech')
         toDirectory = kaldi_audio_files_dir
-        copy_tree(fromDirectory, toDirectory)
+        self.copy_audio_files_to_kaldi_dir([fromDirectory], toDirectory)
 
         wavscp, text, utt2spk = self.generate_arrays(raw_data_path)
 
