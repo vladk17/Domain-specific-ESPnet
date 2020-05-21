@@ -24,7 +24,6 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
 
         self.kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
-        self.kaldi_preprocessed_audio_folder = kaldi_audio_files_dir
 
         origin_audiofiles_dir = os.path.join(raw_data_path, 'clips')
         data = pd.read_csv(Path(raw_data_path, 'validated.tsv'), delimiter='\t')
@@ -63,17 +62,17 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
             logger.info("Data directory already exists")
             if force_transform_audio:
                 for a_path in tqdm(audio_files):
-                    self.convert_to_wav_from_mp3(a_path)
+                    self.convert_to_wav_from_mp3(a_path, kaldi_audio_files_dir)
         else:
             logger.info("Creating data directory")
             os.makedirs(kaldi_audio_files_dir)
             for a_path in tqdm(audio_files):
-                self.convert_to_wav_from_mp3(a_path)
+                self.convert_to_wav_from_mp3(a_path, kaldi_audio_files_dir)
 
-    def convert_to_wav_from_mp3(self, source_path: str):
+    def convert_to_wav_from_mp3(self, source_path: str, kaldi_audio_files_dir: str):
         new_file_name = source_path.split("/")[-1][:-4] + '.wav'
-        upsampled_wav_path = Path(self.kaldi_preprocessed_audio_folder, new_file_name + '.upsample')
-        downsampled_wav_path = Path(self.kaldi_preprocessed_audio_folder, new_file_name)
+        upsampled_wav_path = Path(kaldi_audio_files_dir, new_file_name + '.upsample')
+        downsampled_wav_path = Path(kaldi_audio_files_dir, new_file_name)
         sound = AudioSegment.from_mp3(source_path)
         sound.export(upsampled_wav_path, format="wav")
         os.system("sox '%s' -r 16000 -b 16 -c 1 %s" % (upsampled_wav_path, downsampled_wav_path))
