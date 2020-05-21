@@ -55,7 +55,7 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
         audio_files = [os.path.join(destination_audio_dir, audio_path) for audio_path in data['path'].tolist()]
         for file in tqdm(audio_files):
             file_name = file + '.wav'
-            self.reduce_audio(file_name)
+            self.downsample_audio(file_name)
 
         logger.info("Generating train and test files")
 
