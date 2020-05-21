@@ -109,7 +109,7 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
 
         for idx, row in tqdm(data.iterrows(), total=data.shape[0]):
             transcript = self.clean_text(row['transcript_1'])
-            file_path = os.path.join(self.prefix, row['path'])
+            file_path = row['path']
 
             utt_id = idx+1
             speaker_id = f"{self.prefix}sp{row['speaker']}"

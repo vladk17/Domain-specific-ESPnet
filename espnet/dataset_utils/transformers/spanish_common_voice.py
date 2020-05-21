@@ -89,7 +89,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         data['client_id'] = le.fit_transform(data['client_id'])
         for idx, row in data.iterrows():
             transcript = self.clean_text(row['sentence'])
-            file_path = os.path.join(self.prefix, row['path'])
+            file_path = row['path']
 
             utt_id = idx + 1
             speaker_id = f"{self.prefix}sp{row['client_id']}"

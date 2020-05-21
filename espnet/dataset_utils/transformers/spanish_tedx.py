@@ -72,7 +72,7 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
             tokens = transcript.lower().split(' ')
             transcript = ' '.join(tokens[:-1])
 
-            file_path = os.path.join(self.prefix, files[idx])
+            file_path = files[idx]
             utterance_tokens = tokens[-1][5:].split('_')
 
             utt_id = idx + 1
