@@ -41,18 +41,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
                     f"Taking all dataset")
             data = data[:self.SUBSET_SIZE]
 
-        audio_files = [os.path.join(origin_audiofiles_dir, audio_path) for audio_path in data['path'].tolist()]
-        logger.info("Transforming audio to .wav and copying to eg directory")
-        if os.path.exists(kaldi_audio_files_dir):
-            logger.info("Data directory already exists")
-            if force_transform_audio:
-                for a_path in tqdm(audio_files):
-                    self.convert_to_wav_from_mp3(a_path)
-        else:
-            logger.info("Creating data directory")
-            os.makedirs(kaldi_audio_files_dir)
-            for a_path in tqdm(audio_files):
-                self.convert_to_wav_from_mp3(a_path)
+        # self.transform_audio(origin_audiofiles_dir, kaldi_audio_files_dir, data, force_transform_audio)
 
         logger.info("Generating train and test files")
 
@@ -66,6 +55,20 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
 
         self.create_files(wavscp_train, text_train, utt2spk_train, 'train')
         self.create_files(wavscp_test, text_test, utt2spk_test, 'test')
+
+    def transform_audio(self, origin_audiofiles_dir, kaldi_audio_files_dir, data, force_transform_audio):
+        logger.info("Transforming audio to .wav and copying to eg directory")
+        audio_files = [os.path.join(origin_audiofiles_dir, audio_path) for audio_path in data['path'].tolist()]
+        if os.path.exists(kaldi_audio_files_dir):
+            logger.info("Data directory already exists")
+            if force_transform_audio:
+                for a_path in tqdm(audio_files):
+                    self.convert_to_wav_from_mp3(a_path)
+        else:
+            logger.info("Creating data directory")
+            os.makedirs(kaldi_audio_files_dir)
+            for a_path in tqdm(audio_files):
+                self.convert_to_wav_from_mp3(a_path)
 
     def convert_to_wav_from_mp3(self, source_path: str):
         new_file_name = source_path.split("/")[-1][:-4] + '.wav'
@@ -88,9 +91,11 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         for idx, row in data.iterrows():
             transcript = self.clean_text(row['sentence'])
             file_path = row['path']
-            speaker_id = row['client_id']
-            utterance_id = f'{self.prefix}_sp{speaker_id}-seg{idx+1}'
-            # utterance_id = f'speaker{speaker_id}-segmemt{segment_id}'
+
+            utt_id = idx + 1
+            speaker_id = f"self.prefix{row['client_id']}"
+            utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'
+
             wavscp.append(f'{utterance_id} {file_path}')
             utt2spk.append(f'{utterance_id} {speaker_id}')
             text.append(f'{utterance_id} {transcript}')
