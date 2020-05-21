@@ -50,8 +50,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         wavscp_train, wavscp_test, text_train, text_test, utt2spk_train, utt2spk_test = \
             self.split_train_test(wavscp,
                                   text,
-                                  utt2spk,
-                                  test_proportion=0.2)
+                                  utt2spk)
 
         self.create_files(wavscp_train, text_train, utt2spk_train, 'train')
         self.create_files(wavscp_test, text_test, utt2spk_test, 'test')

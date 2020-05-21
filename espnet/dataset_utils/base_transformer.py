@@ -53,9 +53,8 @@ class AbstractDataTransformer(ABC):
         return train_test_args
 
     def clean_text(self, text):
-        text = text.lower()
-        # for now only removing punctuation, should add number2word later and other cleansing if relevant
-        text = re.sub("[.,:;¡!?¿\-]+", ' ', text).strip()
+        # text = text.lower()
+        # text = re.sub("[.,:;¡!?¿\-]+", ' ', text).strip()
         return text
 
     def copy_audio_files_to_kaldi_dir(self, origin_paths: List[str], destination_path):
