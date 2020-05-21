@@ -13,12 +13,15 @@ eg_dir = Path('/espnet/egs/spanish_tedx/asr1')
 raw_data_folder = Path(eg_dir, 'raw_data')
 
 if __name__ == '__main__':
+
+    logger.info(f"Start downloading and extracting data")
+
     dataset_location = download_and_extract_data(
         dataset_urls=dataset_urls,
         dataset_name=dataset_name,
         download_folder=raw_data_folder)
 
-    logger.info("Dataset location:", dataset_location)
+    logger.info(f"Dataset location: {dataset_location}")
 
     transformer = TEDxSpanish2KaldiTransformer()
     transformer.transform(
