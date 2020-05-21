@@ -41,7 +41,7 @@ raw_data_folder = Path(eg_dir, 'raw_data')
 def run_factory(datasets: List[DataSet]):
     for dataset in datasets:
         
-        logger.info(f"\nDownloading and extracting data for '{dataset.name}' dataset\n")
+        logger.info(f"\n\nDownloading and extracting data for '{dataset.name}' dataset\n\n")
 
         dataset_location = download_and_extract_data(
             dataset_urls=dataset.urls,
@@ -58,5 +58,4 @@ def run_factory(datasets: List[DataSet]):
 
 
 if __name__ == '__main__':
-    sys.stdout.write('\n\n\n\n')
     run_factory(datasets)

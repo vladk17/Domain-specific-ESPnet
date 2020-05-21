@@ -3,7 +3,9 @@ from pathlib import Path
 from tqdm import tqdm
 import pandas as pd
 from dataset_utils.base_transformer import AbstractDataTransformer
+import logging
 
+logger = logging.root
 SUBSET_SIZE = os.environ.get("ESPNET_SUBSET_SIZE", None)
 
 
@@ -33,20 +35,20 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
 
         data = pd.concat(dfs)
         dataset_size = data.shape[0]
-        print("Total dataset size", dataset_size)
+        logger.info(f"Total dataset size: {dataset_size}")
 
         self.copy_audio_files_to_kaldi_dir(origin_paths=audio_dirs, destination_path=kaldi_audio_files_dir)
 
         if self.SUBSET_SIZE:
-            print("Subset size:", self.SUBSET_SIZE)
+            logger.info(f"Subset size: {self.SUBSET_SIZE}")
             if dataset_size < self.SUBSET_SIZE:
-                print(
+                logger.info(
                     f"ATTENTION! Provided subset size ({self.SUBSET_SIZE}) is less "
                     f"than overall dataset size ({dataset_size}). "
                     f"Taking all dataset")
             data = data[:self.SUBSET_SIZE]
 
-        print("Generating data")
+        logger.info("Generating data")
         wavscp, text, utt2spk = self.generate_arrays(data)
 
         wavscp_train, wavscp_test, text_train, text_test, utt2spk_train, utt2spk_test = \

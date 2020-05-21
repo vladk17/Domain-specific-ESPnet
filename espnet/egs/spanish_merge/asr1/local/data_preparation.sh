@@ -7,7 +7,6 @@ pip install -r requirements.txt
 #apt-get -y update
 #apt install -y ffmpeg
 
-echo "BLAAAAAAAAAAAAAAAA"
 python3 make_data.py
 
 chmod -R 777 ../data
