@@ -31,6 +31,7 @@ datasets = [
                      'http://www.openslr.org/resources/74/es_pr_female.zip',
                      'http://www.openslr.org/resources/75/es_ve_female.zip',
                      'http://www.openslr.org/resources/75/es_ve_male.zip'
+
                      ], CrowdsourcedOpenASR())
 ]
 datasets = [DataSet(_[0], _[1], _[2]) for _ in datasets]

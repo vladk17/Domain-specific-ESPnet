@@ -71,9 +71,9 @@ class AbstractDataTransformer(ABC):
 
     def reduce_audio(self, source_path: str):
         new_file_name = source_path.split("/")[-1][:-4] + '.wav'
-        upsampled_wav_path = new_file_name + '.upsample'
+        origin_file_name = new_file_name + '.origin'
         downsampled_wav_path = new_file_name
         sound = AudioSegment.from_wav(source_path)
-        sound.export(upsampled_wav_path, format="wav")
-        os.system("sox '%s' -r 16000 -b 16 -c 1 %s" % (upsampled_wav_path, downsampled_wav_path))
-        os.remove(upsampled_wav_path)
+        sound.export(origin_file_name, format="wav")
+        os.system("sox '%s' -r 16000 -b 16 -c 1 %s" % (origin_file_name, downsampled_wav_path))
+        os.remove(origin_file_name)
