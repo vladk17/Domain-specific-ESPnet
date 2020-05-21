@@ -1,6 +1,5 @@
 import logging
 import os
-from distutils.dir_util import copy_tree
 
 from dataset_utils.base_transformer import AbstractDataTransformer
 

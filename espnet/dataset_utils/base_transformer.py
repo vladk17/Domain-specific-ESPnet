@@ -4,7 +4,9 @@ from abc import ABC, abstractmethod
 from distutils.dir_util import copy_tree
 from typing import List
 from sklearn.model_selection import train_test_split
+import logging
 
+logger = logging.root
 
 class AbstractDataTransformer(ABC):
 
@@ -58,7 +60,7 @@ class AbstractDataTransformer(ABC):
 
     def copy_audio_files_to_kaldi_dir(self, origin_paths: List[str], destination_path):
 
-        print("Copying audio files to kaldi downloads directory...")
+        logger.info("Copying audio files to kaldi downloads directory...")
         if os.path.exists(destination_path):
             pass
         else:
