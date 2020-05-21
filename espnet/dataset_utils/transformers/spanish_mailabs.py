@@ -86,7 +86,7 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
         mix_book_dirs = list(os.walk(mix_dir))[0][1]
 
         for book_dir in mix_book_dirs:
-            speaker_id = -1
+            speaker_id = 999
             final_abs_path = Path(mix_dir, book_dir).absolute()
             audio_path = Path(final_abs_path, 'wavs')
             transcript_path = Path(final_abs_path, 'metadata.csv')
@@ -109,12 +109,11 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
             transcript = self.clean_text(row['transcript_1'])
             file_path = row['path']
 
-
             utt_id = idx+1
-            speaker_id = f"{self.prefix}sp{utt_id}"
+            speaker_id = f"{self.prefix}sp{row['speaker']}"
             utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'
             wavscp.append(f'{utterance_id} {file_path}')
-            if row['speaker'] == -1:
+            if row['speaker'] == 999:
                 utt2spk.append(f'{utterance_id} {utterance_id}')
             else:
                 utt2spk.append(f'{utterance_id} {speaker_id}')
