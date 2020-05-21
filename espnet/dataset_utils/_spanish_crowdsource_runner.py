@@ -7,8 +7,7 @@ if __name__ == '__main__':
                       'http://www.openslr.org/resources/71/es_cl_male.zip'
                       ],
         dataset_name='Crowdsource',
-        download_folder="/home/stanislav/y-data/industry-project/Domain-specific-ESPnet/data",
-        force_decompress=True)
+        download_folder=r"D:\gongio\repo\data")
 
     print("Dataset location:", dataset_location)
 

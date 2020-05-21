@@ -85,8 +85,8 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
 
     ./local/data_preparation.sh
 
-    utils/combine_data.sh data/train data/train_mailabs data/train_tedx
-    utils/combine_data.sh data/test data/test_mailabs data/test_tedx
+    utils/combine_data.sh data/train data/train_mailabs data/train_tedx data/train_crowdsource
+    utils/combine_data.sh data/test data/test_mailabs data/test_tedx data/train_crowdsource
 
     for part in train test; do
         # use underscore-separated names in data directories.

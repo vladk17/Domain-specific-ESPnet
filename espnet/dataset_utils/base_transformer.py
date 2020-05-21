@@ -3,6 +3,8 @@ import re
 from abc import ABC, abstractmethod
 from distutils.dir_util import copy_tree
 from typing import List
+
+from pydub import AudioSegment
 from sklearn.model_selection import train_test_split
 import logging
 
@@ -66,3 +68,12 @@ class AbstractDataTransformer(ABC):
             os.makedirs(destination_path)
         for path in origin_paths:
             copy_tree(path, destination_path)
+
+    def reduce_audio(self, source_path: str):
+        new_file_name = source_path.split("/")[-1][:-4] + '.wav'
+        upsampled_wav_path = new_file_name + '.upsample'
+        downsampled_wav_path = new_file_name
+        sound = AudioSegment.from_wav(source_path)
+        sound.export(upsampled_wav_path, format="wav")
+        os.system("sox '%s' -r 16000 -b 16 -c 1 %s" % (upsampled_wav_path, downsampled_wav_path))
+        os.remove(upsampled_wav_path)

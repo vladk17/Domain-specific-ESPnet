@@ -2,6 +2,8 @@ import logging
 import os
 from pathlib import Path
 import pandas as pd
+from tqdm import tqdm
+
 from dataset_utils.base_transformer import AbstractDataTransformer
 
 logger = logging.root
@@ -24,12 +26,14 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
         subdirs = list(os.walk(raw_data_path))[0][1]
 
         origin_audio_dirs = [os.path.join(raw_data_path, subdir) for subdir in subdirs]
+
         destination_audio_dir = os.path.join(kaldi_audio_files_dir, self.prefix)
         self.copy_audio_files_to_kaldi_dir(origin_paths=origin_audio_dirs,
                                            destination_path=destination_audio_dir)
 
         dfs = [pd.read_csv(Path(audio_dir, 'line_index.tsv'), delimiter='\t', header=None) for audio_dir in
                origin_audio_dirs]
+
         data = pd.concat(dfs, axis=0)
         data.columns = ['path', 'transcript']
         dataset_size = data.shape[0]
@@ -45,6 +49,13 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
                     f"Taking all dataset")
             self.SUBSET_SIZE = self.SUBSET_SIZE
             data = data[:self.SUBSET_SIZE]
+
+        logger.info("Reducing sample frequency to 16000")
+
+        audio_files = [os.path.join(destination_audio_dir, audio_path) for audio_path in data['path'].tolist()]
+        for file in audio_files:
+            file_name = file + '.wav'
+            self.reduce_audio(file_name)
 
         logger.info("Generating train and test files")
 

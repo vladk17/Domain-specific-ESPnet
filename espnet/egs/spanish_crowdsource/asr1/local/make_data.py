@@ -20,8 +20,7 @@ if __name__ == '__main__':
     dataset_location = download_and_extract_data(
         dataset_urls=dataset_urls,
         dataset_name=EG_NAME,
-        download_folder=raw_data_folder,
-        force_decompress=True)
+        download_folder=raw_data_folder)
 
     print("Dataset location:", dataset_location)
 
