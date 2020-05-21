@@ -62,7 +62,7 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
             files = list()
             _files = f1.read().splitlines()
             for _ in _files:
-                files.append(os.path.join('downloads', _[9:]))
+                files.append(os.path.join('downloads', self.prefix, _[9:]))
 
         with open(transcripts_path) as f2:
             transcripts = f2.read().splitlines()

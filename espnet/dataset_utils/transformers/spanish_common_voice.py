@@ -84,7 +84,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         text = list()
         utt2spk = list()
 
-        data['path'] = data['path'].apply(lambda x: "downloads/" + x[:-4] + '.wav')
+        data['path'] = data['path'].apply(lambda x: "downloads/" + self.prefix + "/" + x[:-4] + '.wav')
         le = preprocessing.LabelEncoder()
         data['client_id'] = le.fit_transform(data['client_id'])
         for idx, row in data.iterrows():

@@ -104,7 +104,7 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
         text = list()
         utt2spk = list()
 
-        data['path'] = data['path'].apply(lambda x: "downloads/" + x + '.wav')
+        data['path'] = data['path'].apply(lambda x: "downloads/" + self.prefix + "/" + x + '.wav')
         data = data.reset_index()
 
         for idx, row in tqdm(data.iterrows(), total=data.shape[0]):

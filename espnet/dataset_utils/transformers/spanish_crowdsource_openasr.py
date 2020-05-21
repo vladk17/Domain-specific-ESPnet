@@ -64,11 +64,11 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
         text = list()
         utt2spk = list()
 
-        data['path'] = data['path'].apply(lambda x: "downloads/" + x + '.wav')
+        data['path'] = data['path'].apply(lambda x: "downloads/" + self.prefix + "/" + x + '.wav')
 
         for idx, row in data.iterrows():
             transcript = self.clean_text(row['transcript'])
-            file_path = os.path.join(self.prefix, row['path'])
+            file_path = row['path']
 
             utt_id = idx + 1
             speaker_id = f"{self.prefix}sp{utt_id}"
