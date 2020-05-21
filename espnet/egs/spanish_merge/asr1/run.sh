@@ -81,7 +81,7 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    printf "\n\n"
    echo "STAGE 0: Data download and preparation"
 
-    rm -rf data/
+#    rm -rf data/
 
     ./local/data_preparation.sh
 
