@@ -92,7 +92,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
             file_path = row['path']
 
             utt_id = idx + 1
-            speaker_id = f"self.prefix{row['client_id']}"
+            speaker_id = f"{self.prefix}sp{row['client_id']}"
             utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'
 
             wavscp.append(f'{utterance_id} {file_path}')
