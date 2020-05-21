@@ -87,6 +87,7 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
 
     for part in test train; do
         # use underscore-separated names in data directories.
+        utils/fix_data_dir.sh data/${part}
         utils/utt2spk_to_spk2utt.pl data/${part}/utt2spk > data/${part}/spk2utt
     done
 fi
