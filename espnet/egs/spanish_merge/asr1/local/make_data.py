@@ -17,9 +17,9 @@ logger.setLevel(logging.INFO)
 
 
 datasets = [('Mailabs', ['http://www.caito.de/data/Training/stt_tts/es_ES.tgz'], MailabsKaldiTransformer()),
-            ('CommonVoiceSpanish', [
-                'https://voice-prod-bundler-ee1969a6ce8178826482b88e843c335139bd3fb4.s3.amazonaws.com/cv-corpus-4-2019-12-10/es.tar.gz'],
-             CommonVoiceKaldiTransformer()),
+            # ('CommonVoiceSpanish', [
+            #     'https://voice-prod-bundler-ee1969a6ce8178826482b88e843c335139bd3fb4.s3.amazonaws.com/cv-corpus-4-2019-12-10/es.tar.gz'],
+            #  CommonVoiceKaldiTransformer()),
             ('TEDxSpanish', ['http://www.openslr.org/resources/67/tedx_spanish_corpus.tgz'],
              TEDxSpanish2KaldiTransformer()),
             ('Crowdsource', ['http://www.openslr.org/resources/71/es_cl_female.zip',
