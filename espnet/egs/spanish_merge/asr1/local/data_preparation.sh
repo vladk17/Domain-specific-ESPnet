@@ -12,12 +12,12 @@ cd "$(dirname "$0")"
 echo "Downsampling files to 16000 kHz"
 
 cd ..
-mkdir -p resampled_downloads
+mkdir -p resampled_crowdsource
 cd downloads/crowdsource
 
 for file in *.wav
 do
-    sox $file -r 16000 "../../resampled_downloads/${file}"
+    sox $file -r 16000 "../../resampled_crowdsource/${file}"
 done
 
 cd ..
