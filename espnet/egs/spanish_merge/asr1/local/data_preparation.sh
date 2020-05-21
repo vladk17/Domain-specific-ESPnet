@@ -17,7 +17,7 @@ cd downloads/crowdsource
 
 for file in *.wav
 do
-    sox $file -r 16000 "../resampled_downloads/${file}"
+    sox $file -r 16000 "../../resampled_downloads/${file}"
 done
 
 cd ..
