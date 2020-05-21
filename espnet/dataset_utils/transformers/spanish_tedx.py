@@ -74,8 +74,8 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
             file_path = files[idx]
             utterance_tokens = tokens[-1][5:].split('_')
             speaker_id = '_'.join(utterance_tokens[:2])
-            segment_id = '_'.join(utterance_tokens[2:])
-            utterance_id = f'{self.prefix}_sp{speaker_id}-seg{segment_id}'
+            utt_id = '_'.join(utterance_tokens[2:])
+            utterance_id = f'{self.prefix}sp{utt_id}-seg{self.prefix}ut{utt_id}'
             wavscp.append(f'{utterance_id} {file_path}')
             utt2spk.append(f'{utterance_id} {speaker_id}')
             text.append(f'{utterance_id} {transcript}')

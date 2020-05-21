@@ -68,7 +68,7 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
             transcript = self.clean_text(row['transcript'])
             file_path = row['path']
             utt_id = idx+1
-            utterance_id = f'{self.prefix}_sp{utt_id}-seg{utt_id}'
+            utterance_id = f'{self.prefix}sp{utt_id}-seg{self.prefix}ut{utt_id}'
             wavscp.append(f'{utterance_id} {file_path}')
             utt2spk.append(f'{utterance_id} {utterance_id}')
 
