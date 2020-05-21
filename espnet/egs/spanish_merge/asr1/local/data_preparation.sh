@@ -20,9 +20,10 @@ do
     sox $file -r 16000 "../../resampled_crowdsource/${file}"
 done
 
-cd ..
+cd ../..
+
 rm -rf downloads/crowdsource
-mv resampled_downloads downloads/crowdsource
+mv resampled_crowdsource downloads/crowdsource
 
 chmod -R 777 ../data
 chmod -R 777 ../downloads
