@@ -72,7 +72,7 @@ train_set="train_set"
 train_dev="train_dev"
 recog_set="test"
 
-train_dev_proportion=0.1
+train_dev_proportion=0.05
 
 mv data/test_comvoice data/test
 mv data/train_comvoice data/train
