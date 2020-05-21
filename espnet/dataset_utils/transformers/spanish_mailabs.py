@@ -108,10 +108,11 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
         for idx, row in tqdm(data.iterrows(), total=data.shape[0]):
             transcript = self.clean_text(row['transcript_1'])
             file_path = row['path']
-            speaker_id = row['speaker']
+
 
             utt_id = idx+1
-            utterance_id = f'{self.prefix}{speaker_id}-{self.prefix}{utt_id}'
+            speaker_id = f"{self.prefix}sp{utt_id}"
+            utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'
             wavscp.append(f'{utterance_id} {file_path}')
             if row['speaker'] == -1:
                 utt2spk.append(f'{utterance_id} {utterance_id}')
