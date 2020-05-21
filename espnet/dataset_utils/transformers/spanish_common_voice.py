@@ -100,5 +100,3 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
             text.append(f'{utterance_id} {transcript}')
 
         return wavscp, text, utt2spk
-
-

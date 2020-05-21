@@ -23,12 +23,13 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
         logger.info(raw_data_path)
         subdirs = list(os.walk(raw_data_path))[0][1]
 
-        origin_audio_dir = [os.path.join(raw_data_path, subdir) for subdir in subdirs]
+        origin_audio_dirs = [os.path.join(raw_data_path, subdir) for subdir in subdirs]
         destination_audio_dir = os.path.join(kaldi_audio_files_dir, self.prefix)
-        self.copy_audio_files_to_kaldi_dir(origin_paths=origin_audio_dir,
+        self.copy_audio_files_to_kaldi_dir(origin_paths=origin_audio_dirs,
                                            destination_path=destination_audio_dir)
 
-        dfs = [pd.read_csv(Path(audio_dir, 'line_index.tsv'), delimiter='\t', header=None) for audio_dir in audio_dirs]
+        dfs = [pd.read_csv(Path(audio_dir, 'line_index.tsv'), delimiter='\t', header=None) for audio_dir in
+               origin_audio_dirs]
         data = pd.concat(dfs, axis=0)
         data.columns = ['path', 'transcript']
         dataset_size = data.shape[0]
@@ -69,7 +70,7 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
             transcript = self.clean_text(row['transcript'])
             file_path = os.path.join(self.prefix, row['path'])
 
-            utt_id = idx+1
+            utt_id = idx + 1
             speaker_id = f"{self.prefix}sp{utt_id}"
             utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'
             wavscp.append(f'{utterance_id} {file_path}')

@@ -92,9 +92,11 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
         # use underscore-separated names in data directories.
         utils/fix_data_dir.sh data/${part}
         utils/utt2spk_to_spk2utt.pl data/${part}/utt2spk > data/${part}/spk2utt
+        python3 local/normalize_text.py data/${part}/text --lang es --format acoustic
     done
-fi
 
+
+fi
 
 feat_tr_dir=${dumpdir}/${train_set}/delta${do_delta}; mkdir -p ${feat_tr_dir}
 feat_dt_dir=${dumpdir}/${train_dev}/delta${do_delta}; mkdir -p ${feat_dt_dir}
