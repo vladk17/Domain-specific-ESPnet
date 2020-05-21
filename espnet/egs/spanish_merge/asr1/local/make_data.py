@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 from typing import List
 
@@ -50,5 +51,5 @@ def run_factory(datasets: List[DataSet]):
 
 
 if __name__ == '__main__':
-    print('\n\n\n\n')
+    sys.stdout.write('\n\n\n\n')
     run_factory(datasets)
