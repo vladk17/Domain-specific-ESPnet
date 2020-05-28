@@ -49,8 +49,8 @@ def removeExtraSpaces(rest):
 
 def normalize(inFile, format, lang):
     infile = open(inFile, 'r').readlines()
-    outfile = open(inFile + '_norm', 'w')
-    print("Normalizing text to %s" % (inFile + '_norm'))
+    outfile = open(inFile, 'w')
+    print("Normalizing text to %s" % (inFile))
 
     for line in infile:
         if line == "\n" or line == "":
