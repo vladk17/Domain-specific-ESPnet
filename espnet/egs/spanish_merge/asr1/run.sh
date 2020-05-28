@@ -79,9 +79,6 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
 
     ./local/data_preparation.sh
 
-    utils/combine_data.sh
-    utils/combine_data.sh data/test data/test_mailabs
-
     for part in ${datasets}; do
         # use underscore-separated names in data directories.
         utils/fix_data_dir.sh data/${part}
