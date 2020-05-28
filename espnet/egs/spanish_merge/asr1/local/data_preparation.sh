@@ -28,5 +28,6 @@ pip install -r requirements.txt
 #chmod -R 777 data
 #chmod -R 777 downloads
 
+python3 make_data.py
 chmod -R 777 ../data
 chmod -R 777 ../downloads
