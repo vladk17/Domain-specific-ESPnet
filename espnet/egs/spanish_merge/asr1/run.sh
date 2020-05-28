@@ -62,7 +62,7 @@ tag="" # tag for managing experiments.
 
 # Set bash to 'debug' mode, it will exit on :
 # -e 'error', -u 'undefined variable', -o ... 'error in pipeline', -x 'print commands',
-train_set="train_set"
+train_set="train"
 train_dev="test"
 recog_set="test"
 
