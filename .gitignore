@@ -2,12 +2,13 @@ data
 kaldi
 kaldi_eg
 .idea
-notebooks/.ipynb_checkpoints
+**/*.ipynb_checkpoints
 espnet/tools
 espnet_emulation
 __pycache__
 *.pyc
 
+**/asr1/core
 **/asr1/raw_data/
 **/asr1/dump/
 **/asr1/downloads/
