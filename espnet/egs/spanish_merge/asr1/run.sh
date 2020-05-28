@@ -82,7 +82,7 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
     utils/combine_data.sh
     utils/combine_data.sh data/test data/test_mailabs
 
-    for part in datasets; do
+    for part in ${datasets}; do
         # use underscore-separated names in data directories.
         utils/fix_data_dir.sh data/${part}
         utils/utt2spk_to_spk2utt.pl data/${part}/utt2spk > data/${part}/spk2utt
@@ -100,7 +100,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     echo "stage 1: Feature Generation"
     fbankdir=fbank
     # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
-    for x in datasets; do
+    for x in ${datasets}; do
         steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj ${nj} --write_utt2num_frames true \
             data/${x} exp/make_fbank/${x} ${fbankdir}
         utils/fix_data_dir.sh data/${x}
