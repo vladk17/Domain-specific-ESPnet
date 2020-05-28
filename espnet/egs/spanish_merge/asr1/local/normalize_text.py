@@ -52,6 +52,7 @@ def normalize(inFile, format, lang):
     outfile = open(inFile, 'w')
     print("Normalizing text to %s" % (inFile))
 
+
     for line in infile:
         if line == "\n" or line == "":
             continue
