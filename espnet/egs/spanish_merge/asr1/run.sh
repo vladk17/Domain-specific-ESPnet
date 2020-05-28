@@ -67,7 +67,7 @@ train_dev="test"
 recog_set="test"
 
 train_dev_proportion=0.05
-
+datasets='train_mailabs test_mailabs'
 
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    ### Task dependent. You have to make data the following preparation part by yourself.
@@ -79,10 +79,10 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
 
     ./local/data_preparation.sh
 
-    utils/combine_data.sh data/train data/train_mailabs
+    utils/combine_data.sh
     utils/combine_data.sh data/test data/test_mailabs
 
-    for part in train test; do
+    for part in datasets; do
         # use underscore-separated names in data directories.
         utils/fix_data_dir.sh data/${part}
         utils/utt2spk_to_spk2utt.pl data/${part}/utt2spk > data/${part}/spk2utt
@@ -100,14 +100,14 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     echo "stage 1: Feature Generation"
     fbankdir=fbank
     # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
-    for x in train test; do
+    for x in datasets; do
         steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj ${nj} --write_utt2num_frames true \
             data/${x} exp/make_fbank/${x} ${fbankdir}
         utils/fix_data_dir.sh data/${x}
     done
 
-    mv data/${train_set} data/${train_set}_org
-    mv data/${train_dev} data/${train_dev}_org
+    utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_mailabs
+    utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_org data/test_mailabs
 
     # remove utt having more than 3000 frames
     # remove utt having more than 400 characters
@@ -177,18 +177,15 @@ mkdir -p ${lmexpdir}
 if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     echo "stage 3: LM Preparation"
     lmdatadir=data/local/lm_train_${bpemode}${nbpe}
-    # use external data
-    if [ ! -e data/local/lm_train/librispeech-lm-norm.txt.gz ]; then
-        wget http://www.openslr.org/resources/11/librispeech-lm-norm.txt.gz -P data/local/lm_train/
-    fi
+    # Here we use only transcripts, encoded with bpe model,
+    # later we can add more external spanish text data and merge with transcripts as it was done in librispeech recipe
+
     if [ ! -e ${lmdatadir} ]; then
         mkdir -p ${lmdatadir}
-        cut -f 2- -d" " data/${train_set}/text | gzip -c > data/local/lm_train/${train_set}_text.gz
-        # combine external text and transcriptions and shuffle them with seed 777
-        zcat data/local/lm_train/librispeech-lm-norm.txt.gz data/local/lm_train/${train_set}_text.gz |\
-            spm_encode --model=${bpemodel}.model --output_format=piece > ${lmdatadir}/train.txt
+        cut -f 2- -d" " data/${train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+        > ${lmdatadir}/train.txt
         cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
-                                                            > ${lmdatadir}/valid.txt
+        > ${lmdatadir}/valid.txt
     fi
     ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
         lm_train.py \
