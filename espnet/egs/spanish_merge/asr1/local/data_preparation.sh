@@ -25,6 +25,8 @@ pip install -r requirements.txt
 #rm -rf downloads/crowdsource
 #mv resampled_crowdsource downloads/crowdsource
 
-chmod -R 777 data
-chmod -R 777 downloads
+#chmod -R 777 data
+#chmod -R 777 downloads
 
+chmod -R 777 ../data
+chmod -R 777 ../downloads
