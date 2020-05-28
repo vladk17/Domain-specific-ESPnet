@@ -106,6 +106,8 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
         utils/fix_data_dir.sh data/${x}
     done
 
+    mv data/${train_set} data/${train_set}_org
+    mv data/${train_dev} data/${train_dev}_org
 
     # remove utt having more than 3000 frames
     # remove utt having more than 400 characters
