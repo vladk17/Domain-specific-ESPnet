@@ -62,12 +62,14 @@ tag="" # tag for managing experiments.
 
 # Set bash to 'debug' mode, it will exit on :
 # -e 'error', -u 'undefined variable', -o ... 'error in pipeline', -x 'print commands',
+
+datasets='train_gong test_gong'
+
 train_set="train"
 train_dev="test"
-recog_set="test"
+recog_set="train test"
 
 train_dev_proportion=0.05
-datasets='train_mailabs test_mailabs'
 
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    ### Task dependent. You have to make data the following preparation part by yourself.
@@ -104,8 +106,8 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
         utils/fix_data_dir.sh data/${x}
     done
 
-    utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_mailabs
-    utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_org data/test_mailabs
+    utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_gong
+    utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_org data/test_gong
 
     # remove utt having more than 3000 frames
     # remove utt having more than 400 characters
