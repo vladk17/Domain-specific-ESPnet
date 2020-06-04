@@ -60,11 +60,13 @@ def run_factory(datasets: List[DataSet]):
 
 
 def prepare_gong_data():
+    logger.info(f"\n\nDownloading and extracting data for 'Gongio' dataset\n\n")
     dataset_location = download_from_s3(key='to-y-data',
                                         bucket='gong-shared-with-y-data',
                                         dataset_name='spanish_gong',
                                         download_folder=raw_data_folder)
-    print("Dataset location:", dataset_location)
+    logger.info(f"Dataset location: {dataset_location}")
+    logger.info(f"Using class {GongSpanish2KaldiTransformer()}")
 
     transformer = GongSpanish2KaldiTransformer()
     transformer.transform(
