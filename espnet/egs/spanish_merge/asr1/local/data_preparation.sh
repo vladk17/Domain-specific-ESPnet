@@ -5,7 +5,7 @@ pip install -r requirements.txt
 
 #add-apt-repository ppa:mc3man/trusty-media
 #apt-get -y update
-apt install -y ffmpeg
+#apt install -y ffmpeg
 
 python3 make_data.py
 #
