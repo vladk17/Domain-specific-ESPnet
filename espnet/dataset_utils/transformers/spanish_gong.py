@@ -83,7 +83,10 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
         json_path = os.path.join(relative_path, 'spanish_human_manual_transcription', transcript_path)
         wav_path = f"{transcript_path[:-5]}.raw-audio.wav"
         with open(json_path, 'r') as f:
-            data = json.load(f)
+            try:
+                data = json.load(f)
+            except:
+                logger.error("ERROR IN JSON READING")
             self.overall_duration += data['monologues'][-1]['end']
             chunks = [
                 (
