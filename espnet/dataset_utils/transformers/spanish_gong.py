@@ -83,10 +83,7 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
         json_path = os.path.join(relative_path, 'spanish_human_manual_transcription', transcript_path)
         wav_path = f"{transcript_path[:-5]}.raw-audio.wav"
         with open(json_path, 'r') as f:
-            try:
-                data = json.load(f)
-            except:
-                logger.error("ERROR IN JSON READING")
+            data = json.load(f)
             self.overall_duration += data['monologues'][-1]['end']
             chunks = [
                 (
@@ -94,7 +91,7 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
                     utterance['speaker']['id'])
                 for utterance in
                 data['monologues']]
-            texts = [" ".join([_['text'].encode('cp1252').decode() for _ in utterance['terms']]) for utterance in
+            texts = [" ".join([_['text'] for _ in utterance['terms']]) for utterance in
                      data['monologues']]
             assert len(chunks) == len(
                 texts), "Length of texts is not equal to length of chunks in the transcript file"
