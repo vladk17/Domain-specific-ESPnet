@@ -111,7 +111,7 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
 
             file_path = "downloads/" + self.prefix + "/" + audio_paths[idx]
             utt_id = idx + 1
-            speaker_id = self.prefix + 'sp' + ''.join(speakers[idx])
+            speaker_id = self.prefix + 'sp' + ''.join(speakers[idx]).replace(' ', '')
             utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'
             wavscp.append(f'{utterance_id} {file_path}')
             utt2spk.append(f'{utterance_id} {speaker_id}')
