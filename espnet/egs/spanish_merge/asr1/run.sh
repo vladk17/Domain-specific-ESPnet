@@ -108,7 +108,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_mailabs
     utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_org data/test_mailabs
-    utils/combine_data.sh --extra_files utt2num_frames data/${recog_set}_org data/test_gong datatrain_gong
+    utils/combine_data.sh --extra_files utt2num_frames data/${recog_set}_org data/test_gong data/train_gong
 
     # remove utt having more than 3000 frames
     # remove utt having more than 400 characters
