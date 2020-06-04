@@ -33,7 +33,7 @@ class TEDxSpanish2KaldiTransformer(AbstractDataTransformer):
         logger.info(f"Total dataset size: {len(text)}")
         if len(text) < self.SUBSET_SIZE:
             logger.info(
-                f"ATTENTION! Provided subset size ({self.SUBSET_SIZE}) is less than overall dataset size ({len(text)}). "
+                f"ATTENTION! Provided subset size ({self.SUBSET_SIZE}) is more than overall dataset size ({len(text)}). "
                 f"Taking all dataset")
         if self.SUBSET_SIZE:
             logger.info(f"Subset size: {self.SUBSET_SIZE}")

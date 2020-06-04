@@ -27,7 +27,6 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
 
         # copy audio files to separate directory according to kaldi directory conventions
-        logger.info("Copying files to kaldi download directory")
 
         transcripts_dir = os.path.join(raw_data_path, 'spanish_human_manual_transcription')
         transcript_paths = list(os.walk(transcripts_dir))[0][2]
@@ -62,7 +61,7 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
         logger.info(f"Total dataset size: {len(text)}")
         if len(text) < self.SUBSET_SIZE:
             logger.info(
-                f"ATTENTION! Provided subset size ({self.SUBSET_SIZE}) is less than overall dataset size ({len(text)}). "
+                f"ATTENTION! Provided subset size ({self.SUBSET_SIZE}) is more than overall dataset size ({len(text)}). "
                 f"Taking all dataset")
         if self.SUBSET_SIZE:
             logger.info(f"Subset size: {self.SUBSET_SIZE}")
@@ -110,7 +109,7 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
             tokens = transcript.lower().split(' ')
             transcript = ' '.join(tokens[:-1])
 
-            file_path = audio_paths[idx]
+            file_path = "downloads/" + self.prefix + "/" + audio_paths[idx]
             utt_id = idx + 1
             speaker_id = self.prefix + 'sp' + ''.join(speakers[idx])
             utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'
