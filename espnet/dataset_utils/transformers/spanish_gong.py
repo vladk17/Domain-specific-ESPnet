@@ -42,7 +42,7 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
                 chunks.extend(cur_chunks)
                 cut_audio_paths.extend(cur_cut_audio_paths)
             except Exception as e:
-                logger.error(e)
+                logger.error("EXCEPTION", e)
         print('Total dataset duration, hours:', self.overall_duration / 3600)
 
         best_monologue_indexes = [idx for idx, chunk in enumerate(chunks) if chunk[2] > 3
