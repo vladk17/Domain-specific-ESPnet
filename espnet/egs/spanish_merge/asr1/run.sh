@@ -8,8 +8,8 @@
 
 # general configuration
 backend=pytorch
-stage=0     # start from -1 if you need to start from data download
-stop_stage=2
+stage=5     # start from -1 if you need to start from data download
+stop_stage=100
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
