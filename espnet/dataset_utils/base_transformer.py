@@ -1,5 +1,4 @@
 import os
-import re
 from abc import ABC, abstractmethod
 from distutils.dir_util import copy_tree
 from typing import List
@@ -9,6 +8,7 @@ from sklearn.model_selection import train_test_split
 import logging
 
 logger = logging.root
+
 
 class AbstractDataTransformer(ABC):
 
@@ -21,7 +21,7 @@ class AbstractDataTransformer(ABC):
     @property
     def prefix(self):
         if not self._prefix:
-            raise ValueError("No prefix specified for current Data Tranformer")
+            raise ValueError("No prefix specified for current Data Transformer")
         return self._prefix
 
     @abstractmethod

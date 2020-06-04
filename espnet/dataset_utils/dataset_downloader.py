@@ -3,9 +3,12 @@ import tarfile
 import urllib.request
 import zipfile
 from typing import List
-
+import boto3 as boto3
 from tqdm import tqdm
 import pathlib
+import logging
+
+logger = logging.root
 
 
 class DownloadProgressBar(tqdm):
@@ -22,11 +25,10 @@ def download_url(url, output_path):
 
 
 def download_and_extract_data(dataset_urls: List[str], dataset_name: str, download_folder: str):
-    data_dir = download_folder
 
-    if not os.path.exists(data_dir):
-        os.mkdir(data_dir)
-    dataset_dir = os.path.join(data_dir, dataset_name)
+    if not os.path.exists(download_folder):
+        os.mkdir(download_folder)
+    dataset_dir = os.path.join(download_folder, dataset_name)
 
     if not os.path.exists(os.path.join(dataset_dir, 'decompressed')):
         for idx, dataset_url in enumerate(dataset_urls):
@@ -58,3 +60,33 @@ def download_and_extract_data(dataset_urls: List[str], dataset_name: str, downlo
 
     final_path = os.path.join(dataset_dir, 'decompressed')
     return pathlib.Path(final_path).absolute()
+
+
+def download_dir(client, resource, bucket, prefix, local_dir):
+    paginator = client.get_paginator('list_objects')
+    for result in paginator.paginate(Bucket=bucket, Delimiter='/', Prefix=prefix):
+        if result.get('CommonPrefixes') is not None:
+            for subdir in result.get('CommonPrefixes'):
+                download_dir(client, resource, bucket, subdir.get('Prefix'), local_dir)
+        for file in result.get('Contents', []):
+            dest_pathname = os.path.join(local_dir, file.get('Key'))
+            if not os.path.exists(os.path.dirname(dest_pathname)):
+                os.makedirs(os.path.dirname(dest_pathname))
+            if file.get('Size') != 0:
+                resource.meta.client.download_file(bucket, file.get('Key'), dest_pathname)
+
+
+def download_from_s3(key, bucket, dataset_name, download_folder):
+    client = boto3.client('s3',
+                          aws_access_key_id=os.getenv("AWS_GONG_ACCESS_KEY"),
+                          aws_secret_access_key=os.getenv("AWS_GONG_SECRET"))
+    resource = boto3.resource('s3', aws_access_key_id=os.getenv("AWS_GONG_ACCESS_KEY"),
+                              aws_secret_access_key=os.getenv("AWS_GONG_SECRET"))
+    dataset_dir = os.path.join(download_folder, dataset_name)
+    if os.path.exists(dataset_dir):
+        logger.info("Dataset has been already downloaded")
+    else:
+        logger.info("Getting data from s3")
+        download_dir(client, resource, bucket, key, dataset_dir)
+
+    return pathlib.Path(dataset_dir).absolute()
