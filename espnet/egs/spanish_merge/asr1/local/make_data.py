@@ -41,7 +41,7 @@ eg_dir = Path('/espnet/egs/spanish_merge/asr1')
 raw_data_folder = Path(eg_dir, 'raw_data')
 
 
-def run_factory(datasets: List[DataSet]):
+def prepare_public_data_factory(datasets: List[DataSet]):
     for dataset in datasets:
         logger.info(f"\n\nDownloading and extracting data for '{dataset.name}' dataset\n\n")
 
@@ -75,5 +75,5 @@ def prepare_gong_data():
 
 
 if __name__ == '__main__':
-    run_factory(datasets)
+    prepare_public_data_factory(datasets)
     prepare_gong_data()
