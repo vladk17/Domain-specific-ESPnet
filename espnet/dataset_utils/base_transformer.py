@@ -14,7 +14,7 @@ class AbstractDataTransformer(ABC):
 
     def __init__(self):
         self._prefix: str = None
-        self.SUBSET_SIZE: int = None
+        self.SUBSET_SIZE: int = 999999999999999
         self.TESTSET_PROPORTION: float = 0.1
         self.kaldi_data_dir: str = None
 
@@ -39,13 +39,13 @@ class AbstractDataTransformer(ABC):
     def _create_files(self, directory, wavscp, text, utt2spk):
         if not os.path.exists(directory):
             os.makedirs(directory)
-        with open(os.path.join(directory, 'wav.scp'), 'w') as f1:
+        with open(os.path.join(directory, 'wav.scp'), 'w', encoding="utf-8") as f1:
             f1.write('\n'.join(wavscp))
             f1.write('\n')
-        with open(os.path.join(directory, 'text'), 'w') as f2:
+        with open(os.path.join(directory, 'text', ), 'w', encoding="utf-8") as f2:
             f2.write('\n'.join(text))
             f2.write('\n')
-        with open(os.path.join(directory, 'utt2spk'), 'w') as f3:
+        with open(os.path.join(directory, 'utt2spk'), 'w', encoding="utf-8") as f3:
             f3.write('\n'.join(utt2spk))
             f3.write('\n')
 
@@ -77,3 +77,24 @@ class AbstractDataTransformer(ABC):
         sound.export(origin_file_name, format="wav")
         os.system(f"sox '%s' -r {frequency} -b 16 -c 1 %s" % (origin_file_name, downsampled_wav_path))
         os.remove(origin_file_name)
+
+    def cut_audio_to_chunks(self, base_dir: str, wav_path: str, unprocessed_dir_prefix,
+                            processed_dir_prefix, chunks=List[tuple]):
+        """
+        Takes as input audio file and chunks in format [(0,1.2),(1.2,4.5),...] and returns list of new audio file paths
+        accordingly to chunks length
+        """
+        cut_audio_dir = os.path.join(base_dir, processed_dir_prefix)
+        if not os.path.exists(cut_audio_dir):
+            os.makedirs(cut_audio_dir)
+        sound = AudioSegment.from_wav(os.path.join(base_dir, unprocessed_dir_prefix, wav_path))
+        created_files: List[str] = []
+        for idx, chunk in enumerate(chunks):
+            start = chunk[0] * 1000
+            end = chunk[1] * 1000
+            chunk_sound = sound[start:end]
+            created_files.append(f"{wav_path}".replace(".wav", f"{idx + 1}.wav"))
+            new_file_path = f"{os.path.join(base_dir, processed_dir_prefix, wav_path)}".replace(".wav",
+                                                                                                f"{idx + 1}.wav")
+            chunk_sound.export(new_file_path, format='wav')
+        return created_files

@@ -25,7 +25,6 @@ def download_url(url, output_path):
 
 
 def download_and_extract_data(dataset_urls: List[str], dataset_name: str, download_folder: str):
-
     if not os.path.exists(download_folder):
         os.mkdir(download_folder)
     dataset_dir = os.path.join(download_folder, dataset_name)
@@ -77,11 +76,13 @@ def download_dir(client, resource, bucket, prefix, local_dir):
 
 
 def download_from_s3(key, bucket, dataset_name, download_folder):
+    access_key = os.getenv("AWS_GONG_ACCESS_KEY")
+    secret_token = os.getenv("AWS_GONG_SECRET")
     client = boto3.client('s3',
-                          aws_access_key_id=os.getenv("AWS_GONG_ACCESS_KEY"),
-                          aws_secret_access_key=os.getenv("AWS_GONG_SECRET"))
-    resource = boto3.resource('s3', aws_access_key_id=os.getenv("AWS_GONG_ACCESS_KEY"),
-                              aws_secret_access_key=os.getenv("AWS_GONG_SECRET"))
+                          aws_access_key_id=access_key,
+                          aws_secret_access_key=secret_token)
+    resource = boto3.resource('s3', aws_access_key_id=access_key,
+                              aws_secret_access_key=secret_token)
     dataset_dir = os.path.join(download_folder, dataset_name)
     if os.path.exists(dataset_dir):
         logger.info("Dataset has been already downloaded")
