@@ -44,7 +44,7 @@ class CrowdsourcedOpenASR(AbstractDataTransformer):
             logger.info(f"Subset size: {self.SUBSET_SIZE}")
             if dataset_size < self.SUBSET_SIZE:
                 logger.info(
-                    f"ATTENTION! Provided self.SUBSET_SIZE size ({self.SUBSET_SIZE}) is less "
+                    f"ATTENTION! Provided self.SUBSET_SIZE size ({self.SUBSET_SIZE}) is more "
                     f"than overall dataset size ({dataset_size}). "
                     f"Taking all dataset")
             self.SUBSET_SIZE = self.SUBSET_SIZE
