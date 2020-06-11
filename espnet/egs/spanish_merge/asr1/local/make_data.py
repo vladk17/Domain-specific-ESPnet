@@ -77,5 +77,5 @@ def prepare_gong_data():
 
 
 if __name__ == '__main__':
-    # prepare_public_data_factory(datasets)
+    prepare_public_data_factory(datasets)
     prepare_gong_data()
