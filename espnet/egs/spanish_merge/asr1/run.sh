@@ -187,10 +187,11 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
 
         for i data/${train_set}/text data/train_gong_unsupervised/text data/test_gong_unsupervised/text
         do
-            cut -f 2- -d" " $i >> data/local/lm_raw_data.txt
+            cut -f 2- -d" " $i >> data/local/unsupervised_and_supervised_raw_data_for_lm.txt
         done
 
-        spm_encode --model=${bpemodel}.model --output_format=piece < data/local/lm_raw_data.txt > ${lmdatadir}/train.txt
+        spm_encode --model=${bpemodel}.model --output_format=piece <
+        data/local/unsupervised_and_supervised_raw_data_for_lm.txt > ${lmdatadir}/train.txt
 
         cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
         > ${lmdatadir}/valid.txt

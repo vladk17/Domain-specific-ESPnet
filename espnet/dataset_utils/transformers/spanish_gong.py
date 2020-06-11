@@ -22,13 +22,13 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
 
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
 
-        raw_data_path = os.path.join(raw_data_path, 'to-y-data', 'spanish_test_set')
+        raw_data_path = os.path.join(raw_data_path, 'to-y-data', 'spanish_test_set_second_pass')
         self.kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
 
         # copy audio files to separate directory according to kaldi directory conventions
 
-        transcripts_dir = os.path.join(raw_data_path, 'spanish_human_manual_transcription')
+        transcripts_dir = os.path.join(raw_data_path)
         transcript_paths = list(os.walk(transcripts_dir))[0][2]
         texts = []
         chunks = []
@@ -79,7 +79,7 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
         self.create_files(wavscp_test, text_test, utt2spk_test, 'test')
 
     def cut_audio_to_monologues(self, relative_path, transcript_path):
-        json_path = os.path.join(relative_path, 'spanish_human_manual_transcription', transcript_path)
+        json_path = os.path.join(relative_path, transcript_path)
         wav_path = f"{transcript_path[:-5]}.raw-audio.wav"
         with open(json_path, 'r') as f:
             data = json.load(f)

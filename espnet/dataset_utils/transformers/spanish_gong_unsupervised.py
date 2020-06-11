@@ -1,7 +1,7 @@
 import json
 import logging
 import os
-from pathlib import Path
+import random
 
 from tqdm import tqdm
 
@@ -41,7 +41,7 @@ class GongUnsupervisedSpanish2KaldiTransformer(AbstractDataTransformer):
                 chunks.extend(cur_chunks)
                 cut_audio_paths.extend(cur_cut_audio_paths)
             except Exception as e:
-                logger.error(f"EXCEPTION {e}")
+                logger.error(f"GOT EXCEPTION in data transformation! type: {e.__class__.__name__}, message: {e}")
         print('Total dataset duration, hours:', self.overall_duration / 3600)
 
         best_monologue_indexes = [idx for idx, chunk in enumerate(chunks) if chunk[2] > 3
@@ -80,14 +80,15 @@ class GongUnsupervisedSpanish2KaldiTransformer(AbstractDataTransformer):
 
     def cut_audio_to_monologues(self, relative_path, transcript_path):
         json_path = os.path.join(relative_path, 'machine_transcripts', transcript_path)
-        wav_path = f"{transcript_path[:-5]}.raw-audio.wav"
+        wav_path = f"{transcript_path[:-21]}.raw-audio.wav"
         with open(json_path, 'r') as f:
             data = json.load(f)
-            self.overall_duration += data['monologues'][-1]['end']
+            self.overall_duration += data['monologues'][-1]['terms'][-1]['end']
             chunks = [
                 (
-                    utterance['start'], utterance['end'], utterance['end'] - utterance['start'],
-                    utterance['speaker']['id'])
+                    utterance['terms'][0]['start'], utterance['terms'][-1]['end'],
+                    utterance['terms'][-1]['end'] - utterance['terms'][0]['start'],
+                    str(utterance.get('speaker', {}).get('id', random.randint(9999999999999, 99999999999999999))))
                 for utterance in
                 data['monologues']]
             texts = [" ".join([_['text'] for _ in utterance['terms']]) for utterance in
