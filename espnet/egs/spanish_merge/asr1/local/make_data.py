@@ -5,6 +5,7 @@ from typing import List
 
 from dataset_utils.dataset_downloader import download_and_extract_data, download_from_s3
 from dataset_utils.transformers.spanish_gong import GongSpanish2KaldiTransformer
+from dataset_utils.transformers.spanish_gong_unsupervised import GongUNsupervisedSpanish2KaldiTransformer
 from dataset_utils.transformers.spanish_mailabs import MailabsKaldiTransformer
 from dataset_utils.transformers.spanish_common_voice import CommonVoiceKaldiTransformer
 from dataset_utils.transformers.spanish_tedx import TEDxSpanish2KaldiTransformer
@@ -68,10 +69,11 @@ def prepare_gong_data():
     logger.info(f"Dataset location: {dataset_location}")
     logger.info(f"Using class {GongSpanish2KaldiTransformer()}")
 
-    transformer = GongSpanish2KaldiTransformer()
-    transformer.transform(
-        raw_data_path=dataset_location,
-        espnet_kaldi_eg_directory=eg_dir)
+    transformers = [GongSpanish2KaldiTransformer(), GongUNsupervisedSpanish2KaldiTransformer()]
+    for transformer in transformers:
+        transformer.transform(
+            raw_data_path=dataset_location,
+            espnet_kaldi_eg_directory=eg_dir)
 
 
 if __name__ == '__main__':
