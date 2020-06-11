@@ -15,7 +15,7 @@ class GongUNsupervisedSpanish2KaldiTransformer(AbstractDataTransformer):
 
     def __init__(self):
         super().__init__()
-        self._prefix = 'gong'
+        self._prefix = 'gong_unsupervised'
         self.overall_duration = 0
         if SUBSET_SIZE:
             self.SUBSET_SIZE = int(SUBSET_SIZE)
