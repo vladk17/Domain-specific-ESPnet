@@ -8,7 +8,7 @@
 
 # general configuration
 backend=pytorch
-stage=3     # start from -1 if you need to start from data download
+stage=1     # start from -1 if you need to start from data download
 stop_stage=3
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
@@ -63,7 +63,7 @@ tag="" # tag for managing experiments.
 # Set bash to 'debug' mode, it will exit on :
 # -e 'error', -u 'undefined variable', -o ... 'error in pipeline', -x 'print commands',
 
-datasets='train_mailabs test_mailabs train_gong test_gong'
+datasets='train_mailabs test_mailabs train_gong test_gong test_gong_unsupervised train_gong_unsupervised'
 
 train_set="train"
 train_dev="train_dev"
