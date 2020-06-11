@@ -185,7 +185,7 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     if [ ! -e ${lmdatadir} ]; then
         mkdir -p ${lmdatadir}
 
-        for i data/${train_set}/text data/train_gong_unsupervised/text data/test_gong_unsupervised/text
+        for i in data/${train_set}/text data/train_gong_unsupervised/text data/test_gong_unsupervised/text
         do
             cut -f 2- -d" " $i >> data/local/unsupervised_and_supervised_raw_data_for_lm.txt
         done
