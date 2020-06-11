@@ -11,7 +11,7 @@ if __name__ == '__main__':
                                                                      'asr1', 'raw_data'))
     print("Dataset location:", dataset_location)
 
-    transformer = GongSpanish2KaldiTransformer()
+    transformer = GongUnSpanish2KaldiTransformer()
     transformer.transform(
         raw_data_path=dataset_location,
         espnet_kaldi_eg_directory=os.path.join(PROJECT_ROOT, 'espnet', 'egs', 'spanish_gong', 'asr1'))
