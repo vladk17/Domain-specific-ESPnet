@@ -11,7 +11,7 @@ SUBSET_SIZE = os.environ.get("ESPNET_SUBSET_SIZE", None)
 logger = logging.root
 
 
-class GongUNsupervisedSpanish2KaldiTransformer(AbstractDataTransformer):
+class GongUnsupervisedSpanish2KaldiTransformer(AbstractDataTransformer):
 
     def __init__(self):
         super().__init__()

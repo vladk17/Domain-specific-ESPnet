@@ -5,7 +5,7 @@ from typing import List
 
 from dataset_utils.dataset_downloader import download_and_extract_data, download_from_s3
 from dataset_utils.transformers.spanish_gong import GongSpanish2KaldiTransformer
-from dataset_utils.transformers.spanish_gong_unsupervised import GongUNsupervisedSpanish2KaldiTransformer
+from dataset_utils.transformers.spanish_gong_unsupervised import GongUnsupervisedSpanish2KaldiTransformer
 from dataset_utils.transformers.spanish_mailabs import MailabsKaldiTransformer
 from dataset_utils.transformers.spanish_common_voice import CommonVoiceKaldiTransformer
 from dataset_utils.transformers.spanish_tedx import TEDxSpanish2KaldiTransformer
@@ -61,21 +61,21 @@ def prepare_public_data_factory(datasets: List[DataSet]):
 
 
 def prepare_gong_data():
-    logger.info(f"\n\nDownloading and extracting data for 'Gongio' dataset\n\n")
+    logger.info(f"\n\nDownloading and extracting data for 'Gongio' datasets\n\n")
     dataset_location = download_from_s3(key='to-y-data',
                                         bucket='gong-shared-with-y-data',
                                         dataset_name='spanish_gong',
                                         download_folder=raw_data_folder)
     logger.info(f"Dataset location: {dataset_location}")
-    logger.info(f"Using class {GongSpanish2KaldiTransformer()}")
 
-    transformers = [GongSpanish2KaldiTransformer(), GongUNsupervisedSpanish2KaldiTransformer()]
+    transformers = [GongSpanish2KaldiTransformer(), GongUnsupervisedSpanish2KaldiTransformer()]
     for transformer in transformers:
+        logger.info(f"Using class {transformer}")
         transformer.transform(
             raw_data_path=dataset_location,
             espnet_kaldi_eg_directory=eg_dir)
 
 
 if __name__ == '__main__':
-    prepare_public_data_factory(datasets)
+    # prepare_public_data_factory(datasets)
     prepare_gong_data()

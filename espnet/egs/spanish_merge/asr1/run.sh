@@ -9,7 +9,7 @@
 # general configuration
 backend=pytorch
 stage=0     # start from -1 if you need to start from data download
-stop_stage=2
+stop_stage=3
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
@@ -184,8 +184,14 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
 
     if [ ! -e ${lmdatadir} ]; then
         mkdir -p ${lmdatadir}
-        cut -f 2- -d" " data/${train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
-        > ${lmdatadir}/train.txt
+
+        for i data/${train_set}/text data/train_gong_unsupervised/text data/test_gong_unsupervised/text
+        do
+            cut -f 2- -d" " $i >> data/local/lm_raw_data.txt
+        done
+
+        spm_encode --model=${bpemodel}.model --output_format=piece < data/local/lm_raw_data.txt > ${lmdatadir}/train.txt
+
         cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
         > ${lmdatadir}/valid.txt
     fi
