@@ -8,7 +8,7 @@
 
 # general configuration
 backend=pytorch
-stage=0     # start from -1 if you need to start from data download
+stage=3     # start from -1 if you need to start from data download
 stop_stage=3
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
@@ -190,7 +190,7 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
             cut -f 2- -d" " $i >> data/local/unsupervised_and_supervised_raw_data_for_lm.txt
         done
 
-        spm_encode --model=${bpemodel}.model --output_format=piece <
+        spm_encode --model=${bpemodel}.model --output_format=piece < \
         data/local/unsupervised_and_supervised_raw_data_for_lm.txt > ${lmdatadir}/train.txt
 
         cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
