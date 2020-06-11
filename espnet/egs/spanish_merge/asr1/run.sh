@@ -173,6 +173,7 @@ if [ -z ${lmtag} ]; then
     lmtag=$(basename ${lm_config%.*})
 fi
 lmexpname=train_rnnlm_${backend}_${lmtag}_${bpemode}${nbpe}_ngpu${ngpu}
+lmbigname=unsupervised_and_supervised_raw_data_for_lm.txt
 lmexpdir=exp/${lmexpname}
 mkdir -p ${lmexpdir}
 
@@ -182,12 +183,11 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     # Here we use only transcripts, encoded with bpe model,
     # later we can add more external spanish text data and merge with transcripts as it was done in librispeech recipe
 
-    if [ ! -e ${lmdatadir} ]; then
+    if [ ! -e data/local/${lmdatadir} ]; then
         mkdir -p ${lmdatadir}
 
-        rm data/local/unsupervised_and_supervised_raw_data_for_lm.txt
-        touch data/local/unsupervised_and_supervised_raw_data_for_lm.txt
-
+        # merge trainset with unsupervised gong data
+        touch data/local/${lmbigname}
         for i in data/${train_set}/text data/train_gong_unsupervised/text data/test_gong_unsupervised/text
         do
             cut -f 2- -d" " $i >> data/local/unsupervised_and_supervised_raw_data_for_lm.txt
