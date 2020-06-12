@@ -1,1 +1,1 @@
-./run.sh --docker_gpu 0,1,2,3 --docker_egs spanish_merge/asr1 --docker_env --ngpu 4
+./run.sh --docker_gpu 0,1,2,3,4,5,6,7 --docker_egs spanish_merge/asr1 --docker_env --ngpu 8
