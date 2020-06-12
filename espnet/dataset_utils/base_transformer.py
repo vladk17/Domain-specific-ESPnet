@@ -1,5 +1,6 @@
 import os
 from abc import ABC, abstractmethod
+from copy import copy
 from distutils.dir_util import copy_tree
 from typing import List
 
@@ -69,14 +70,13 @@ class AbstractDataTransformer(ABC):
         for path in origin_paths:
             copy_tree(path, destination_path)
 
-    def downsample_audio(self, source_path: str, frequency=16000):
-        new_file_name = source_path.split("/")[-1][:-4] + '.wav'
-        origin_file_name = new_file_name + '.origin'
-        downsampled_wav_path = new_file_name
-        sound = AudioSegment.from_wav(source_path)
-        sound.export(origin_file_name, format="wav")
-        os.system(f"sox '%s' -r {frequency} -b 16 -c 1 %s" % (origin_file_name, downsampled_wav_path))
-        os.remove(origin_file_name)
+    def downsample_audio(self, source_path: str, frequency=16, channels=1):
+        downsampled_path = list(copy(source_path))
+        downsampled_path[-4:] = '.out.wav'
+        downsampled_path = ''.join(downsampled_path)
+        os.system("sox %s -r 16000 -b 16 -c 1 %s" % (source_path, downsampled_path))
+        os.remove(source_path)
+        os.rename(downsampled_path, source_path)
 
     def cut_audio_to_chunks(self, base_dir: str, wav_path: str, unprocessed_dir_prefix,
                             processed_dir_prefix, chunks=List[tuple]):
