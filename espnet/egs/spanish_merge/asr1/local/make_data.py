@@ -25,17 +25,17 @@ datasets = [
     #  CommonVoiceKaldiTransformer()),
     # ('TEDxSpanish', ['http://www.openslr.org/resources/67/tedx_spanish_corpus.tgz'],
     #  TEDxSpanish2KaldiTransformer()),
-    # ('Crowdsource', ['http://www.openslr.org/resources/71/es_cl_female.zip',
-    #                  'http://www.openslr.org/resources/71/es_cl_male.zip',
-    #                  'http://www.openslr.org/resources/72/es_co_female.zip',
-    #                  'http://www.openslr.org/resources/72/es_co_male.zip',
-    #                  'http://www.openslr.org/resources/73/es_pe_female.zip',
-    #                  'http://www.openslr.org/resources/73/es_pe_male.zip',
-    #                  'http://www.openslr.org/resources/74/es_pr_female.zip',
-    #                  'http://www.openslr.org/resources/75/es_ve_female.zip',
-    #                  'http://www.openslr.org/resources/75/es_ve_male.zip'
-    #
-    #                  ], CrowdsourcedOpenASR())
+    ('Crowdsource', ['http://www.openslr.org/resources/71/es_cl_female.zip',
+                     'http://www.openslr.org/resources/71/es_cl_male.zip',
+                     'http://www.openslr.org/resources/72/es_co_female.zip',
+                     'http://www.openslr.org/resources/72/es_co_male.zip',
+                     'http://www.openslr.org/resources/73/es_pe_female.zip',
+                     'http://www.openslr.org/resources/73/es_pe_male.zip',
+                     'http://www.openslr.org/resources/74/es_pr_female.zip',
+                     'http://www.openslr.org/resources/75/es_ve_female.zip',
+                     'http://www.openslr.org/resources/75/es_ve_male.zip'
+
+                     ], CrowdsourcedOpenASR())
 ]
 datasets = [DataSet(_[0], _[1], _[2]) for _ in datasets]
 eg_dir = Path('/espnet/egs/spanish_merge/asr1')
