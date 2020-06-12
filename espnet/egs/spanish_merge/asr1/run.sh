@@ -68,6 +68,7 @@ datasets='train_mailabs test_mailabs train_gong test_gong test_gong_unsupervised
 train_set="train"
 train_dev="train_dev"
 recog_set="test"
+lm_train_set="lm_train"
 
 train_dev_proportion=0.05
 
@@ -109,12 +110,17 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_mailabs
     utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_org data/test_mailabs
     utils/combine_data.sh --extra_files utt2num_frames data/${recog_set}_org data/test_gong data/train_gong
+    utils/combine_data.sh --extra_files utt2num_frames data/${lm_train_set}_org data/test_gong_unsupervised \
+    data/train_gong_unsupervised
+
 
     # remove utt having more than 3000 frames
     # remove utt having more than 400 characters
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_set}_org data/${train_set}
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev}_org data/${train_dev}
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_org data/${recog_set}
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
+
 
     # compute global CMVN
     compute-cmvn-stats scp:data/${train_set}/feats.scp data/${train_set}/cmvn.ark
@@ -188,7 +194,7 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
 
         # merge trainset with unsupervised gong data
         touch data/local/${lmbigname}
-        for i in data/${train_set}/text data/train_gong_unsupervised/text data/test_gong_unsupervised/text
+        for i in data/${train_set}/text data/${lm_train_set}/text
         do
             cut -f 2- -d" " $i >> data/local/${lmbigname}
         done
