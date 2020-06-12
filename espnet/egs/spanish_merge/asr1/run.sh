@@ -63,8 +63,7 @@ tag="" # tag for managing experiments.
 # Set bash to 'debug' mode, it will exit on :
 # -e 'error', -u 'undefined variable', -o ... 'error in pipeline', -x 'print commands',
 
-datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource
-          train_gong test_gong test_gong_unsupervised train_gong_unsupervised'
+datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_gong test_gong test_gong_unsupervised train_gong_unsupervised'
 
 train_set="train"
 train_dev="train_dev"
@@ -111,8 +110,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_mailabs data/train_crowdsource
     utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_org data/test_mailabs data/test_crowdsource
     utils/combine_data.sh --extra_files utt2num_frames data/${recog_set}_org data/test_gong data/train_gong
-    utils/combine_data.sh --extra_files utt2num_frames data/${lm_train_set}_org data/test_gong_unsupervised \
-    data/train_gong_unsupervised
+    utils/combine_data.sh --extra_files utt2num_frames data/${lm_train_set}_org data/test_gong_unsupervised data/train_gong_unsupervised
 
 
     # remove utt having more than 3000 frames
