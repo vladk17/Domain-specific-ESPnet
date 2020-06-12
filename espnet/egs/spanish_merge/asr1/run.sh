@@ -187,14 +187,17 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
         mkdir -p ${lmdatadir}
 
         # merge trainset with unsupervised gong data
-        touch data/local/${lmbigname}
-        for i in data/${train_set}/text data/train_gong_unsupervised/text data/test_gong_unsupervised/text
-        do
-            cut -f 2- -d" " $i >> data/local/${lmbigname}
-        done
+#        touch data/local/${lmbigname}
+#        for i in data/${train_set}/text data/train_gong_unsupervised/text data/test_gong_unsupervised/text
+#        do
+#            cut -f 2- -d" " $i >> data/local/${lmbigname}
+#        done
+#
+#        spm_encode --model=${bpemodel}.model --output_format=piece < \
+#        data/local/${lmbigname} > ${lmdatadir}/train.txt
 
-        spm_encode --model=${bpemodel}.model --output_format=piece < \
-        data/local/${lmbigname} > ${lmdatadir}/train.txt
+        cut -f 2- -d" " data/${train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+        > ${lmdatadir}/train.txt
 
         cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
         > ${lmdatadir}/valid.txt
