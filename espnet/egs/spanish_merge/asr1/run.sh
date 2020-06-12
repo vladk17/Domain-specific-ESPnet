@@ -191,12 +191,24 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
 
     if [ ! -e ${lmdatadir} ]; then
         mkdir -p ${lmdatadir}
-        cut -f 2- -d" " data/${train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
-        > ${lmdatadir}/train.txt
+
+        touch data/local/${lmbigname}
+        for i in data/${train_set}/text data/${lm_train_set}/text
+        do
+            cut -f 2- -d" " $i >> data/local/${lmbigname}
+        done
+
+        spm_encode --model=${bpemodel}.model --output_format=piece < \
+        data/local/${lmbigname} > ${lmdatadir}/train.txt
+
+#        cut -f 2- -d" " data/${train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+#        > ${lmdatadir}/train.txt
+
         cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
         > ${lmdatadir}/valid.txt
-    fi
 
+
+    fi
     ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
         lm_train.py \
         --config ${lm_config} \
