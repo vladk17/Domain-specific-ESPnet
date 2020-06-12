@@ -8,7 +8,7 @@
 
 # general configuration
 backend=pytorch
-stage=0   # start from -1 if you need to start from data download
+stage=1   # start from -1 if you need to start from data download
 stop_stage=3
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
@@ -122,6 +122,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_org data/${recog_set}
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
 
+    rm -rf data/${train_set}_org data/${train_dev}_org data/${recog_set}_org data/${lm_train_set}_org
 
     # compute global CMVN
     compute-cmvn-stats scp:data/${train_set}/feats.scp data/${train_set}/cmvn.ark
