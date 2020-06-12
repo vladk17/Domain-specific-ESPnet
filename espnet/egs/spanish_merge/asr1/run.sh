@@ -8,7 +8,7 @@
 
 # general configuration
 backend=pytorch
-stage=1     # start from -1 if you need to start from data download
+stage=3     # start from -1 if you need to start from data download
 stop_stage=3
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
@@ -183,7 +183,7 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     # Here we use only transcripts, encoded with bpe model,
     # later we can add more external spanish text data and merge with transcripts as it was done in librispeech recipe
 
-    if [ ! -e data/local/${lmdatadir} ]; then
+    if [ ! -e ${lmdatadir} ]; then
         mkdir -p ${lmdatadir}
 
         # merge trainset with unsupervised gong data
