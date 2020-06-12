@@ -177,16 +177,16 @@ lmbigname=unsupervised_and_supervised_raw_data_for_lm.txt
 lmexpdir=exp/${lmexpname}
 mkdir -p ${lmexpdir}
 
-if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
-    echo "stage 3: LM Preparation"
-    lmdatadir=data/local/lm_train_${bpemode}${nbpe}
-    # Here we use only transcripts, encoded with bpe model,
-    # later we can add more external spanish text data and merge with transcripts as it was done in librispeech recipe
-
-    if [ ! -e ${lmdatadir} ]; then
-        mkdir -p ${lmdatadir}
-
-        # merge trainset with unsupervised gong data
+#if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
+#    echo "stage 3: LM Preparation"
+#    lmdatadir=data/local/lm_train_${bpemode}${nbpe}
+#    # Here we use only transcripts, encoded with bpe model,
+#    # later we can add more external spanish text data and merge with transcripts as it was done in librispeech recipe
+#
+#    if [ ! -e ${lmdatadir} ]; then
+#        mkdir -p ${lmdatadir}
+#
+#        # merge trainset with unsupervised gong data
 #        touch data/local/${lmbigname}
 #        for i in data/${train_set}/text data/train_gong_unsupervised/text data/test_gong_unsupervised/text
 #        do
@@ -195,12 +195,37 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
 #
 #        spm_encode --model=${bpemodel}.model --output_format=piece < \
 #        data/local/${lmbigname} > ${lmdatadir}/train.txt
+#
+#        cut -f 2- -d" " data/${train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+#        > ${lmdatadir}/train.txt
+#
+#        cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+#        > ${lmdatadir}/valid.txt
+#    fi
+#    ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
+#        lm_train.py \
+#        --config ${lm_config} \
+#        --ngpu ${ngpu} \
+#        --backend ${backend} \
+#        --verbose 1 \
+#        --outdir ${lmexpdir} \
+#        --tensorboard-dir tensorboard/${lmexpname} \
+#        --train-label ${lmdatadir}/train.txt \
+#        --valid-label ${lmdatadir}/valid.txt \
+#        --resume ${lm_resume} \
+#        --dict ${dict} \
+#        --dump-hdf5-path ${lmdatadir}
+#fi
 
-        cut -f 2- -d" " data/${train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
-        > ${lmdatadir}/train.txt
 
+if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
+    echo "stage 3: LM Preparation"
+    lmdatadir=data/local/lm_train_${bpemode}${nbpe}
+
+    if [ ! -e ${lmdatadir} ]; then
+        mkdir -p ${lmdatadir}
         cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
-        > ${lmdatadir}/valid.txt
+                                                            > ${lmdatadir}/valid.txt
     fi
     ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
         lm_train.py \
@@ -216,6 +241,8 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
         --dict ${dict} \
         --dump-hdf5-path ${lmdatadir}
 fi
+
+
 
 if [ -z ${tag} ]; then
     expname=${train_set}_${backend}_$(basename ${train_config%.*})
