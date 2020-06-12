@@ -201,7 +201,7 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
 #        spm_encode --model=${bpemodel}.model --output_format=piece < \
 #        data/local/${lmbigname} > ${lmdatadir}/train.txt
 
-        cut -f 2- -d" " data/${train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+        cut -f 2- -d" " data/${lm_train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
         > ${lmdatadir}/train.txt
 
         cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
