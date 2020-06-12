@@ -8,7 +8,7 @@
 
 # general configuration
 backend=pytorch
-stage=3    # start from -1 if you need to start from data download
+stage=1   # start from -1 if you need to start from data download
 stop_stage=3
 ngpu=1         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
@@ -119,7 +119,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_set}_org data/${train_set}
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev}_org data/${train_dev}
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_org data/${recog_set}
-    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
+    remove_longshortdata.sh --maxframes 3000 --maxchars 256 data/${lm_train_set}_org data/${lm_train_set}
 
 
     # compute global CMVN
@@ -192,18 +192,20 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     if [ ! -e ${lmdatadir} ]; then
         mkdir -p ${lmdatadir}
 
-        # merge trainset with unsupervised gong data
-        touch data/local/${lmbigname}
-        for i in data/${train_set}/text data/${lm_train_set}/text
-        do
-            cut -f 2- -d" " $i >> data/local/${lmbigname}
-        done
-
-        spm_encode --model=${bpemodel}.model --output_format=piece < \
-        data/local/${lmbigname} > ${lmdatadir}/train.txt
+#        touch data/local/${lmbigname}
+#        for i in data/${train_set}/text data/${lm_train_set}/text
+#        do
+#            cut -f 2- -d" " $i >> data/local/${lmbigname}
+#        done
+#
+#        spm_encode --model=${bpemodel}.model --output_format=piece < \
+#        data/local/${lmbigname} > ${lmdatadir}/train.txt
 
         cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
         > ${lmdatadir}/valid.txt
+
+        cut -f 2- -d" " data/${train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+        > ${lmdatadir}/train.txt
     fi
     ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
         lm_train.py \
