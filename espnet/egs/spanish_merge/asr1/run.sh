@@ -8,7 +8,7 @@
 
 # general configuration
 backend=pytorch
-stage=3     # start from -1 if you need to start from data download
+stage=1     # start from -1 if you need to start from data download
 stop_stage=3
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
@@ -63,7 +63,7 @@ tag="" # tag for managing experiments.
 # Set bash to 'debug' mode, it will exit on :
 # -e 'error', -u 'undefined variable', -o ... 'error in pipeline', -x 'print commands',
 
-datasets='train_mailabs test_mailabs test_comvoice train_comvoice train_gong test_gong test_gong_unsupervised train_gong_unsupervised'
+datasets='train_mailabs test_mailabs train_gong test_gong test_gong_unsupervised train_gong_unsupervised'
 
 train_set="train"
 train_dev="train_dev"
@@ -106,8 +106,8 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
         utils/fix_data_dir.sh data/${x}
     done
 
-    utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_mailabs data/train_comvoice
-    utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_org data/test_mailabs data/test_comvoice
+    utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_mailabs
+    utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_org data/test_mailabs
     utils/combine_data.sh --extra_files utt2num_frames data/${recog_set}_org data/test_gong data/train_gong
 
     # remove utt having more than 3000 frames
@@ -177,55 +177,27 @@ lmbigname=unsupervised_and_supervised_raw_data_for_lm.txt
 lmexpdir=exp/${lmexpname}
 mkdir -p ${lmexpdir}
 
-#if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
-#    echo "stage 3: LM Preparation"
-#    lmdatadir=data/local/lm_train_${bpemode}${nbpe}
-#    # Here we use only transcripts, encoded with bpe model,
-#    # later we can add more external spanish text data and merge with transcripts as it was done in librispeech recipe
-#
-#    if [ ! -e ${lmdatadir} ]; then
-#        mkdir -p ${lmdatadir}
-#
-#        # merge trainset with unsupervised gong data
-#        touch data/local/${lmbigname}
-#        for i in data/${train_set}/text data/train_gong_unsupervised/text data/test_gong_unsupervised/text
-#        do
-#            cut -f 2- -d" " $i >> data/local/${lmbigname}
-#        done
-#
-#        spm_encode --model=${bpemodel}.model --output_format=piece < \
-#        data/local/${lmbigname} > ${lmdatadir}/train.txt
-#
-#        cut -f 2- -d" " data/${train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
-#        > ${lmdatadir}/train.txt
-#
-#        cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
-#        > ${lmdatadir}/valid.txt
-#    fi
-#    ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
-#        lm_train.py \
-#        --config ${lm_config} \
-#        --ngpu ${ngpu} \
-#        --backend ${backend} \
-#        --verbose 1 \
-#        --outdir ${lmexpdir} \
-#        --tensorboard-dir tensorboard/${lmexpname} \
-#        --train-label ${lmdatadir}/train.txt \
-#        --valid-label ${lmdatadir}/valid.txt \
-#        --resume ${lm_resume} \
-#        --dict ${dict} \
-#        --dump-hdf5-path ${lmdatadir}
-#fi
-
-
 if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     echo "stage 3: LM Preparation"
     lmdatadir=data/local/lm_train_${bpemode}${nbpe}
+    # Here we use only transcripts, encoded with bpe model,
+    # later we can add more external spanish text data and merge with transcripts as it was done in librispeech recipe
 
     if [ ! -e ${lmdatadir} ]; then
         mkdir -p ${lmdatadir}
+
+        # merge trainset with unsupervised gong data
+        touch data/local/${lmbigname}
+        for i in data/${train_set}/text data/train_gong_unsupervised/text data/test_gong_unsupervised/text
+        do
+            cut -f 2- -d" " $i >> data/local/${lmbigname}
+        done
+
+        spm_encode --model=${bpemodel}.model --output_format=piece < \
+        data/local/${lmbigname} > ${lmdatadir}/train.txt
+
         cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
-                                                            > ${lmdatadir}/valid.txt
+        > ${lmdatadir}/valid.txt
     fi
     ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
         lm_train.py \
@@ -241,8 +213,6 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
         --dict ${dict} \
         --dump-hdf5-path ${lmdatadir}
 fi
-
-
 
 if [ -z ${tag} ]; then
     expname=${train_set}_${backend}_$(basename ${train_config%.*})
