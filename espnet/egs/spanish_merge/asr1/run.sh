@@ -111,7 +111,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     # combine data
     utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_mailabs data/train_crowdsource \
-    data/train_tedx
+    data/train_tedx data/train_gong_unsupervised data/test_gong_unsupervised
     utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_org data/test_mailabs data/test_crowdsource \
     data/test_tedx
     utils/combine_data.sh --extra_files utt2num_frames data/${recog_set}_org data/test_gong data/train_gong
@@ -125,17 +125,17 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_org data/${recog_set}
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
 
-#    rm -rf data/${train_set}_org data/${train_dev}_org data/${recog_set}_org data/${lm_train_set}_org
+    rm -rf data/${train_set}_org data/${train_dev}_org data/${recog_set}_org data/${lm_train_set}_org
 
     # speed-perturbed
     utils/perturb_data_dir_speed.sh 0.9 data/${train_set} data/temp1
     utils/perturb_data_dir_speed.sh 1.0 data/${train_set} data/temp2
     utils/perturb_data_dir_speed.sh 1.1 data/${train_set} data/temp3
-#    utils/combine_data.sh --extra-files utt2uniq data/${train_set} data/temp1 data/temp2 data/temp3
-#    rm -r data/temp1 data/temp2 data/temp3
-#    steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj 32 --write_utt2num_frames true \
-#        data/${train_set} exp/make_fbank/${train_set} ${fbankdir}
-#    utils/fix_data_dir.sh data/${train_set}
+    utils/combine_data.sh --extra-files utt2uniq data/${train_set} data/temp1 data/temp2 data/temp3
+    rm -r data/temp1 data/temp2 data/temp3
+    steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj 32 --write_utt2num_frames true \
+        data/${train_set} exp/make_fbank/${train_set} ${fbankdir}
+    utils/fix_data_dir.sh data/${train_set}
 
     # compute global CMVN
     compute-cmvn-stats scp:data/${train_set}/feats.scp data/${train_set}/cmvn.ark
