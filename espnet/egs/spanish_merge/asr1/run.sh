@@ -103,15 +103,6 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     echo "stage 1: Feature Generation"
     fbankdir=fbank
 
-    local/reverberate_data.sh $datasets
-
-    # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
-#    for x in ${datasets}; do
-#        steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj ${nj} --write_utt2num_frames true \
-#            data/${x} exp/make_fbank/${x} ${fbankdir}
-#        utils/fix_data_dir.sh data/${x}
-#    done
-
     # combine data
     utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_mailabs data/train_crowdsource \
     data/train_tedx data/train_gong_unsupervised data/test_gong_unsupervised
@@ -120,6 +111,14 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     utils/combine_data.sh --extra_files utt2num_frames data/${recog_set}_org data/test_gong data/train_gong
     utils/combine_data.sh --extra_files utt2num_frames data/${lm_train_set}_org data/test_gong_unsupervised data/train_gong_unsupervised
 
+    local/reverberate_data.sh $train_set $train_dev $recog_set
+
+#   Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
+    for x in ${datasets}; do
+        steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj ${nj} --write_utt2num_frames true \
+            data/${x} exp/make_fbank/${x} ${fbankdir}
+        utils/fix_data_dir.sh data/${x}
+    done
 
     # remove utt having more than 3000 frames
     # remove utt having more than 400 characters
