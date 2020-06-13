@@ -15,3 +15,6 @@ __pycache__
 **/asr1/exp/
 **/asr1/fbank/
 **/asr1/tensorboard/
+**/asr1/data/
+raw_data/
+.vscode/
