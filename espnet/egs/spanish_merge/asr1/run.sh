@@ -17,7 +17,7 @@ dumpdir=dump   # directory to dump full features
 N=0            # number of minibatches to be used (mainly for debugging). "0" uses all minibll
 # atches.
 verbose=0      # verbose option
-resume=snapshot.ep.18        # Resume the training from snapshot
+resume=        # Resume the training from snapshot
 
 # feature configuration
 do_delta=false
