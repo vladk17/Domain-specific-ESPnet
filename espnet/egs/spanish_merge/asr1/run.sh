@@ -14,9 +14,10 @@ ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
 dumpdir=dump   # directory to dump full features
-N=0            # number of minibatches to be used (mainly for debugging). "0" uses all minibatches.
+N=0            # number of minibatches to be used (mainly for debugging). "0" uses all minibll
+# atches.
 verbose=0      # verbose option
-resume=        # Resume the training from snapshot
+resume=snapshot.ep.18        # Resume the training from snapshot
 
 # feature configuration
 do_delta=false
