@@ -110,6 +110,11 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     data/test_tedx
     utils/combine_data.sh --extra_files utt2num_frames data/${recog_set}_combined data/test_gong data/train_gong
 
+    for x in ${train_set} ${train_dev} ${recog_set}; do
+        utils/fix_data_dir.sh data/${x}
+        utils/validate_data_dir.sh data/${x}
+    done
+
     # combine data for LM only
     utils/combine_data.sh --extra_files utt2num_frames data/${lm_train_set}_combined data/test_gong_unsupervised data/train_gong_unsupervised
 
