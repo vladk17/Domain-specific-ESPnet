@@ -112,7 +112,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     for x in ${train_set} ${train_dev} ${recog_set}; do
         utils/fix_data_dir.sh data/${x}
-        utils/validate_data_dir.sh data/${x}
+        utils/validate_data_dir.sh --no-feats data/${x}
     done
 
     # combine data for LM only
