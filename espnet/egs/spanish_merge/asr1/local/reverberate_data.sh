@@ -22,8 +22,11 @@ local/check_version.sh || exit 1;
 mkdir -p exp/nnet3
 if [ $stage -le 1 ]; then
   # Download the package that includes the real RIRs, simulated RIRs, isotropic noises and point-source noises
-  wget --no-check-certificate http://www.openslr.org/resources/28/rirs_noises.zip
-  unzip rirs_noises.zip
+
+  if [ ! -e rirs_noises.zip ]; then
+    wget --no-check-certificate http://www.openslr.org/resources/28/rirs_noises.zip
+    unzip rirs_noises.zip
+  fi
 
   rvb_opts=()
   if [ "$base_rirs" == "simulated" ]; then
