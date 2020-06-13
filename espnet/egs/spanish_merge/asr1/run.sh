@@ -111,9 +111,9 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     # combine data
     utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_mailabs data/train_crowdsource \
-    data/train_comvoice data/train_tedx
+    data/train_tedx
     utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_org data/test_mailabs data/test_crowdsource \
-    data/test_comvoice data/test_tedx
+    data/test_tedx
     utils/combine_data.sh --extra_files utt2num_frames data/${recog_set}_org data/test_gong data/train_gong
     utils/combine_data.sh --extra_files utt2num_frames data/${lm_train_set}_org data/test_gong_unsupervised data/train_gong_unsupervised
 
