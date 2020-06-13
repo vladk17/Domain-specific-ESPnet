@@ -103,31 +103,40 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     echo "stage 1: Feature Generation"
     fbankdir=fbank
 
-    # combine data
-    utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_mailabs data/train_crowdsource \
+    # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
+    utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_combined data/train_mailabs data/train_crowdsource \
     data/train_tedx data/train_gong_unsupervised data/test_gong_unsupervised
-    utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_org data/test_mailabs data/test_crowdsource \
+    utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_combined data/test_mailabs data/test_crowdsource \
     data/test_tedx
-    utils/combine_data.sh --extra_files utt2num_frames data/${recog_set}_org data/test_gong data/train_gong
-    utils/combine_data.sh --extra_files utt2num_frames data/${lm_train_set}_org data/test_gong_unsupervised data/train_gong_unsupervised
+    utils/combine_data.sh --extra_files utt2num_frames data/${recog_set}_combined data/test_gong data/train_gong
 
-    local/reverberate_data.sh $train_set $train_dev $recog_set
+    # combine data for LM only
+    utils/combine_data.sh --extra_files utt2num_frames data/${lm_train_set}_combined data/test_gong_unsupervised data/train_gong_unsupervised
 
-#   Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
+    # reverberate data for train and dev
+    local/reverberate_data.sh ${train_set}_combined ${train_dev}_combined ${recog_set}_combined
+
+    # combine data before and after reverberation for train, dev, test
+    utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_combined_reverberated ${train_set}_combined ${train_set}_combined_rvb
+    utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_combined_reverberated ${train_dev}_combined ${train_dev}_combined_rvb
+    utils/combine_data.sh --extra_files utt2num_frames data/${recog_set}_combined_reverberated ${recog_set}_combined ${recog_set}_combined_rvb
+
+
+    # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
     for x in ${train_set} ${train_dev} ${recog_set}; do
         steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj ${nj} --write_utt2num_frames true \
-            data/${x} exp/make_fbank/${x} ${fbankdir}
+            data/${x}_combined_reverberated exp/make_fbank/${x} ${fbankdir}
         utils/fix_data_dir.sh data/${x}
     done
 
     # remove utt having more than 3000 frames
     # remove utt having more than 400 characters
-    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_set}_org data/${train_set}
-    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev}_org data/${train_dev}
-    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_org data/${recog_set}
-    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_set}_combined_reverberated data/${train_set}
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev}_combined_reverberated data/${train_dev}
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_combined_reverberated data/${recog_set}
 
-    rm -rf data/${train_set}_org data/${train_dev}_org data/${recog_set}_org data/${lm_train_set}_org
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_combine data/${lm_train_set}
+
 
     # compute global CMVN
     compute-cmvn-stats scp:data/${train_set}/feats.scp data/${train_set}/cmvn.ark
