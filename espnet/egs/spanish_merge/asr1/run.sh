@@ -8,7 +8,7 @@
 
 # general configuration
 backend=pytorch
-stage=4   # start from -1 if you need to start from data download
+stage=0   # start from -1 if you need to start from data download
 stop_stage=999
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
@@ -64,7 +64,8 @@ tag="" # tag for managing experiments.
 # Set bash to 'debug' mode, it will exit on :
 # -e 'error', -u 'undefined variable', -o ... 'error in pipeline', -x 'print commands',
 
-datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_gong test_gong test_gong_unsupervised train_gong_unsupervised'
+datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_comvoice test_comvoice train_tedx test_tedx
+          train_gong test_gong test_gong_unsupervised train_gong_unsupervised'
 
 train_set="train"
 train_dev="train_dev"
@@ -108,8 +109,10 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
         utils/fix_data_dir.sh data/${x}
     done
 
-    utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_mailabs data/train_crowdsource
-    utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_org data/test_mailabs data/test_crowdsource
+    utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_mailabs data/train_crowdsource \
+    data/train_comvoice data/train_tedx data/train_gong_unsupervised data/test_gong_unsupervised
+    utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_org data/test_mailabs data/test_crowdsource \
+    data/test_comvoice data/test_tedx
     utils/combine_data.sh --extra_files utt2num_frames data/${recog_set}_org data/test_gong data/train_gong
     utils/combine_data.sh --extra_files utt2num_frames data/${lm_train_set}_org data/test_gong_unsupervised data/train_gong_unsupervised
 
@@ -124,14 +127,14 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     rm -rf data/${train_set}_org data/${train_dev}_org data/${recog_set}_org data/${lm_train_set}_org
 
     # speed-perturbed
-#    utils/perturb_data_dir_speed.sh 0.9 data/train data/temp1
-#    utils/perturb_data_dir_speed.sh 1.0 data/train data/temp2
-#    utils/perturb_data_dir_speed.sh 1.1 data/train data/temp3
-#    utils/combine_data.sh --extra-files utt2uniq data/${train_set} data/temp1 data/temp2 data/temp3
-#    rm -r data/temp1 data/temp2 data/temp3
-#    steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj 32 --write_utt2num_frames true \
-#        data/${train_set} exp/make_fbank/${train_set} ${fbankdir}
-#    utils/fix_data_dir.sh data/${train_set}
+    utils/perturb_data_dir_speed.sh 0.9 data/${train_set} data/temp1
+    utils/perturb_data_dir_speed.sh 1.0 data/${train_set} data/temp2
+    utils/perturb_data_dir_speed.sh 1.1 data/${train_set} data/temp3
+    utils/combine_data.sh --extra-files utt2uniq data/${train_set} data/temp1 data/temp2 data/temp3
+    rm -r data/temp1 data/temp2 data/temp3
+    steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj 32 --write_utt2num_frames true \
+        data/${train_set} exp/make_fbank/${train_set} ${fbankdir}
+    utils/fix_data_dir.sh data/${train_set}
 
     # compute global CMVN
     compute-cmvn-stats scp:data/${train_set}/feats.scp data/${train_set}/cmvn.ark
