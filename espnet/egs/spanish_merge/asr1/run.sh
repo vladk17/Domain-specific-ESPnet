@@ -127,11 +127,13 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     rm -rf data/${train_set}_org data/${train_dev}_org data/${recog_set}_org data/${lm_train_set}_org
 
+    utils/fix_data_dir.sh data/${train_set}
+
     # speed-perturbed
-    utils/perturb_data_dir_speed.sh 0.9 data/${train_set} data/temp1
-    utils/perturb_data_dir_speed.sh 1.0 data/${train_set} data/temp2
-    utils/perturb_data_dir_speed.sh 1.1 data/${train_set} data/temp3
-    utils/combine_data.sh --extra_files utt2num_frames data/train_perturb data/temp1 data/temp2 data/temp3
+#    utils/perturb_data_dir_speed.sh 0.9 data/${train_set} data/temp1
+#    utils/perturb_data_dir_speed.sh 1.0 data/${train_set} data/temp2
+#    utils/perturb_data_dir_speed.sh 1.1 data/${train_set} data/temp3
+#    utils/combine_data.sh --extra_files utt2num_frames data/train_perturb data/temp1 data/temp2 data/temp3
 #    rm -r data/temp1 data/temp2 data/temp3
 #    steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj 32 --write_utt2num_frames true \
 #        data/${train_set} exp/make_fbank/${train_set} ${fbankdir}
