@@ -103,7 +103,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     echo "stage 1: Feature Generation"
     fbankdir=fbank
 
-    local/reverberate_data.sh $train_set $train_dev
+    local/reverberate_data.sh $datasets
 
     # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
 #    for x in ${datasets}; do
