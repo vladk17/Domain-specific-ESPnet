@@ -8,7 +8,7 @@
 
 # general configuration
 backend=pytorch
-stage=1   # start from -1 if you need to start from data download
+stage=0   # start from -1 if you need to start from data download
 stop_stage=2
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
@@ -104,9 +104,9 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     fbankdir=fbank
 
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
-    utils/combine_data.sh  data/${train_set}_combined data/train_mailabs
-    utils/combine_data.sh  data/${train_dev}_combined data/test_mailabs
-    utils/combine_data.sh  data/${recog_set}_combined data/test_gong data/train_gong
+    utils/combine_data.sh  data/${train_set} data/train_mailabs
+    utils/combine_data.sh  data/${train_dev} data/test_mailabs
+    utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
 
     for x in ${train_set} ${train_dev} ${recog_set}; do
         utils/fix_data_dir.sh data/${x}
@@ -114,31 +114,31 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     done
 
     # select datasets for LM only
-    utils/combine_data.sh data/${lm_train_set}_combined data/test_gong_unsupervised data/train_gong_unsupervised
+    utils/combine_data.sh data/${lm_train_set}_org data/test_gong_unsupervised data/train_gong_unsupervised
 
     # reverberate data for train, dev and test
-    local/reverberate_data.sh ${train_set}_combined ${train_dev}_combined ${recog_set}_combined
+    local/reverberate_data.sh ${train_set} ${train_dev} ${recog_set}
 
     # combine data before and after reverberation for train, dev, test
-    utils/combine_data.sh data/${train_set}_combined_reverberated ${train_set}_combined ${train_set}_combined_rvb
-    utils/combine_data.sh data/${train_dev}_combined_reverberated ${train_dev}_combined ${train_dev}_combined_rvb
-    utils/combine_data.sh data/${recog_set}_combined_reverberated ${recog_set}_combined ${recog_set}_combined_rvb
+    utils/combine_data.sh data/${train_set}_org ${train_set} ${train_set}_rvb
+    utils/combine_data.sh data/${train_dev}_org ${train_dev} ${train_dev}_rvb
+    utils/combine_data.sh data/${recog_set}_org ${recog_set} ${recog_set}_rvb
 
 
     # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
     for x in ${train_set} ${train_dev} ${recog_set}; do
         steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj ${nj} --write_utt2num_frames true \
-            data/${x}_combined_reverberated exp/make_fbank/${x} ${fbankdir}
+            data/${x}_org exp/make_fbank/${x} ${fbankdir}
         utils/fix_data_dir.sh data/${x}
     done
 
     # remove utt having more than 3000 frames
     # remove utt having more than 400 characters
-    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_set}_combined_reverberated data/${train_set}
-    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev}_combined_reverberated data/${train_dev}
-    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_combined_reverberated data/${recog_set}
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_set}_org data/${train_set}
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev}_org data/${train_dev}
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_org data/${recog_set}
 
-    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_combine data/${lm_train_set}
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
 
 
     # compute global CMVN
