@@ -18,6 +18,7 @@ class AbstractDataTransformer(ABC):
         self.SUBSET_SIZE: int = 999999999999999
         self.TESTSET_PROPORTION: float = 0.1
         self.kaldi_data_dir: str = None
+        self.kaldi_eg_dir: str = None
 
     @property
     def prefix(self):
