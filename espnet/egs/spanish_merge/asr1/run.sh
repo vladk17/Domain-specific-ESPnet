@@ -118,9 +118,9 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 #    local/reverberate_data.sh ${train_set} ${train_dev} ${recog_set}
 
     # combine data before and after reverberation for train, dev, test
-    utils/combine_data.sh data/${train_set}_org ${train_set} ${train_set}_rvb
-    utils/combine_data.sh data/${train_dev}_org ${train_dev} ${train_dev}_rvb
-    utils/combine_data.sh data/${recog_set}_org ${recog_set} ${recog_set}_rvb
+    utils/combine_data.sh data/${train_set}_org data/${train_set} data/${train_set}_rvb
+    utils/combine_data.sh data/${train_dev}_org data/${train_dev} data/${train_dev}_rvb
+    utils/combine_data.sh data/${recog_set}_org data/${recog_set} data/${recog_set}_rvb
 
 
     # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
