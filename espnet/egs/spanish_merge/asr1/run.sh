@@ -102,7 +102,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     fbankdir=fbank
 
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
-    utils/combine_data.sh  data/${train_set} data/train_mailabs data/train_crowdsource data/train_tedx
+    utils/combine_data.sh  data/${train_set} data/train_mailabs data/train_crowdsource data/train_tedx data/test_gong_unsupervised
     utils/combine_data.sh  data/${train_dev} data/test_mailabs data/test_crowdsource data/test_tedx
     utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
 
@@ -138,6 +138,8 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
 
+    # remove auxiliary data
+    rm -rg *_org *_rvb
 
     # compute global CMVN
     compute-cmvn-stats scp:data/${train_set}/feats.scp data/${train_set}/cmvn.ark
