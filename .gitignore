@@ -15,3 +15,6 @@ __pycache__
 **/asr1/exp/
 **/asr1/fbank/
 **/asr1/tensorboard/
+**/asr1/RIRS_NOISES
+**/asr1/rirs_noises.zip
+**/asr1/local/score.sh
