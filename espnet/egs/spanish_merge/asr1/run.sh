@@ -102,7 +102,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     fbankdir=fbank
 
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
-    utils/combine_data.sh  data/${train_set} data/train_mailabs data/train_crowdsource data/train_tedx data/test_gong_unsupervised
+    utils/combine_data.sh  data/${train_set} data/train_mailabs data/train_crowdsource data/train_tedx data/test_gong_unsupervised data/train_gong_unsupervised
     utils/combine_data.sh  data/${train_dev} data/test_mailabs data/test_crowdsource data/test_tedx
     utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
 
