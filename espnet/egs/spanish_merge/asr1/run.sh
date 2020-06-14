@@ -64,8 +64,7 @@ tag="" # tag for managing experiments.
 # Set bash to 'debug' mode, it will exit on :
 # -e 'error', -u 'undefined variable', -o ... 'error in pipeline', -x 'print commands',
 
-datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_comvoice test_comvoice train_tedx test_tedx
-          train_gong test_gong test_gong_unsupervised train_gong_unsupervised'
+datasets='train_mailabs test_mailabs train_gong test_gong test_gong_unsupervised train_gong_unsupervised'
 
 train_set="train"
 train_dev="train_dev"
@@ -79,6 +78,8 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    ### But you can utilize Kaldi recipes in most cases
    printf "\n\n"
    echo "STAGE 0: Data download and preparation"
+
+    rm -rf data
 
     ./local/data_preparation.sh
 
