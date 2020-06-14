@@ -8,7 +8,7 @@
 
 # general configuration
 backend=pytorch
-stage=0   # start from -1 if you need to start from data download
+stage=1   # start from -1 if you need to start from data download
 stop_stage=2
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
@@ -80,7 +80,7 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    printf "\n\n"
    echo "STAGE 0: Data download and preparation"
 
-#    rm -rf data
+    rm -rf data
     ./local/data_preparation.sh
 
     for part in ${datasets}; do
