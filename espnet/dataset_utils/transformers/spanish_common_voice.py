@@ -35,7 +35,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
             logger.info(f"Subset size: {self.SUBSET_SIZE}")
             if dataset_size < self.SUBSET_SIZE:
                 logger.info(
-                    f"ATTENTION! Provided subset size ({self.SUBSET_SIZE}) is less "
+                    f"ATTENTION! Provided subset size ({self.SUBSET_SIZE}) is more "
                     f"than overall dataset size ({dataset_size}). "
                     f"Taking all dataset")
             data = data[:self.SUBSET_SIZE]

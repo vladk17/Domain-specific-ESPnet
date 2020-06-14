@@ -71,7 +71,8 @@ def download_dir(client, resource, bucket, prefix, local_dir):
         if result.get('CommonPrefixes') is not None:
             for subdir in result.get('CommonPrefixes'):
                 download_dir(client, resource, bucket, subdir.get('Prefix'), local_dir)
-        for file in result.get('Contents', []):
+        for file in tqdm(result.get('Contents', [])[:5]):
+            logger.info(f"Downloading data from {prefix}")
             dest_pathname = os.path.join(local_dir, file.get('Key'))
             if not os.path.exists(os.path.dirname(dest_pathname)):
                 os.makedirs(os.path.dirname(dest_pathname))

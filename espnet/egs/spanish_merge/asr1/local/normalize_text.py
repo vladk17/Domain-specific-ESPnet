@@ -52,45 +52,47 @@ def normalize(inFile, format, lang):
     outfile = open(inFile, 'w')
     print("Normalizing text to %s" % (inFile))
 
-
     for line in infile:
-        if line == "\n" or line == "":
-            continue
-        if format == "text-only":
-            name = ""
-            rest = ' '.join(line.split())
-        else:
-            name = line.split()[0]
-            rest = ' '.join(line.split()[1:])
-
-        rest = run_normalization(rest, lang)
-
-        if rest == "":
-            rest = '<unk>'
-
-        line = ' '.join([name, rest])
-
-        if format == "non-acoustic":
-            if len(rest) < 400:
-                outfile.write(line + '\n')
+        try:
+            if line == "\n" or line == "":
+                continue
+            if format == "text-only":
+                name = ""
+                rest = ' '.join(line.split())
             else:
-                prev = 0
-                for i in range(int(len(rest) / 400) + 1):
-                    subStr = rest[prev:min(prev + 400, len(rest))]
-                    if prev + 400 < len(rest):
-                        words = subStr.split(' ')[:-1]
-                    else:
-                        words = subStr.split(' ')
-                    subStr = ' '.join(words) + '\n'
-                    if subStr == "" or subStr == "\n":
-                        continue
-                    prev = prev + len(subStr)
-                    if format == "text-only":
-                        outfile.write(subStr)
-                    else:
-                        outfile.write(' '.join([name + str(prev), subStr]))
-        else:
-            outfile.write(line + '\n')
+                name = line.split()[0]
+                rest = ' '.join(line.split()[1:])
+
+            rest = run_normalization(rest, lang)
+
+            if rest == "":
+                rest = '<unk>'
+
+            line = ' '.join([name, rest])
+
+            if format == "non-acoustic":
+                if len(rest) < 400:
+                    outfile.write(line + '\n')
+                else:
+                    prev = 0
+                    for i in range(int(len(rest) / 400) + 1):
+                        subStr = rest[prev:min(prev + 400, len(rest))]
+                        if prev + 400 < len(rest):
+                            words = subStr.split(' ')[:-1]
+                        else:
+                            words = subStr.split(' ')
+                        subStr = ' '.join(words) + '\n'
+                        if subStr == "" or subStr == "\n":
+                            continue
+                        prev = prev + len(subStr)
+                        if format == "text-only":
+                            outfile.write(subStr)
+                        else:
+                            outfile.write(' '.join([name + str(prev), subStr]))
+            else:
+                outfile.write(line + '\n')
+        except Exception as e:
+            print("Exception occurred during normalization:", e.__class__.__name__, e)
 
     print("DONE")
 

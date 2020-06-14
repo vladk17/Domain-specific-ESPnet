@@ -8,13 +8,14 @@
 
 # general configuration
 backend=pytorch
-stage=5     # start from -1 if you need to start from data download
-stop_stage=100
+stage=0   # start from -1 if you need to start from data download
+stop_stage=2
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
 dumpdir=dump   # directory to dump full features
-N=0            # number of minibatches to be used (mainly for debugging). "0" uses all minibatches.
+N=0            # number of minibatches to be used (mainly for debugging). "0" uses all minibll
+# atches.
 verbose=0      # verbose option
 resume=        # Resume the training from snapshot
 
@@ -63,11 +64,12 @@ tag="" # tag for managing experiments.
 # Set bash to 'debug' mode, it will exit on :
 # -e 'error', -u 'undefined variable', -o ... 'error in pipeline', -x 'print commands',
 
-datasets='train_mailabs test_mailabs train_gong test_gong'
+datasets='train_mailabs test_mailabs train_gong test_gong test_gong_unsupervised train_gong_unsupervised'
 
 train_set="train"
 train_dev="train_dev"
 recog_set="test"
+lm_train_set="lm_train"
 
 train_dev_proportion=0.05
 
@@ -77,7 +79,7 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    printf "\n\n"
    echo "STAGE 0: Data download and preparation"
 
-    rm -rf data/
+    rm -rf data
 
     ./local/data_preparation.sh
 
@@ -87,7 +89,6 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
         utils/utt2spk_to_spk2utt.pl data/${part}/utt2spk > data/${part}/spk2utt
         python3 local/normalize_text.py data/${part}/text --lang es --format acoustic
     done
-
 
 fi
 
@@ -99,22 +100,44 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     ### But you can utilize Kaldi recipes in most cases
     echo "stage 1: Feature Generation"
     fbankdir=fbank
-    # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
-    for x in ${datasets}; do
-        steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj ${nj} --write_utt2num_frames true \
-            data/${x} exp/make_fbank/${x} ${fbankdir}
+
+    # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
+    utils/combine_data.sh  data/${train_set} data/train_mailabs
+    utils/combine_data.sh  data/${train_dev} data/test_mailabs
+    utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
+
+    for x in ${train_set} ${train_dev} ${recog_set}; do
         utils/fix_data_dir.sh data/${x}
+        utils/validate_data_dir.sh --no-feats data/${x}
     done
 
-    utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_org data/train_mailabs
-    utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_org data/test_mailabs
-    utils/combine_data.sh --extra_files utt2num_frames data/${recog_set}_org data/test_gong data/train_gong
+    # select datasets for LM only
+    utils/combine_data.sh data/${lm_train_set}_org data/test_gong_unsupervised data/train_gong_unsupervised
+
+    # reverberate data for train, dev and test
+    local/reverberate_data.sh ${train_set} ${train_dev} ${recog_set}
+
+    # combine data before and after reverberation for train, dev, test
+    utils/combine_data.sh data/${train_set}_org ${train_set} ${train_set}_rvb
+    utils/combine_data.sh data/${train_dev}_org ${train_dev} ${train_dev}_rvb
+    utils/combine_data.sh data/${recog_set}_org ${recog_set} ${recog_set}_rvb
+
+
+    # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
+    for x in ${train_set} ${train_dev} ${recog_set}; do
+        steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj ${nj} --write_utt2num_frames true \
+            data/${x}_org exp/make_fbank/${x} ${fbankdir}
+        utils/fix_data_dir.sh data/${x}
+    done
 
     # remove utt having more than 3000 frames
     # remove utt having more than 400 characters
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_set}_org data/${train_set}
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev}_org data/${train_dev}
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_org data/${recog_set}
+
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
+
 
     # compute global CMVN
     compute-cmvn-stats scp:data/${train_set}/feats.scp data/${train_set}/cmvn.ark
@@ -184,10 +207,16 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
 
     if [ ! -e ${lmdatadir} ]; then
         mkdir -p ${lmdatadir}
-        cut -f 2- -d" " data/${train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+
+        cat data/${lm_train_set}/text data/${train_set}/text > data/local/lm_text_big
+
+        cut -f 2- -d" " data/local/lm_text_big | spm_encode --model=${bpemodel}.model --output_format=piece \
         > ${lmdatadir}/train.txt
+
         cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
         > ${lmdatadir}/valid.txt
+
+
     fi
     ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
         lm_train.py \

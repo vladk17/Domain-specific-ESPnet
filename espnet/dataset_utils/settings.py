@@ -1,0 +1,1 @@
+UTTERANCE_MIN_LENGTH = 0.3  # in seconds
