@@ -6,7 +6,7 @@ import random
 from tqdm import tqdm
 
 from dataset_utils.base_transformer import AbstractDataTransformer
-from dataset_utils.settings import UTTERANCE_MIN_LENGTH
+from dataset_utils.conf import UTTERANCE_MIN_LENGTH
 
 SUBSET_SIZE = os.environ.get("ESPNET_SUBSET_SIZE", None)
 logger = logging.root
