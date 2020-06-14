@@ -6,11 +6,11 @@ from tqdm import tqdm
 import pandas as pd
 from sklearn import preprocessing
 
-
 from dataset_utils.base_transformer import AbstractDataTransformer
 
 SUBSET_SIZE = os.environ.get("ESPNET_SUBSET_SIZE", None)
 logger = logging.root
+
 
 class CommonVoiceKaldiTransformer(AbstractDataTransformer):
 
@@ -21,7 +21,7 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
             self.SUBSET_SIZE = int(SUBSET_SIZE)
 
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, force_transform_audio=False, *args, **kwargs):
-
+        self.kaldi_eg_dir = espnet_kaldi_eg_directory
         self.kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
 
@@ -88,15 +88,16 @@ class CommonVoiceKaldiTransformer(AbstractDataTransformer):
         le = preprocessing.LabelEncoder()
         data['client_id'] = le.fit_transform(data['client_id'])
         for idx, row in data.iterrows():
-            transcript = self.clean_text(row['sentence'])
+
             file_path = row['path']
+            if os.path.exists(os.path.join(self.kaldi_eg_dir, file_path)):
+                transcript = self.clean_text(row['sentence'])
+                utt_id = idx + 1
+                speaker_id = f"{self.prefix}sp{row['client_id']}"
+                utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'
 
-            utt_id = idx + 1
-            speaker_id = f"{self.prefix}sp{row['client_id']}"
-            utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'
-
-            wavscp.append(f'{utterance_id} {file_path}')
-            utt2spk.append(f'{utterance_id} {speaker_id}')
-            text.append(f'{utterance_id} {transcript}')
+                wavscp.append(f'{utterance_id} {file_path}')
+                utt2spk.append(f'{utterance_id} {speaker_id}')
+                text.append(f'{utterance_id} {transcript}')
 
         return wavscp, text, utt2spk
