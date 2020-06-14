@@ -69,7 +69,7 @@ datasets='train_mailabs test_mailabs test_gong train_gong test_gong_unsupervised
 train_set="train"
 train_dev="train_dev"
 recog_set="test"
-lm_train_set="lm_train"
+lm_train_set="LM_TRAIN"
 
 train_dev_proportion=0.05
 
