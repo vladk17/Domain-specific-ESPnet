@@ -104,7 +104,7 @@ def download_and_extract_data_from_kaggle_datasets(kuggle_dataset_name: str, kug
     print(f'download_folder: {download_folder}')
 
     if not os.path.exists(download_folder):
-        os.mkdir(download_folder)
+        os.makedirs(download_folder)
     dataset_dir = os.path.join(download_folder, dataset_name)
     print(f'dataset_dir: {dataset_dir}')
     if not os.path.exists(os.path.join(dataset_dir, 'decompressed')):

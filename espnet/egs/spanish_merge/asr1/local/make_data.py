@@ -21,7 +21,7 @@ logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.INFO)
 
 datasets = [
-    # ('Mailabs', ['http://www.caito.de/data/Training/stt_tts/es_ES.tgz'], MailabsKaldiTransformer()),
+    ('Mailabs', ['http://www.caito.de/data/Training/stt_tts/es_ES.tgz'], MailabsKaldiTransformer()),
 
     # ('CommonVoiceSpanish', [
     #     'https://voice-prod-bundler-ee1969a6ce8178826482b88e843c335139bd3fb4.s3.amazonaws.com/cv-corpus-4-2019-12-10/es.tar.gz'],
@@ -39,7 +39,7 @@ datasets = [
     #                  'http://www.openslr.org/resources/75/es_ve_male.zip'
     #
     #                  ], CrowdsourcedOpenASR()),
-    ('kaggle_120h', None, Kaggle120hSpanish2KaldiTransformer())
+    # ('kaggle_120h', None, Kaggle120hSpanish2KaldiTransformer())
 ]
 datasets = [DataSet(_[0], _[1], _[2]) for _ in datasets]
 eg_dir = Path('/espnet/egs/spanish_merge/asr1')
