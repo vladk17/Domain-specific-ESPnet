@@ -80,8 +80,6 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    printf "\n\n"
    echo "STAGE 0: Data download and preparation"
 
-    rm -rf data/
-
     ./local/data_preparation.sh
 
     for part in ${datasets}; do
@@ -90,7 +88,6 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
         utils/utt2spk_to_spk2utt.pl data/${part}/utt2spk > data/${part}/spk2utt
         python3 local/normalize_text.py data/${part}/text --lang es --format acoustic
     done
-
 
 fi
 
