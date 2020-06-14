@@ -139,7 +139,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
 
     # remove auxiliary data
-    rm -rg *_org *_rvb
+    rm -rf *_org *_rvb
 
     # compute global CMVN
     compute-cmvn-stats scp:data/${train_set}/feats.scp data/${train_set}/cmvn.ark
