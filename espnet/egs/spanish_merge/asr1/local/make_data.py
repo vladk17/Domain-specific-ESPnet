@@ -39,7 +39,7 @@ datasets = [
     #                  'http://www.openslr.org/resources/75/es_ve_male.zip'
     #
     #                  ], CrowdsourcedOpenASR()),
-    ('kaggle_120h_spanish_speech', None, Kaggle120hSpanish2KaldiTransformer())
+    ('kaggle_120h', None, Kaggle120hSpanish2KaldiTransformer())
 ]
 datasets = [DataSet(_[0], _[1], _[2]) for _ in datasets]
 eg_dir = Path('/espnet/egs/spanish_merge/asr1')
