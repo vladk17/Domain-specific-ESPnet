@@ -103,25 +103,25 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
     utils/combine_data.sh  data/${train_set} data/train_mailabs data/train_crowdsource data/train_tedx
-    utils/combine_data.sh  data/${train_dev} data/test_mailabs data/test_crowsource data/test_tedx
+    utils/combine_data.sh  data/${train_dev} data/test_mailabs data/test_crowdsource data/test_tedx
     utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
 
+    # select datasets for LM only
+    utils/combine_data.sh data/${lm_train_set}_org data/test_gong_unsupervised data/train_gong_unsupervised
+
+    # fix combined data
     for x in ${train_set} ${train_dev} ${recog_set}; do
         utils/fix_data_dir.sh data/${x}
         utils/validate_data_dir.sh --no-feats data/${x}
     done
 
-    # select datasets for LM only
-    utils/combine_data.sh data/${lm_train_set}_org data/test_gong_unsupervised data/train_gong_unsupervised
-
     # reverberate data for train, dev and test
     local/reverberate_data.sh ${train_set} ${train_dev} ${recog_set}
 
     # combine data before and after reverberation for train, dev, test
-    utils/combine_data.sh data/${train_set}_org data/${train_set} data/${train_set}_rvb
-    utils/combine_data.sh data/${train_dev}_org data/${train_dev} data/${train_dev}_rvb
-    utils/combine_data.sh data/${recog_set}_org data/${recog_set} data/${recog_set}_rvb
-
+    for x in ${train_set} ${train_dev} ${recog_set}; do
+      utils/combine_data.sh data/${x}_org data/${x} data/${x}_rvb
+    done
 
     # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
     for x in ${train_set} ${train_dev} ${recog_set}; do
