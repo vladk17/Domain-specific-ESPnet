@@ -1,11 +1,11 @@
 import json
 import logging
 import os
-from pathlib import Path
 
 from tqdm import tqdm
 
 from dataset_utils.base_transformer import AbstractDataTransformer
+from settings import UTTERANCE_MIN_LENGTH
 
 SUBSET_SIZE = os.environ.get("ESPNET_SUBSET_SIZE", None)
 logger = logging.root
@@ -44,7 +44,7 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
                 logger.error(f"EXCEPTION {e}")
         print('Total dataset duration, hours:', self.overall_duration / 3600)
 
-        best_monologue_indexes = [idx for idx, chunk in enumerate(chunks) if chunk[2] > 3
+        best_monologue_indexes = [idx for idx, chunk in enumerate(chunks) if chunk[2] > UTTERANCE_MIN_LENGTH
                                   and "<unk>" not in texts[idx]
                                   and "+" not in chunk[3]
                                   and len(texts[idx]) > 0]
