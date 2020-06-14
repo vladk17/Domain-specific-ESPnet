@@ -104,10 +104,8 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     fbankdir=fbank
 
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
-    utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_combined data/train_mailabs data/train_crowdsource \
-    data/train_tedx data/train_gong_unsupervised data/test_gong_unsupervised
-    utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_combined data/test_mailabs data/test_crowdsource \
-    data/test_tedx
+    utils/combine_data.sh --extra_files utt2num_frames data/${train_set}_combined data/train_mailabs
+    utils/combine_data.sh --extra_files utt2num_frames data/${train_dev}_combined data/test_mailabs
     utils/combine_data.sh --extra_files utt2num_frames data/${recog_set}_combined data/test_gong data/train_gong
 
     for x in ${train_set} ${train_dev} ${recog_set}; do
@@ -115,10 +113,10 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
         utils/validate_data_dir.sh --no-feats data/${x}
     done
 
-    # combine data for LM only
+    # select datasets for LM only
     utils/combine_data.sh --extra_files utt2num_frames data/${lm_train_set}_combined data/test_gong_unsupervised data/train_gong_unsupervised
 
-    # reverberate data for train and dev
+    # reverberate data for train, dev and test
     local/reverberate_data.sh ${train_set}_combined ${train_dev}_combined ${recog_set}_combined
 
     # combine data before and after reverberation for train, dev, test
