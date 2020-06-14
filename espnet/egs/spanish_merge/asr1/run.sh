@@ -8,7 +8,7 @@
 
 # general configuration
 backend=pytorch
-stage=1   # start from -1 if you need to start from data download
+stage=0   # start from -1 if you need to start from data download
 stop_stage=2
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
@@ -64,7 +64,8 @@ tag="" # tag for managing experiments.
 # Set bash to 'debug' mode, it will exit on :
 # -e 'error', -u 'undefined variable', -o ... 'error in pipeline', -x 'print commands',
 
-datasets='train_mailabs test_mailabs train_crowdsource test_crowsource train_tedx test_tedx test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
+datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_tedx test_tedx train_comvoice test_comvoice
+          test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
 
 train_set="train"
 train_dev="train_dev"
@@ -79,9 +80,8 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    printf "\n\n"
    echo "STAGE 0: Data download and preparation"
 
-    rm -rf data
-
-    ./local/data_preparation.sh
+#    rm -rf data
+#    ./local/data_preparation.sh
 
     for part in ${datasets}; do
         # use underscore-separated names in data directories.
@@ -102,7 +102,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     fbankdir=fbank
 
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
-    utils/combine_data.sh  data/${train_set} data/train_mailabs data/train_crowdsource data/train_tedx data/test_gong_unsupervised data/train_gong_unsupervised
+    utils/combine_data.sh  data/${train_set} data/train_mailabs data/train_crowdsource data/train_tedx
     utils/combine_data.sh  data/${train_dev} data/test_mailabs data/test_crowsource data/test_tedx
     utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
 
