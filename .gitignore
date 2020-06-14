@@ -19,4 +19,4 @@ __pycache__
 **/asr1/rirs_noises.zip
 **/asr1/local/score.sh
 
-log/
+**/log
