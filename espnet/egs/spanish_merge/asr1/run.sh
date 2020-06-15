@@ -102,8 +102,8 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     fbankdir=fbank
 
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
-    utils/combine_data.sh  data/${train_set} data/train_mailabs data/train_crowdsource data/train_tedx data/test_gong_unsupervised data/train_gong_unsupervised
-    utils/combine_data.sh  data/${train_dev} data/test_mailabs data/test_crowdsource data/test_tedx
+    utils/combine_data.sh  data/${train_set} data/train_crowdsource
+    utils/combine_data.sh  data/${train_dev} data/test_crowdsource
     utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
 
     # select datasets for LM only
@@ -194,60 +194,60 @@ if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
 fi
 
 # You can skip this and remove --rnnlm option in the recognition (stage 5)
-if [ -z ${lmtag} ]; then
-    lmtag=$(basename ${lm_config%.*})
-fi
-lmexpname=train_rnnlm_${backend}_${lmtag}_${bpemode}${nbpe}_ngpu${ngpu}
-lmexpdir=exp/${lmexpname}
-mkdir -p ${lmexpdir}
-
-if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
-    echo "stage 3: LM Preparation"
-    lmdatadir=data/local/lm_train_${bpemode}${nbpe}
-    # Here we use only transcripts, encoded with bpe model,
-    # later we can add more external spanish text data and merge with transcripts as it was done in librispeech recipe
-
-    if [ ! -e ${lmdatadir} ]; then
-        mkdir -p ${lmdatadir}
-
-        cat data/${lm_train_set}/text data/${train_set}/text > data/local/lm_text_big
-
-        cut -f 2- -d" " data/local/lm_text_big | spm_encode --model=${bpemodel}.model --output_format=piece \
-        > ${lmdatadir}/train.txt
-
-        cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
-        > ${lmdatadir}/valid.txt
-
-
-    fi
-    ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
-        lm_train.py \
-        --config ${lm_config} \
-        --ngpu ${ngpu} \
-        --backend ${backend} \
-        --verbose 1 \
-        --outdir ${lmexpdir} \
-        --tensorboard-dir tensorboard/${lmexpname} \
-        --train-label ${lmdatadir}/train.txt \
-        --valid-label ${lmdatadir}/valid.txt \
-        --resume ${lm_resume} \
-        --dict ${dict} \
-        --dump-hdf5-path ${lmdatadir}
-fi
-
-if [ -z ${tag} ]; then
-    expname=${train_set}_${backend}_$(basename ${train_config%.*})
-    if ${do_delta}; then
-        expname=${expname}_delta
-    fi
-    if [ -n "${preprocess_config}" ]; then
-        expname=${expname}_$(basename ${preprocess_config%.*})
-    fi
-else
-    expname=${train_set}_${backend}_${tag}
-fi
-expdir=exp/${expname}
-mkdir -p ${expdir}
+#if [ -z ${lmtag} ]; then
+#    lmtag=$(basename ${lm_config%.*})
+#fi
+#lmexpname=train_rnnlm_${backend}_${lmtag}_${bpemode}${nbpe}_ngpu${ngpu}
+#lmexpdir=exp/${lmexpname}
+#mkdir -p ${lmexpdir}
+#
+#if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
+#    echo "stage 3: LM Preparation"
+#    lmdatadir=data/local/lm_train_${bpemode}${nbpe}
+#    # Here we use only transcripts, encoded with bpe model,
+#    # later we can add more external spanish text data and merge with transcripts as it was done in librispeech recipe
+#
+#    if [ ! -e ${lmdatadir} ]; then
+#        mkdir -p ${lmdatadir}
+#
+#        cat data/${lm_train_set}/text data/${train_set}/text > data/local/lm_text_big
+#
+#        cut -f 2- -d" " data/local/lm_text_big | spm_encode --model=${bpemodel}.model --output_format=piece \
+#        > ${lmdatadir}/train.txt
+#
+#        cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+#        > ${lmdatadir}/valid.txt
+#
+#
+#    fi
+#    ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
+#        lm_train.py \
+#        --config ${lm_config} \
+#        --ngpu ${ngpu} \
+#        --backend ${backend} \
+#        --verbose 1 \
+#        --outdir ${lmexpdir} \
+#        --tensorboard-dir tensorboard/${lmexpname} \
+#        --train-label ${lmdatadir}/train.txt \
+#        --valid-label ${lmdatadir}/valid.txt \
+#        --resume ${lm_resume} \
+#        --dict ${dict} \
+#        --dump-hdf5-path ${lmdatadir}
+#fi
+#
+#if [ -z ${tag} ]; then
+#    expname=${train_set}_${backend}_$(basename ${train_config%.*})
+#    if ${do_delta}; then
+#        expname=${expname}_delta
+#    fi
+#    if [ -n "${preprocess_config}" ]; then
+#        expname=${expname}_$(basename ${preprocess_config%.*})
+#    fi
+#else
+#    expname=${train_set}_${backend}_${tag}
+#fi
+#expdir=exp/${expname}
+#mkdir -p ${expdir}
 
 if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
     echo "stage 4: Network Training"
