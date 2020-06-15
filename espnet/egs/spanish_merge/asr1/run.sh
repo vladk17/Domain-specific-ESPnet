@@ -338,7 +338,7 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
             --recog-json ${feat_recog_dir}/split${nj}utt/data_${bpemode}${nbpe}.JOB.json \
             --result-label ${expdir}/${decode_dir}/data.JOB.json \
             --model ${expdir}/results/${recog_model}  \
-            --rnnlm ${lmexpdir}/${lang_model} \
+#            --rnnlm ${lmexpdir}/${lang_model} \
             --api v2
 
         score_sclite.sh --bpe ${nbpe} --bpemodel ${bpemodel}.model --wer true ${expdir}/${decode_dir} ${dict}
