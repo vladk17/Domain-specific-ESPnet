@@ -11,7 +11,7 @@ backend=pytorch
 stage=5   # start from -1 if you need to start from data download
 stop_stage=5
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
-nj=64
+nj=32
 debugmode=1
 dumpdir=dump   # directory to dump full features
 N=0            # number of minibatches to be used (mainly for debugging). "0" uses all minibll
@@ -68,7 +68,7 @@ datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_te
           test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
 
 # all iteration names: 3 (crowsource google), 4 (common voice mozilla), 5_tedx, 6_mailabs
-iteration='3'
+iteration=3
 
 train_set="train_iter${iteration}"
 train_dev="train_dev_iter${iteration}"
@@ -200,48 +200,48 @@ if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
     done
 fi
 
-# You can skip this and remove --rnnlm option in the recognition (stage 5)
-#if [ -z ${lmtag} ]; then
-#    lmtag=$(basename ${lm_config%.*})
-#fi
-#lmexpname=train_rnnlm_${backend}_${lmtag}_${bpemode}${nbpe}_ngpu${ngpu}
-#lmexpdir=exp/${lmexpname}
-#mkdir -p ${lmexpdir}
-#
-#if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
-#    echo "stage 3: LM Preparation"
-#    lmdatadir=data/local/lm_train_${bpemode}${nbpe}
-#    # Here we use only transcripts, encoded with bpe model,
-#    # later we can add more external spanish text data and merge with transcripts as it was done in librispeech recipe
-#
-#    if [ ! -e ${lmdatadir} ]; then
-#        mkdir -p ${lmdatadir}
-#
-#        cat data/${lm_train_set}/text data/${train_set}/text > data/local/lm_text_big
-#
-#        cut -f 2- -d" " data/local/lm_text_big | spm_encode --model=${bpemodel}.model --output_format=piece \
-#        > ${lmdatadir}/train.txt
-#
-#        cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
-#        > ${lmdatadir}/valid.txt
-#
-#
-#    fi
-#    ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
-#        lm_train.py \
-#        --config ${lm_config} \
-#        --ngpu ${ngpu} \
-#        --backend ${backend} \
-#        --verbose 1 \
-#        --outdir ${lmexpdir} \
-#        --tensorboard-dir tensorboard/${lmexpname} \
-#        --train-label ${lmdatadir}/train.txt \
-#        --valid-label ${lmdatadir}/valid.txt \
-#        --resume ${lm_resume} \
-#        --dict ${dict} \
-#        --dump-hdf5-path ${lmdatadir}
-#fi
-#
+ You can skip this and remove --rnnlm option in the recognition (stage 5)
+if [ -z ${lmtag} ]; then
+    lmtag=$(basename ${lm_config%.*})
+fi
+lmexpname=train_rnnlm_${backend}_${lmtag}_${bpemode}${nbpe}_ngpu${ngpu}
+lmexpdir=exp/${lmexpname}
+mkdir -p ${lmexpdir}
+
+if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
+    echo "stage 3: LM Preparation"
+    lmdatadir=data/local/lm_train_${bpemode}${nbpe}
+    # Here we use only transcripts, encoded with bpe model,
+    # later we can add more external spanish text data and merge with transcripts as it was done in librispeech recipe
+
+    if [ ! -e ${lmdatadir} ]; then
+        mkdir -p ${lmdatadir}
+
+        cat data/${lm_train_set}/text data/${train_set}/text > data/local/lm_text_big
+
+        cut -f 2- -d" " data/local/lm_text_big | spm_encode --model=${bpemodel}.model --output_format=piece \
+        > ${lmdatadir}/train.txt
+
+        cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+        > ${lmdatadir}/valid.txt
+
+
+    fi
+    ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
+        lm_train.py \
+        --config ${lm_config} \
+        --ngpu ${ngpu} \
+        --backend ${backend} \
+        --verbose 1 \
+        --outdir ${lmexpdir} \
+        --tensorboard-dir tensorboard/${lmexpname} \
+        --train-label ${lmdatadir}/train.txt \
+        --valid-label ${lmdatadir}/valid.txt \
+        --resume ${lm_resume} \
+        --dict ${dict} \
+        --dump-hdf5-path ${lmdatadir}
+fi
+
 if [ -z ${tag} ]; then
     expname=${train_set}_${backend}_$(basename ${train_config%.*})_iter${iteration}
     if ${do_delta}; then
