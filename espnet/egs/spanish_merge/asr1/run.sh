@@ -145,7 +145,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     # remove auxiliary data
     for x in ${train_set} ${train_dev} ${recog_set} ${lm_train_set}; do
-        rm -r data/${train_set}_org data/${train_set}_rvb
+        rm -r data/${x}_org data/${x}_rvb
     done
 
     # compute global CMVN
@@ -211,20 +211,16 @@ mkdir -p ${lmexpdir}
 if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     echo "stage 3: LM Preparation"
     lmdatadir=data/local/lm_train_${bpemode}${nbpe}
-    # Here we use only transcripts, encoded with bpe model,
-    # later we can add more external spanish text data and merge with transcripts as it was done in librispeech recipe
+    cat data/${lm_train_set}/text data/${train_set}/text > data/local/lm_text_big
 
     if [ ! -e ${lmdatadir} ]; then
         mkdir -p ${lmdatadir}
-
-        cat data/${lm_train_set}/text data/${train_set}/text > data/local/lm_text_big
 
         cut -f 2- -d" " data/local/lm_text_big | spm_encode --model=${bpemodel}.model --output_format=piece \
         > ${lmdatadir}/train.txt
 
         cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
         > ${lmdatadir}/valid.txt
-
 
     fi
     ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
@@ -336,7 +332,7 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
             --recog-json ${feat_recog_dir}/split${nj}utt/data_${bpemode}${nbpe}.JOB.json \
             --result-label ${expdir}/${decode_dir}/data.JOB.json \
             --model ${expdir}/results/${recog_model}  \
-#            --rnnlm ${lmexpdir}/${lang_model} \
+            --rnnlm ${lmexpdir}/${lang_model} \
             --api v2
 
         score_sclite.sh --bpe ${nbpe} --bpemodel ${bpemodel}.model --wer true ${expdir}/${decode_dir} ${dict}
