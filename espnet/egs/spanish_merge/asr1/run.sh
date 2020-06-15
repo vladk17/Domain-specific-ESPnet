@@ -68,7 +68,7 @@ datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_te
           test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
 
 # all iteration names: 3 (crowsource google), 4 (common voice mozilla), 5_tedx, 6_mailabs
-iteration='all_data'
+iteration='LM_all_data'
 
 train_set="train_iter${iteration}"
 train_dev="train_dev_iter${iteration}"
@@ -107,13 +107,13 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
     utils/combine_data.sh  data/${train_set} data/train_mailabs
-    utils/combine_data.sh  data/${train_dev} data/test_tedx test_crowdsource data/test_gong_unsupervised
+    utils/combine_data.sh  data/${train_dev} data/test_tedx data/test_crowdsource data/test_gong_unsupervised
     utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
 
     # select datasets for LM only
-    utils/combine_data.sh data/${lm_train_set}_org train_mailabs test_mailabs train_crowdsource  \
-                                                    train_tedx train_comvoice  data/test_comvoice \
-                                                     train_gong_unsupervised
+    utils/combine_data.sh data/${lm_train_set}_org data/train_mailabs data/test_mailabs data/train_crowdsource  \
+                                                    data/train_tedx data/train_comvoice  data/test_comvoice \
+                                                     data/train_gong_unsupervised
 
     # fix combined data
     for x in ${train_set} ${train_dev} ${recog_set}; do
