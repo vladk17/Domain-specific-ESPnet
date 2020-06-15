@@ -69,7 +69,6 @@ datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_te
 
 # all iteration names: 3 (crowdsource google), 4 (common voice mozilla), 5_tedx, 6_mailabs, LM_all_data (for language model only)
 iteration=3
-lm_force_rebuild=1
 
 train_set="train_iter${iteration}"
 train_dev="train_dev_iter${iteration}"
@@ -215,19 +214,14 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     echo "stage 3: LM Preparation"
     lmdatadir=data/local/lm_train_${bpemode}${nbpe}
 
-    if [ ! -e ${lmdatadir} ]; then
-        if [ ${lm_force_rebuild} == 1] then
-          mkdir -p ${lmdatadir}
-          cat data/${lm_train_set}/text data/${train_set}/text > data/local/lm_text_big
+    mkdir -p ${lmdatadir}
+    cat data/${lm_train_set}/text data/${train_set}/text > data/local/lm_text_big
 
-          cut -f 2- -d" " data/local/lm_text_big | spm_encode --model=${bpemodel}.model --output_format=piece \
-          > ${lmdatadir}/train.txt
+    cut -f 2- -d" " data/local/lm_text_big | spm_encode --model=${bpemodel}.model --output_format=piece \
+    > ${lmdatadir}/train.txt
 
-          cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
-          > ${lmdatadir}/valid.txt
-        fi
-    fi
-
+    cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+    > ${lmdatadir}/valid.txt
 
     ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
         lm_train.py \
