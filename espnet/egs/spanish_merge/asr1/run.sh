@@ -200,7 +200,7 @@ if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
     done
 fi
 
- You can skip this and remove --rnnlm option in the recognition (stage 5)
+# You can skip this and remove --rnnlm option in the recognition (stage 5)
 if [ -z ${lmtag} ]; then
     lmtag=$(basename ${lm_config%.*})
 fi
