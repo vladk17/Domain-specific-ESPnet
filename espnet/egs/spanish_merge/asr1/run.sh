@@ -8,8 +8,8 @@
 
 # general configuration
 backend=pytorch
-stage=5   # start from -1 if you need to start from data download
-stop_stage=999
+stage=1  # start from -1 if you need to start from data download
+stop_stage=3
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
@@ -106,14 +106,12 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     fbankdir=fbank
 
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
-    utils/combine_data.sh  data/${train_set} data/train_mailabs
-    utils/combine_data.sh  data/${train_dev} data/test_tedx data/test_crowdsource data/test_gong_unsupervised
+    utils/combine_data.sh  data/${train_set} data/train_crowdsource
+    utils/combine_data.sh  data/${train_dev} data/test_crowdsource
     utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
 
     # select datasets for LM only
-    utils/combine_data.sh data/${lm_train_set}_org data/train_mailabs data/test_mailabs data/train_crowdsource  \
-                                                    data/train_tedx data/train_comvoice  data/test_comvoice \
-                                                     data/train_gong_unsupervised
+    utils/combine_data.sh data/${lm_train_set}_org data/train_gong_unsupervised data/test_gong_unsupervised
 
     # fix combined data
     for x in ${train_set} ${train_dev} ${recog_set}; do
