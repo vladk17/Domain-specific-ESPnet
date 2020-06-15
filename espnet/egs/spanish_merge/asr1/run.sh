@@ -66,15 +66,15 @@ tag="" # tag for managing experiments.
 
 datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_tedx test_tedx train_comvoice test_comvoice
           test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
+iteration=3
 
-train_set="train"
-train_dev="train_dev"
-recog_set="test"
-lm_train_set="LM_TRAIN"
+train_set="train_iter${iteration}"
+train_dev="train_dev_iter${iteration}"
+recog_set="test_iter${iteration}"
+lm_train_set="LM_TRAIN_iter${iteration}"
 
 train_dev_proportion=0.05
 
-iteration=3
 
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    ### Task dependent. You have to make data the following preparation part by yourself.
