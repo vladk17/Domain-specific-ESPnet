@@ -111,7 +111,8 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
 
     # select datasets for LM only
-    utils/combine_data.sh data/${lm_train_set}_org data/train_gong_unsupervised data/test_gong_unsupervised
+    utils/combine_data.sh data/${lm_train_set}_org data/train_gong_unsupervised data/test_gong_unsupervised \
+                                                   data/train_crowdsource data/train_comvoice data/train_mailabs
 
     # fix combined data
     for x in ${train_set} ${train_dev} ${recog_set}; do
@@ -142,9 +143,9 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_org data/${recog_set}
 
 
-#    remove_longshortdata.sh --maxframes 7000 --maxchars 1000 data/${lm_train_set}_org data/${lm_train_set}
+    remove_longshortdata.sh --maxframes 5000 --maxchars 600 data/${lm_train_set}_org data/${lm_train_set}
     # EXPERIMENT: not cuting data for LM by max chars, instead taking all the data
-     mv data/${lm_train_set}_org data/${lm_train_set}
+#     mv data/${lm_train_set}_org data/${lm_train_set}
 
     # remove auxiliary data
     for x in ${train_set} ${train_dev} ${recog_set} ${lm_train_set}; do
@@ -218,9 +219,7 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     rm -rf ${lmdatadir}
     mkdir -p ${lmdatadir}
 
-    cat data/${lm_train_set}/text data/${train_set}/text > data/local/lm_text_big
-
-    cut -f 2- -d" " data/local/lm_text_big | spm_encode --model=${bpemodel}.model --output_format=piece \
+    cut -f 2- -d" " data/${lm_train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
     > ${lmdatadir}/train.txt
 
     cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
