@@ -145,7 +145,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     # remove auxiliary data
     for x in ${train_set} ${train_dev} ${recog_set}; do
-        rm -r ${train_set}_org ${train_set}_rvb
+        rm -r data/${train_set}_org data/${train_set}_rvb
     done
 
     # compute global CMVN
