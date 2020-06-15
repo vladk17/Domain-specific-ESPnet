@@ -73,6 +73,7 @@ recog_set="test"
 lm_train_set="LM_TRAIN"
 
 train_dev_proportion=0.05
+
 iteration=3
 
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
