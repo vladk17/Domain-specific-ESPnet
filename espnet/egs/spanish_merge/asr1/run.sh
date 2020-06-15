@@ -67,6 +67,7 @@ tag="" # tag for managing experiments.
 datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_tedx test_tedx train_comvoice test_comvoice
           test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
 
+# all iteration names: 3 (crowsource google), 4 (common voice mozilla), 5_tedx, 6_mailabs
 iteration='6_mailabs'
 
 train_set="train_iter${iteration}"
