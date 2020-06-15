@@ -8,7 +8,7 @@
 
 # general configuration
 backend=pytorch
-stage=4   # start from -1 if you need to start from data download
+stage=1   # start from -1 if you need to start from data download
 stop_stage=5
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
@@ -73,6 +73,7 @@ recog_set="test"
 lm_train_set="LM_TRAIN"
 
 train_dev_proportion=0.05
+iteration=3
 
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    ### Task dependent. You have to make data the following preparation part by yourself.
@@ -235,19 +236,19 @@ fi
 #        --dump-hdf5-path ${lmdatadir}
 #fi
 #
-#if [ -z ${tag} ]; then
-#    expname=${train_set}_${backend}_$(basename ${train_config%.*})
-#    if ${do_delta}; then
-#        expname=${expname}_delta
-#    fi
-#    if [ -n "${preprocess_config}" ]; then
-#        expname=${expname}_$(basename ${preprocess_config%.*})
-#    fi
-#else
-#    expname=${train_set}_${backend}_${tag}
-#fi
-#expdir=exp/${expname}
-#mkdir -p ${expdir}
+if [ -z ${tag} ]; then
+    expname=${train_set}_${backend}_$(basename ${train_config%.*})_iter${iteration}
+    if ${do_delta}; then
+        expname=${expname}_delta
+    fi
+    if [ -n "${preprocess_config}" ]; then
+        expname=${expname}_$(basename ${preprocess_config%.*})
+    fi
+else
+    expname=${train_set}_${backend}_${tag}
+fi
+expdir=exp/${expname}
+mkdir -p ${expdir}
 
 if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
     echo "stage 4: Network Training"
