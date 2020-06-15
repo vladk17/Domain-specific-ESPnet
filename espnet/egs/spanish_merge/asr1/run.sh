@@ -141,7 +141,8 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev}_org data/${train_dev}
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_org data/${recog_set}
 
-    remove_longshortdata.sh --maxframes 6000 --maxchars 800 data/${lm_train_set}_org data/${lm_train_set}
+#    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
+    mv data/${lm_train_set}_org data/${lm_train_set}
 
     # remove auxiliary data
     for x in ${train_set} ${train_dev} ${recog_set} ${lm_train_set}; do
@@ -211,6 +212,7 @@ mkdir -p ${lmexpdir}
 if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     echo "stage 3: LM Preparation"
     lmdatadir=data/local/lm_train_${bpemode}${nbpe}
+
     cat data/${lm_train_set}/text data/${train_set}/text > data/local/lm_text_big
 
     if [ ! -e ${lmdatadir} ]; then
