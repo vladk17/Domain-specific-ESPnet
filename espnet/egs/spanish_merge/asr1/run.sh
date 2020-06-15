@@ -73,7 +73,7 @@ iteration=3
 train_set="train_iter${iteration}"
 train_dev="train_dev_iter${iteration}"
 recog_set="test_iter${iteration}"
-lm_train_set="LM_TRAIN_iter${iteration}"
+lm_train_set="lm_train${iteration}"
 
 train_dev_proportion=0.05
 
