@@ -112,7 +112,8 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     # select datasets for LM only
     utils/combine_data.sh data/${lm_train_set}_org data/train_gong_unsupervised data/test_gong_unsupervised \
-                                                   data/train_crowdsource data/train_comvoice data/train_mailabs
+                                                   data/train_crowdsource data/train_comvoice data/train_mailabs \
+                                                   data/train_comvoice data/train_tedx
 
     # fix combined data
     for x in ${train_set} ${train_dev} ${recog_set}; do
