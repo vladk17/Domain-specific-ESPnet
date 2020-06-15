@@ -122,7 +122,8 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     # combine data before and after reverberation for train, dev, test
     for x in ${train_set} ${train_dev} ${recog_set}; do
-      utils/combine_data.sh data/${x}_org data/${x} data/${x}_rvb
+    #   utils/combine_data.sh data/${x}_org data/${x} data/${x}_rvb
+        utils/combine_data.sh data/${x}_org data/${x}
     done
 
     # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
@@ -141,7 +142,9 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
 
     # remove auxiliary data
-    rm -rf *_org/ *_rvb/
+    for x in ${train_set} ${train_dev} ${recog_set}; do
+        rm -rf ${train_set}_org ${train_set}_rvb
+    done
 
     # compute global CMVN
     compute-cmvn-stats scp:data/${train_set}/feats.scp data/${train_set}/cmvn.ark
