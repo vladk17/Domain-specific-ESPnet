@@ -146,7 +146,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
 
     # remove auxiliary data
-    for x in ${train_set} ${train_dev} ${recog_set}; do
+    for x in ${train_set} ${train_dev} ${recog_set} ${lm_train_set}; do
         rm -r data/${train_set}_org data/${train_set}_rvb
     done
 
