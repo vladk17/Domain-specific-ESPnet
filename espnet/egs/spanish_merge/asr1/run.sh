@@ -53,7 +53,7 @@ datadir=/export/a15/vpanayotov/data
 data_url=www.openslr.org/resources/12
 
 # bpemode (unigram or bpe)
-nbpe=3000
+nbpe=5000
 bpemode=unigram
 
 # exp tag
@@ -66,7 +66,7 @@ tag="" # tag for managing experiments.
 
 datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_tedx test_tedx train_comvoice test_comvoice
           test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
-iteration=3
+iteration=4
 
 train_set="train_iter${iteration}"
 train_dev="train_dev_iter${iteration}"
@@ -104,8 +104,8 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     fbankdir=fbank
 
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
-    utils/combine_data.sh  data/${train_set} data/train_crowdsource
-    utils/combine_data.sh  data/${train_dev} data/test_crowdsource
+    utils/combine_data.sh  data/${train_set} data/train_comvoice
+    utils/combine_data.sh  data/${train_dev} data/test_comvoice
     utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
 
     # select datasets for LM only
