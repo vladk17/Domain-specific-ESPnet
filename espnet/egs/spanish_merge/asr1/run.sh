@@ -142,9 +142,9 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_org data/${recog_set}
 
 
-    remove_longshortdata.sh --maxframes 7000 --maxchars 1000 data/${lm_train_set}_org data/${lm_train_set}
+#    remove_longshortdata.sh --maxframes 7000 --maxchars 1000 data/${lm_train_set}_org data/${lm_train_set}
     # EXPERIMENT: not cuting data for LM by max chars, instead taking all the data
-    # mv data/${lm_train_set}_org data/${lm_train_set}
+     mv data/${lm_train_set}_org data/${lm_train_set}
 
     # remove auxiliary data
     for x in ${train_set} ${train_dev} ${recog_set} ${lm_train_set}; do
