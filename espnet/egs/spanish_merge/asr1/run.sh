@@ -8,10 +8,10 @@
 
 # general configuration
 backend=pytorch
-stage=1   # start from -1 if you need to start from data download
+stage=5   # start from -1 if you need to start from data download
 stop_stage=5
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
-nj=32
+nj=64
 debugmode=1
 dumpdir=dump   # directory to dump full features
 N=0            # number of minibatches to be used (mainly for debugging). "0" uses all minibll
@@ -68,7 +68,7 @@ datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_te
           test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
 
 # all iteration names: 3 (crowsource google), 4 (common voice mozilla), 5_tedx, 6_mailabs
-iteration='6_mailabs'
+iteration='3'
 
 train_set="train_iter${iteration}"
 train_dev="train_dev_iter${iteration}"
