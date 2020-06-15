@@ -43,7 +43,7 @@ if [ $stage -le 1 ]; then
   # corrupt the fisher data to generate multi-condition data
   # for data_dir in train dev test; do
   for data_dir in ${datasets}; do
-    if [ "$data_dir" == "train" ]; then
+    if [ "$data_dir" == train* ]; then
       num_reps=$num_data_reps
     else
       num_reps=1
