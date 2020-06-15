@@ -141,6 +141,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev}_org data/${train_dev}
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_org data/${recog_set}
 
+    # EXPERIMENT: not cuting data for LM by max chars, instead taking all the data
 #    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
     mv data/${lm_train_set}_org data/${lm_train_set}
 
@@ -213,18 +214,28 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     echo "stage 3: LM Preparation"
     lmdatadir=data/local/lm_train_${bpemode}${nbpe}
 
+#    if [ ! -e ${lmdatadir} ]; then
+#        mkdir -p ${lmdatadir}
+#        cat data/${lm_train_set}/text data/${train_set}/text > data/local/lm_text_big
+#
+#        cut -f 2- -d" " data/local/lm_text_big | spm_encode --model=${bpemodel}.model --output_format=piece \
+#        > ${lmdatadir}/train.txt
+#
+#        cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+#        > ${lmdatadir}/valid.txt
+#
+#    fi
+
+    mkdir -p ${lmdatadir}
     cat data/${lm_train_set}/text data/${train_set}/text > data/local/lm_text_big
 
-    if [ ! -e ${lmdatadir} ]; then
-        mkdir -p ${lmdatadir}
+    cut -f 2- -d" " data/local/lm_text_big | spm_encode --model=${bpemodel}.model --output_format=piece \
+    > ${lmdatadir}/train.txt
 
-        cut -f 2- -d" " data/local/lm_text_big | spm_encode --model=${bpemodel}.model --output_format=piece \
-        > ${lmdatadir}/train.txt
+    cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+    > ${lmdatadir}/valid.txt
 
-        cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
-        > ${lmdatadir}/valid.txt
 
-    fi
     ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
         lm_train.py \
         --config ${lm_config} \
