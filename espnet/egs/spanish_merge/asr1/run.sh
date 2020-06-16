@@ -76,7 +76,7 @@ iteration_val_datasets=${ITERATION_VAL}
 train_set="train_iter${iteration}"
 train_dev="train_dev_iter${iteration}"
 recog_set="test"
-lm_train_set="lm_train_iter"
+lm_train_set="lm_and_bpe_train"
 
 train_dev_proportion=0.05
 
@@ -141,6 +141,13 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
         rm -r data/${x}_org data/${x}_rvb
     done
 
+    # select datasets for LM and BPE
+    utils/combine_data.sh data/${lm_train_set}_org data/test_gong_unsupervised data/train_gong_unsupervised \
+                                                   data/train_crowdsource data/train_comvoice data/train_mailabs \
+                                                   data/train_comvoice data/train_tedx
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
+    rm -rf data/${lm_train_set}_org
+
     # compute global CMVN
     compute-cmvn-stats scp:data/${train_set}/feats.scp data/${train_set}/cmvn.ark
 
@@ -168,7 +175,9 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 fi
 
 dict=data/lang_char/${train_set}_${bpemode}${nbpe}_units.txt
-bpemodel=data/lang_char/${train_set}_${bpemode}${nbpe}
+#bpemodel=data/lang_char/${train_set}_${bpemode}${nbpe}
+bpemodel=data/lang_char/${lm_train_set}_${bpemode}${nbpe}
+
 echo "dictionary: ${dict}"
 if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
     ### Task dependent. You have to check non-linguistic symbols used in the corpus.
@@ -207,15 +216,7 @@ mkdir -p ${lmexpdir}
 #
 #    rm -rf ${lmdatadir}
 #    mkdir ${lmdatadir}
-#
-#    # select datasets for LM only
-#    utils/combine_data.sh data/${lm_train_set}_org data/test_gong_unsupervised \
-#                                                   data/train_crowdsource data/train_comvoice data/train_mailabs \
-#                                                   data/train_comvoice data/train_tedx
-#
-#    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
-#
-#    rm -rf data/${lm_train_set}_org
+
 #
 #    cut -f 2- -d" " data/${lm_train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
 #    > ${lmdatadir}/train.txt
