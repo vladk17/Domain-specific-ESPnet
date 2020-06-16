@@ -137,9 +137,9 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
 
     # remove auxiliary data
-#    for x in ${train_set} ${train_dev} ${recog_set}; do
-#        rm -r data/${x}_org
-#    done
+    for x in ${train_set} ${train_dev} ${recog_set}; do
+        rm -r data/${x}_org
+    done
 
     # select datasets for LM and BPE
     utils/combine_data.sh data/${lm_train_set}_org data/test_gong_unsupervised data/train_gong_unsupervised \
@@ -186,7 +186,7 @@ if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
     echo "<unk> 1" > ${dict} # <unk> must be 1, 0 will be used for "blank" in CTC
 #    cut -f 2- -d" " data/${train_set}/text > data/lang_char/input.txt
     cut -f 2- -d" " data/${lm_train_set}/text > data/lang_char/input.txt
-    spm_train --input=data/lang_char/input.txt --vocab_size=${nbpe} --model_type=${bpemode} --model_prefix=${bpemodel} --input_sentence_size=100000000
+#    spm_train --input=data/lang_char/input.txt --vocab_size=${nbpe} --model_type=${bpemode} --model_prefix=${bpemodel} --input_sentence_size=100000000
     spm_encode --model=${bpemodel}.model --output_format=piece < data/lang_char/input.txt | tr ' ' '\n' | sort | uniq | awk '{print $0 " " NR+1}' >> ${dict}
     wc -l ${dict}
 
