@@ -1,1 +1,1 @@
-./run.sh --docker_gpu 0,1,2,3,4 --docker_egs spanish_merge/asr1 --ngpu 4 --stage 3 --stop_stage 3 --iteration lm
+./run.sh --docker_gpu 12,13,14,15 --docker_egs spanish_merge/asr1 --ngpu 4 --stage 3 --stop_stage 3 --iteration lm
