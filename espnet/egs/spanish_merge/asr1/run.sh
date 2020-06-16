@@ -8,8 +8,8 @@
 
 # general configuration
 backend=pytorch
-stage=5  # start from -1 if you need to start from data download
-stop_stage=999
+stage=1  # start from -1 if you need to start from data download
+stop_stage=2
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=64
 debugmode=1
@@ -73,7 +73,7 @@ iteration=6_mailabs
 train_set="train_iter${iteration}"
 train_dev="train_dev_iter${iteration}"
 recog_set="test"
-lm_train_set="lm_train_iter${iteration}"
+lm_train_set="lm_train_iter"
 
 train_dev_proportion=0.05
 
