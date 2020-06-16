@@ -8,7 +8,7 @@
 
 # general configuration
 backend=pytorch
-stage=1  # start from -1 if you need to start from data download
+stage=0  # start from -1 if you need to start from data download
 stop_stage=2
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=64
@@ -67,8 +67,12 @@ tag="" # tag for managing experiments.
 datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_tedx test_tedx train_comvoice test_comvoice
           test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
 
+datasets='train_mailabs test_mailabs'
+
 # all iteration names: 3 (crowdsource google), 4 (common voice mozilla), 5_tedx, 6_mailabs
-iteration=6_mailabs
+iteration=
+iteration_train_datasets=
+iteration_val_datasets=
 
 train_set="train_iter${iteration}"
 train_dev="train_dev_iter${iteration}"
@@ -105,38 +109,26 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     echo "stage 1: Feature Generation"
     fbankdir=fbank
 
-    # CHANGE THIS ACCORDING TO EACH ITERATION
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
-    utils/combine_data.sh  data/${train_set} data/train_mailabs
-    utils/combine_data.sh  data/${train_dev} data/test_mailabs
+    utils/combine_data.sh  data/${train_set} ${iteration_train_datasets}
+    utils/combine_data.sh  data/${train_dev} ${iteration_test_datasets}
     utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
-
-    # fix combined data
-#    for x in ${train_set} ${train_dev} ${recog_set}; do
-#        utils/fix_data_dir.sh data/${x}
-#        utils/validate_data_dir.sh --no-feats data/${x}
-#    done
 
     # reverberate data for train, dev and test
     local/reverberate_data.sh ${train_set} ${train_dev}
 
     # combine data before and after reverberation for train, dev, test
-    for x in ${train_set} ${train_dev}; do
+    for x in ${train_set} ${train_dev} ${recog_set}; do
     #   utils/combine_data.sh data/${x}_org data/${x} data/${x}_rvb
         utils/combine_data.sh data/${x}_org data/${x}
     done
 
     # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
-    for x in ${train_set} ${train_dev}; do
+    for x in ${train_set} ${train_dev} ${recog_set}; do
         steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj ${nj} --write_utt2num_frames true \
             data/${x}_org exp/make_fbank/${x} ${fbankdir}
         utils/fix_data_dir.sh data/${x}
     done
-
-    # Generate the fbank features for recog_set
-    steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj ${nj} --write_utt2num_frames true \
-        data/${recog_set} exp/make_fbank/${x} ${fbankdir}
-    utils/fix_data_dir.sh data/${x}
 
 
     # remove utt having more than 3000 frames
