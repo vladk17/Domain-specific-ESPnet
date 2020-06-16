@@ -105,6 +105,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     echo "stage 1: Feature Generation"
     fbankdir=fbank
 
+    # CHANGE THIS ACCORDING TO EACH ITERATION
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
     utils/combine_data.sh  data/${train_set} data/train_comvoice
     utils/combine_data.sh  data/${train_dev} data/test_comvoice
