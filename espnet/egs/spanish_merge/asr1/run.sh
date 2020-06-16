@@ -112,8 +112,8 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     utils/combine_data.sh  data/${train_dev} ${iteration_test_datasets}
     utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
 
-    # reverberate data for train, dev and test
-    local/reverberate_data.sh ${train_set} ${train_dev}
+    # reverberate data for train, dev
+    local/reverberate_data.sh data/${train_set} data/${train_dev}
 
     # combine data before and after reverberation for train, dev, test
     for x in ${train_set} ${train_dev} ${recog_set}; do
