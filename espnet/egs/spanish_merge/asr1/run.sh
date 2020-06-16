@@ -332,25 +332,25 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
         echo "Success splitting"
 
         #### use CPU for decoding
-        ngpu=8
+        ngpu=4
         echo "Decode cmd: ${decode_cmd}"
         # set batchsize 0 to disable batch decoding
 
-#        ${decode_cmd} JOB=1:${nj} ${expdir}/${decode_dir}/log/decode.JOB.log \
-#            asr_recog.py \
-#            --config ${decode_config} \
-#            --ngpu ${ngpu} \
-#            --backend ${backend} \
-#            --debugmode ${debugmode} \
-#            --batchsize 0 \
-#            --verbose ${verbose} \
-#            --recog-json ${feat_recog_dir}/split${nj}utt/data_${bpemode}${nbpe}.JOB.json \
-#            --result-label ${expdir}/${decode_dir}/data.JOB.json \
-#            --model ${expdir}/results/${recog_model}  \
-#            --api v2 \
+        ${decode_cmd} JOB=1:${nj} ${expdir}/${decode_dir}/log/decode.JOB.log \
+            asr_recog.py \
+            --config ${decode_config} \
+            --ngpu ${ngpu} \
+            --backend ${backend} \
+            --debugmode ${debugmode} \
+            --batchsize 0 \
+            --verbose ${verbose} \
+            --recog-json ${feat_recog_dir}/split${nj}utt/data_${bpemode}${nbpe}.JOB.json \
+            --result-label ${expdir}/${decode_dir}/data.JOB.json \
+            --model ${expdir}/results/${recog_model}  \
+            --api v2 \
 #            --rnnlm ${lmexpdir}/${lang_model}
-#
-#        score_sclite.sh --bpe ${nbpe} --bpemodel ${bpemodel}.model --wer true ${expdir}/${decode_dir} ${dict}
+
+        score_sclite.sh --bpe ${nbpe} --bpemodel ${bpemodel}.model --wer true ${expdir}/${decode_dir} ${dict}
 
     ) &
     pids+=($!) # store background pids
