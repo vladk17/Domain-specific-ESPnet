@@ -53,7 +53,7 @@ datadir=/export/a15/vpanayotov/data
 data_url=www.openslr.org/resources/12
 
 # bpemode (unigram or bpe)
-nbpe=3000
+nbpe=5000
 bpemode=unigram
 
 # exp tag
