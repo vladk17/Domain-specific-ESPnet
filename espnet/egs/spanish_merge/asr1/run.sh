@@ -68,7 +68,7 @@ datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_te
           test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
 
 # all iteration names: 3 (crowdsource google), 4 (common voice mozilla), 5_tedx, 6_mailabs, LM_all_data (for language model only)
-iteration=4
+iteration=6_mailabs
 
 train_set="train_iter${iteration}"
 train_dev="train_dev_iter${iteration}"
