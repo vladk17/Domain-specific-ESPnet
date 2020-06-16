@@ -109,7 +109,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
     utils/combine_data.sh  data/${train_set}_org ${iteration_train_datasets}
-    utils/combine_data.sh  data/${train_dev}_org ${iteration_test_datasets}
+    utils/combine_data.sh  data/${train_dev}_org ${iteration_val_datasets}
     utils/combine_data.sh  data/${recog_set}_org data/test_gong data/train_gong
 
     # reverberate data for train, dev
