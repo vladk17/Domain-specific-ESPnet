@@ -8,8 +8,8 @@
 
 # general configuration
 backend=pytorch
-stage=5  # start from -1 if you need to start from data download
-stop_stage=999
+stage=3  # start from -1 if you need to start from data download
+stop_stage=3
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
@@ -216,7 +216,7 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
                                                    data/train_crowdsource data/train_comvoice data/train_mailabs \
                                                    data/train_comvoice data/train_tedx
 
-    remove_longshortdata.sh --maxframes 5000 --maxchars 600 data/${lm_train_set}_org data/${lm_train_set}
+    remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
 
     cut -f 2- -d" " data/${lm_train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
     > ${lmdatadir}/train.txt
@@ -333,8 +333,7 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
             --recog-json ${feat_recog_dir}/split${nj}utt/data_${bpemode}${nbpe}.JOB.json \
             --result-label ${expdir}/${decode_dir}/data.JOB.json \
             --model ${expdir}/results/${recog_model}  \
-#            --rnnlm ${lmexpdir}/${lang_model} \
-            --rnnlm train_rnnlm_pytorch_lm_unigram3000_ngpu4/rnnlm.model.best \
+            --rnnlm ${lmexpdir}/${lang_model} \
             --api v2
 
         score_sclite.sh --bpe ${nbpe} --bpemodel ${bpemodel}.model --wer true ${expdir}/${decode_dir} ${dict}
