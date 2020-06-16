@@ -8,8 +8,8 @@
 
 # general configuration
 backend=pytorch
-stage=5  # start from -1 if you need to start from data download
-stop_stage=999
+stage=1  # start from -1 if you need to start from data download
+stop_stage=2
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
@@ -67,7 +67,7 @@ tag="" # tag for managing experiments.
 datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_tedx test_tedx train_comvoice test_comvoice
           test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
 
-# all iteration names: 3 (crowdsource google), 4 (common voice mozilla), 5_tedx, 6_mailabs, LM_all_data (for language model only)
+# all iteration names: 3 (crowdsource google), 4 (common voice mozilla), 5_tedx, 6_mailabs
 iteration=6_mailabs
 
 train_set="train_iter${iteration}"
@@ -107,8 +107,8 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
     # CHANGE THIS ACCORDING TO EACH ITERATION
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
-    utils/combine_data.sh  data/${train_set} data/train_comvoice
-    utils/combine_data.sh  data/${train_dev} data/test_comvoice
+    utils/combine_data.sh  data/${train_set} data/train_mailabs
+    utils/combine_data.sh  data/${train_dev} data/test_mailabs
     utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
 
     # fix combined data
@@ -216,7 +216,7 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     lmdatadir=data/local/lm_train_${bpemode}${nbpe}
 
     rm -rf ${lmdatadir}
-    mkdir -p ${lmdatadir}
+    mkdir ${lmdatadir}
 
     # select datasets for LM only
     utils/combine_data.sh data/${lm_train_set}_org data/test_gong_unsupervised \
@@ -224,6 +224,8 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
                                                    data/train_comvoice data/train_tedx
 
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
+
+    rm -rf data/${lm_train_set}_org
 
     cut -f 2- -d" " data/${lm_train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
     > ${lmdatadir}/train.txt
