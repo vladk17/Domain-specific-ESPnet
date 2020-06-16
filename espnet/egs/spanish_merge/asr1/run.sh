@@ -212,9 +212,7 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     echo "stage 3: LM Preparation"
     lmdatadir=data/local/lm_train_${bpemode}${nbpe}
 
-    rm -rf ${lmdatadir}
-    mkdir ${lmdatadir}
-
+    mkdir -p ${lmdatadir}
 
     cut -f 2- -d" " data/${lm_train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
     > ${lmdatadir}/train.txt
