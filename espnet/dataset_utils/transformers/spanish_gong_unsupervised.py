@@ -3,6 +3,7 @@ import logging
 import os
 import random
 
+from pydub import AudioSegment
 from tqdm import tqdm
 
 from dataset_utils.base_transformer import AbstractDataTransformer
@@ -22,7 +23,7 @@ class GongUnsupervisedSpanish2KaldiTransformer(AbstractDataTransformer):
             self.SUBSET_SIZE = int(SUBSET_SIZE)
 
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
-
+        self.kaldi_eg_dir = espnet_kaldi_eg_directory
         raw_data_path = os.path.join(raw_data_path, 'to-y-data')
         self.kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
@@ -43,7 +44,7 @@ class GongUnsupervisedSpanish2KaldiTransformer(AbstractDataTransformer):
                 cut_audio_paths.extend(cur_cut_audio_paths)
             except Exception as e:
                 logger.error(f"GOT EXCEPTION in data transformation! type: {e.__class__.__name__}, message: {e}")
-        print('Total dataset duration, hours:', self.overall_duration / 3600)
+        logger.info(f'Total dataset duration: {round(self.overall_duration/3600, 2)} hours')
 
         best_monologue_indexes = [idx for idx, chunk in enumerate(chunks) if chunk[2] > UTTERANCE_MIN_LENGTH
                                   and "<unk>" not in texts[idx]
@@ -108,15 +109,20 @@ class GongUnsupervisedSpanish2KaldiTransformer(AbstractDataTransformer):
         utt2spk = list()
 
         for idx, transcript in enumerate(origin_texts):
-            tokens = transcript.lower().split(' ')
-            transcript = ' '.join(tokens[:-1])
 
             file_path = "downloads/" + self.prefix + "/" + audio_paths[idx]
-            utt_id = idx + 1
-            speaker_id = self.prefix + 'sp' + ''.join(speakers[idx]).replace(' ', '')
-            utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'
-            wavscp.append(f'{utterance_id} {file_path}')
-            utt2spk.append(f'{utterance_id} {speaker_id}')
-            text.append(f'{utterance_id} {transcript}')
+            absolute_path = os.path.join(self.kaldi_eg_dir, file_path)
+            if os.path.exists(absolute_path):
+                audio = AudioSegment.from_file(absolute_path)
+                duration = audio.duration_seconds
+                if duration > UTTERANCE_MIN_LENGTH:
+                    tokens = transcript.lower().split(' ')
+                    transcript = ' '.join(tokens[:-1])
+                    utt_id = idx + 1
+                    speaker_id = self.prefix + 'sp' + ''.join(speakers[idx]).replace(' ', '')
+                    utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'
+                    wavscp.append(f'{utterance_id} {file_path}')
+                    utt2spk.append(f'{utterance_id} {speaker_id}')
+                    text.append(f'{utterance_id} {transcript}')
 
         return wavscp, text, utt2spk
