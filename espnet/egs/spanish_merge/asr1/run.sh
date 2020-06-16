@@ -208,34 +208,34 @@ lmexpname=train_rnnlm_${backend}_${lmtag}_${bpemode}${nbpe}_ngpu${ngpu}
 lmexpdir=exp/${lmexpname}
 mkdir -p ${lmexpdir}
 
-#if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
-#    echo "stage 3: LM Preparation"
-#    lmdatadir=data/local/lm_train_${bpemode}${nbpe}
-#
-#    rm -rf ${lmdatadir}
-#    mkdir ${lmdatadir}
+if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
+    echo "stage 3: LM Preparation"
+    lmdatadir=data/local/lm_train_${bpemode}${nbpe}
 
-#
-#    cut -f 2- -d" " data/${lm_train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
-#    > ${lmdatadir}/train.txt
-#
-#    cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
-#    > ${lmdatadir}/valid.txt
-#
-#    ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
-#        lm_train.py \
-#        --config ${lm_config} \
-#        --ngpu ${ngpu} \
-#        --backend ${backend} \
-#        --verbose 1 \
-#        --outdir ${lmexpdir} \
-#        --tensorboard-dir tensorboard/${lmexpname} \
-#        --train-label ${lmdatadir}/train.txt \
-#        --valid-label ${lmdatadir}/valid.txt \
-#        --resume ${lm_resume} \
-#        --dict ${dict} \
-#        --dump-hdf5-path ${lmdatadir}
-#fi
+    rm -rf ${lmdatadir}
+    mkdir ${lmdatadir}
+
+
+    cut -f 2- -d" " data/${lm_train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+    > ${lmdatadir}/train.txt
+
+    cut -f 2- -d" " data/${train_dev}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
+    > ${lmdatadir}/valid.txt
+
+    ${cuda_cmd} --gpu ${ngpu} ${lmexpdir}/train.log \
+        lm_train.py \
+        --config ${lm_config} \
+        --ngpu ${ngpu} \
+        --backend ${backend} \
+        --verbose 1 \
+        --outdir ${lmexpdir} \
+        --tensorboard-dir tensorboard/${lmexpname} \
+        --train-label ${lmdatadir}/train.txt \
+        --valid-label ${lmdatadir}/valid.txt \
+        --resume ${lm_resume} \
+        --dict ${dict} \
+        --dump-hdf5-path ${lmdatadir}
+fi
 
 if [ -z ${tag} ]; then
     expname=${train_set}_${backend}_$(basename ${train_config%.*})_iter${iteration}
