@@ -135,11 +135,8 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev}_org data/${train_dev}
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_org data/${recog_set}
 
-
     # remove auxiliary data
-    for x in ${train_set} ${train_dev} ${recog_set}; do
-        rm -r data/${x}_org
-    done
+    rm -r data/*_org
 
     # select datasets for LM and BPE
     utils/combine_data.sh data/${lm_train_set}_org data/test_gong_unsupervised data/train_gong_unsupervised \
