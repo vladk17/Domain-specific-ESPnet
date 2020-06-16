@@ -215,7 +215,7 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     mkdir -p ${lmdatadir}
 
     head -n -5000 data/${lm_train_set}/text > data/local/lm_train.raw.txt
-    tail -n -5000 data/${lm_train_set}/text > data/local/lm_valid.raw.txt
+    tail -n 5000 data/${lm_train_set}/text > data/local/lm_valid.raw.txt
 
     cut -f 2- -d" " data/local/lm_train.raw.txt | spm_encode --model=${bpemodel}.model --output_format=piece \
     > ${lmdatadir}/train.txt
