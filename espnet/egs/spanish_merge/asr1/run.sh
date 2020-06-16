@@ -11,7 +11,7 @@ backend=pytorch
 stage=5  # start from -1 if you need to start from data download
 stop_stage=999
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
-nj=32
+nj=64
 debugmode=1
 dumpdir=dump   # directory to dump full features
 N=0            # number of minibatches to be used (mainly for debugging). "0" uses all minibll
@@ -332,7 +332,7 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
         echo "Success splitting"
 
         #### use CPU for decoding
-        ngpu=1
+        ngpu=0
         echo "Decode cmd: ${decode_cmd}"
         # set batchsize 0 to disable batch decoding
 
