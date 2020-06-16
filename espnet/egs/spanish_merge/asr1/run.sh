@@ -8,8 +8,8 @@
 
 # general configuration
 backend=pytorch
-stage=3  # start from -1 if you need to start from data download
-stop_stage=3
+stage=5  # start from -1 if you need to start from data download
+stop_stage=999
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
@@ -280,7 +280,8 @@ if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
 fi
 
 if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
-    echo "stage 5: Decoding"
+    printf "\n\n"
+    echo "STAGE 5: Decoding"
     if [[ $(get_yaml.py ${train_config} model-module) = *transformer* ]]; then
         # Average ASR models
         if ${use_valbest_average}; then
@@ -325,22 +326,26 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
 
         # split data
         splitjson.py --parts ${nj} ${feat_recog_dir}/data_${bpemode}${nbpe}.json
+        echo "Success splitting"
 
         #### use CPU for decoding
-        ngpu=1,2,3,4
-
+        ngpu=0
+        echo "Decode cmd: ${decode_cmd}"
         # set batchsize 0 to disable batch decoding
+
         ${decode_cmd} JOB=1:${nj} ${expdir}/${decode_dir}/log/decode.JOB.log \
             asr_recog.py \
             --config ${decode_config} \
             --ngpu ${ngpu} \
             --backend ${backend} \
+            --debugmode ${debugmode} \
             --batchsize 0 \
+            --verbose ${verbose} \
             --recog-json ${feat_recog_dir}/split${nj}utt/data_${bpemode}${nbpe}.JOB.json \
             --result-label ${expdir}/${decode_dir}/data.JOB.json \
             --model ${expdir}/results/${recog_model}  \
-            --rnnlm ${lmexpdir}/${lang_model} \
-            --api v2
+            --api v2 \
+            --rnnlm ${lmexpdir}/${lang_model}
 
         score_sclite.sh --bpe ${nbpe} --bpemodel ${bpemodel}.model --wer true ${expdir}/${decode_dir} ${dict}
 
