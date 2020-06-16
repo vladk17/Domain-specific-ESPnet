@@ -52,6 +52,7 @@ use_lm_valbest_average=false # if true, the validation `lm_n_average`-best langu
 ## base url for downloads.
 #data_url=www.openslr.org/resources/12
 
+
 # bpemode (unigram or bpe)
 nbpe=5000
 bpemode=unigram
