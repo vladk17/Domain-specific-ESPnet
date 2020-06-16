@@ -72,7 +72,7 @@ iteration=6_mailabs
 
 train_set="train_iter${iteration}"
 train_dev="train_dev_iter${iteration}"
-recog_set="test_iter${iteration}"
+recog_set="test"
 lm_train_set="lm_train_iter${iteration}"
 
 train_dev_proportion=0.05
@@ -348,7 +348,7 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
             --result-label ${expdir}/${decode_dir}/data.JOB.json \
             --model ${expdir}/results/${recog_model}  \
             --api v2 \
-#            --rnnlm ${lmexpdir}/${lang_model}
+            --rnnlm ${lmexpdir}/${lang_model}
 
         score_sclite.sh --bpe ${nbpe} --bpemodel ${bpemodel}.model --wer true ${expdir}/${decode_dir} ${dict}
 
