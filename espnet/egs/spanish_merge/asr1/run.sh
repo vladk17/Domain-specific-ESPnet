@@ -111,26 +111,32 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
 
     # fix combined data
-    for x in ${train_set} ${train_dev} ${recog_set}; do
-        utils/fix_data_dir.sh data/${x}
-        utils/validate_data_dir.sh --no-feats data/${x}
-    done
+#    for x in ${train_set} ${train_dev} ${recog_set}; do
+#        utils/fix_data_dir.sh data/${x}
+#        utils/validate_data_dir.sh --no-feats data/${x}
+#    done
 
     # reverberate data for train, dev and test
-    local/reverberate_data.sh ${train_set} ${train_dev} ${recog_set}
+    local/reverberate_data.sh ${train_set} ${train_dev}
 
     # combine data before and after reverberation for train, dev, test
-    for x in ${train_set} ${train_dev} ${recog_set}; do
+    for x in ${train_set} ${train_dev}; do
     #   utils/combine_data.sh data/${x}_org data/${x} data/${x}_rvb
         utils/combine_data.sh data/${x}_org data/${x}
     done
 
     # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
-    for x in ${train_set} ${train_dev} ${recog_set}; do
+    for x in ${train_set} ${train_dev}; do
         steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj ${nj} --write_utt2num_frames true \
             data/${x}_org exp/make_fbank/${x} ${fbankdir}
         utils/fix_data_dir.sh data/${x}
     done
+
+    # Generate the fbank features for recog_set
+    steps/make_fbank_pitch.sh --cmd "$train_cmd" --nj ${nj} --write_utt2num_frames true \
+        data/${recog_set} exp/make_fbank/${x} ${fbankdir}
+    utils/fix_data_dir.sh data/${x}
+
 
     # remove utt having more than 3000 frames
     # remove utt having more than 400 characters
@@ -140,7 +146,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
 
     # remove auxiliary data
-    for x in ${train_set} ${train_dev} ${recog_set}; do
+    for x in ${train_set} ${train_dev}; do
         rm -r data/${x}_org data/${x}_rvb
     done
 
