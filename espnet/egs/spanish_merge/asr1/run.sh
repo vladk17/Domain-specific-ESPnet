@@ -171,8 +171,9 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     done
 fi
 
-dict=data/lang_char/${train_set}_${bpemode}${nbpe}_units.txt
+#dict=data/lang_char/${train_set}_${bpemode}${nbpe}_units.txt
 #bpemodel=data/lang_char/${train_set}_${bpemode}${nbpe}
+dict=data/lang_char/${lm_train_set}_${bpemode}${nbpe}_units.txt
 bpemodel=data/lang_char/${lm_train_set}_${bpemode}${nbpe}
 
 echo "dictionary: ${dict}"
