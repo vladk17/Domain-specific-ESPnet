@@ -69,10 +69,9 @@ datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_te
           test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
 
 
-# all iteration names: 3 (crowdsource google), 4 (common voice mozilla), 5_tedx, 6_mailabs
-iteration=
-iteration_train_datasets=
-iteration_val_datasets=
+iteration=${ITERATION_NAME}
+iteration_train_datasets=${ITERATION_TRAIN}
+iteration_val_datasets=${ITERATION_VAL}
 
 train_set="train_iter${iteration}"
 train_dev="train_dev_iter${iteration}"
@@ -88,7 +87,6 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    printf "\n\n"
    echo "STAGE 0: Data download and preparation"
 
-    rm -rf data
     ./local/data_preparation.sh
 
     for part in ${datasets}; do
