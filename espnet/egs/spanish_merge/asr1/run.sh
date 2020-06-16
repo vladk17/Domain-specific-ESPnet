@@ -137,7 +137,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
 
 
     # remove auxiliary data
-    for x in ${train_set} ${train_dev}; do
+    for x in ${train_set} ${train_dev} ${recog_set}; do
         rm -r data/${x}_org data/${x}_rvb
     done
 
