@@ -110,11 +110,6 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     utils/combine_data.sh  data/${train_dev} data/test_comvoice
     utils/combine_data.sh  data/${recog_set} data/test_gong data/train_gong
 
-    # select datasets for LM only
-    utils/combine_data.sh data/${lm_train_set}_org data/test_gong_unsupervised \
-                                                   data/train_crowdsource data/train_comvoice data/train_mailabs \
-                                                   data/train_comvoice data/train_tedx
-
     # fix combined data
     for x in ${train_set} ${train_dev} ${recog_set}; do
         utils/fix_data_dir.sh data/${x}
@@ -142,8 +137,6 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_set}_org data/${train_set}
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev}_org data/${train_dev}
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_org data/${recog_set}
-
-    remove_longshortdata.sh --maxframes 5000 --maxchars 600 data/${lm_train_set}_org data/${lm_train_set}
 
 
     # remove auxiliary data
@@ -217,6 +210,13 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
 
     rm -rf ${lmdatadir}
     mkdir -p ${lmdatadir}
+
+    # select datasets for LM only
+    utils/combine_data.sh data/${lm_train_set}_org data/test_gong_unsupervised \
+                                                   data/train_crowdsource data/train_comvoice data/train_mailabs \
+                                                   data/train_comvoice data/train_tedx
+
+    remove_longshortdata.sh --maxframes 5000 --maxchars 600 data/${lm_train_set}_org data/${lm_train_set}
 
     cut -f 2- -d" " data/${lm_train_set}/text | spm_encode --model=${bpemodel}.model --output_format=piece \
     > ${lmdatadir}/train.txt
@@ -334,6 +334,7 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
             --result-label ${expdir}/${decode_dir}/data.JOB.json \
             --model ${expdir}/results/${recog_model}  \
 #            --rnnlm ${lmexpdir}/${lang_model} \
+            --rnnlm train_rnnlm_pytorch_lm_unigram3000_ngpu4/rnnlm.model.best \
             --api v2
 
         score_sclite.sh --bpe ${nbpe} --bpemodel ${bpemodel}.model --wer true ${expdir}/${decode_dir} ${dict}
