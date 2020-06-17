@@ -135,15 +135,15 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev}_org data/${train_dev}
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${recog_set}_org data/${recog_set}
 
-    # remove auxiliary data
-    rm -r data/*_org
 
     # select datasets for LM and BPE
-    utils/combine_data.sh data/${lm_train_set}_org data/test_gong_unsupervised data/train_gong_unsupervised \
-                                                   data/train_crowdsource data/train_comvoice data/train_mailabs \
-                                                   data/train_comvoice data/train_tedx
+    utils/combine_data.sh data/${lm_train_set}_org data/train_crowdsource data/test_crowdsource data/train_mailabs \
+                                                   data/test_mailabs data/train_comvoice data/test_comvoice data/train_tedx \
+                                                   data/test_tedx data/test_gong_unsupervised data/train_gong_unsupervised
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${lm_train_set}_org data/${lm_train_set}
-    rm -rf data/${lm_train_set}_org
+
+    # remove auxiliary data
+    rm -r data/*_org
 
     # compute global CMVN
     compute-cmvn-stats scp:data/${train_set}/feats.scp data/${train_set}/cmvn.ark
