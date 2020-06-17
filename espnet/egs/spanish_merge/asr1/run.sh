@@ -183,6 +183,7 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
 
     if [ ! -e ${lmdatadir} ]; then
         mkdir -p ${lmdatadir}
+        mkdir -p data/local/lm_train
         cut -f 2- -d" " data/${train_set}/text | gzip -c > data/local/lm_train/${train_set}_text.gz
         # combine external text and transcriptions and shuffle them with seed 777
         zcat data/local/lm_train/${train_set}_text.gz |\
