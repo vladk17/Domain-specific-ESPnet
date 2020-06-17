@@ -323,7 +323,7 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
         echo "Success splitting"
 
         #### use CPU for decoding
-        ngpu=0
+        ngpu=1
         echo "Decode cmd: ${decode_cmd}"
         # set batchsize 0 to disable batch decoding
 
