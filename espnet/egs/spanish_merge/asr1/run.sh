@@ -99,7 +99,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
     utils/combine_data.sh  data/${train_set}_org data/train_mailabs
     utils/combine_data.sh  data/${train_dev}_org data/test_mailabs
-    utils/combine_data.sh  data/${recog_set}_org data/test_gong
+    utils/combine_data.sh  data/${recog_set}_org data/train_gong
 
     # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
     for x in ${train_set} ${train_dev} ${recog_set}; do
