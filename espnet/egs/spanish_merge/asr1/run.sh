@@ -16,7 +16,7 @@ debugmode=1
 dumpdir=dump   # directory to dump full features
 N=0            # number of minibatches to be used (mainly for debugging). "0" uses all minibll
 # atches.
-verbose=1      # verbose option
+verbose=0      # verbose option
 resume=        # Resume the training from snapshot
 
 # feature configuration
@@ -334,7 +334,7 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
             --backend ${backend} \
             --debugmode ${debugmode} \
             --batchsize 0 \
-            --verbose ${verbose} \
+            --verbose 1 \
             --recog-json ${feat_recog_dir}/split${nj}utt/data_${bpemode}${nbpe}.JOB.json \
             --result-label ${expdir}/${decode_dir}/data.JOB.json \
             --model ${expdir}/results/${recog_model}  \
