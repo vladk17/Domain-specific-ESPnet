@@ -44,7 +44,7 @@ class GongUnsupervisedSpanish2KaldiTransformer(AbstractDataTransformer):
                 cut_audio_paths.extend(cur_cut_audio_paths)
             except Exception as e:
                 logger.error(f"GOT EXCEPTION in data transformation! type: {e.__class__.__name__}, message: {e}")
-        logger.info(f'Total dataset duration: {round(self.overall_duration/3600, 2)} hours')
+        logger.info(f'Total {self.__class__.__name__} dataset duration: {round(self.overall_duration/3600, 2)} hours')
 
         best_monologue_indexes = [idx for idx, chunk in enumerate(chunks) if chunk[2] > UTTERANCE_MIN_LENGTH
                                   and "<unk>" not in texts[idx]
@@ -93,8 +93,11 @@ class GongUnsupervisedSpanish2KaldiTransformer(AbstractDataTransformer):
                     str(utterance.get('speaker', {}).get('id', random.randint(9999999999999, 99999999999999999))))
                 for utterance in
                 data['monologues']]
-            texts = [" ".join([_['text'] for _ in utterance['terms']]) for utterance in
-                     data['monologues']]
+            texts = []
+            for utterance in data['monologues']:
+                text = " ".join([_['text'] for _ in utterance['terms']])
+                texts.append(text)
+
             assert len(chunks) == len(
                 texts), "Length of texts is not equal to length of chunks in the transcript file"
             cut_audio_paths = self.cut_audio_to_chunks(base_dir=relative_path,
@@ -116,8 +119,6 @@ class GongUnsupervisedSpanish2KaldiTransformer(AbstractDataTransformer):
                 audio = AudioSegment.from_file(absolute_path)
                 duration = audio.duration_seconds
                 if duration > UTTERANCE_MIN_LENGTH:
-                    tokens = transcript.lower().split(' ')
-                    transcript = ' '.join(tokens[:-1])
                     utt_id = idx + 1
                     speaker_id = self.prefix + 'sp' + ''.join(speakers[idx]).replace(' ', '')
                     utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'

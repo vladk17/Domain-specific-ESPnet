@@ -2,6 +2,7 @@ import json
 import logging
 import os
 
+from pydub import AudioSegment
 from tqdm import tqdm
 
 from dataset_utils.base_transformer import AbstractDataTransformer
@@ -21,7 +22,7 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
             self.SUBSET_SIZE = int(SUBSET_SIZE)
 
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
-
+        self.kaldi_eg_dir = espnet_kaldi_eg_directory
         raw_data_path = os.path.join(raw_data_path, 'to-y-data', 'spanish_test_set_second_pass')
         self.kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
@@ -42,7 +43,7 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
                 cut_audio_paths.extend(cur_cut_audio_paths)
             except Exception as e:
                 logger.error(f"EXCEPTION {e}")
-        print('Total dataset duration, hours:', self.overall_duration / 3600)
+        logger.info(f'Total {self.__class__.__name__} dataset duration: {round(self.overall_duration/3600, 2)} hours')
 
         best_monologue_indexes = [idx for idx, chunk in enumerate(chunks) if chunk[2] > UTTERANCE_MIN_LENGTH
                                   and "<unk>" not in texts[idx]
@@ -81,7 +82,7 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
     def cut_audio_to_monologues(self, relative_path, transcript_path):
         json_path = os.path.join(relative_path, transcript_path)
         wav_path = f"{transcript_path[:-5]}.raw-audio.wav"
-        with open(json_path, 'r') as f:
+        with open(json_path, 'r', encoding="utf8") as f:
             data = json.load(f)
             self.overall_duration += data['monologues'][-1]['end']
             chunks = [
@@ -90,8 +91,10 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
                     utterance['speaker']['id'])
                 for utterance in
                 data['monologues']]
-            texts = [" ".join([_['text'] for _ in utterance['terms']]) for utterance in
-                     data['monologues']]
+            texts = []
+            for idx, utterance in enumerate(data['monologues']):
+                text = " ".join([_['text'] for _ in utterance['terms']])
+                texts.append(text)
             assert len(chunks) == len(
                 texts), "Length of texts is not equal to length of chunks in the transcript file"
             cut_audio_paths = self.cut_audio_to_chunks(base_dir=relative_path,
@@ -106,15 +109,18 @@ class GongSpanish2KaldiTransformer(AbstractDataTransformer):
         utt2spk = list()
 
         for idx, transcript in enumerate(origin_texts):
-            tokens = transcript.lower().split(' ')
-            transcript = ' '.join(tokens[:-1])
 
             file_path = "downloads/" + self.prefix + "/" + audio_paths[idx]
-            utt_id = idx + 1
-            speaker_id = self.prefix + 'sp' + ''.join(speakers[idx]).replace(' ', '')
-            utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'
-            wavscp.append(f'{utterance_id} {file_path}')
-            utt2spk.append(f'{utterance_id} {speaker_id}')
-            text.append(f'{utterance_id} {transcript}')
+            absolute_path = os.path.join(self.kaldi_eg_dir, file_path)
+            if os.path.exists(absolute_path):
+                audio = AudioSegment.from_file(absolute_path)
+                duration = audio.duration_seconds
+                if duration > UTTERANCE_MIN_LENGTH:
+                    utt_id = idx + 1
+                    speaker_id = self.prefix + 'sp' + ''.join(speakers[idx]).replace(' ', '')
+                    utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'
+                    wavscp.append(f'{utterance_id} {file_path}')
+                    utt2spk.append(f'{utterance_id} {speaker_id}')
+                    text.append(f'{utterance_id} {transcript}')
 
         return wavscp, text, utt2spk
