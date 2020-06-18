@@ -7,6 +7,7 @@ from typing import List
 from pydub import AudioSegment
 from sklearn.model_selection import train_test_split
 import logging
+import pandas as pd
 
 logger = logging.root
 
@@ -51,9 +52,17 @@ class AbstractDataTransformer(ABC):
             f3.write('\n'.join(utt2spk))
             f3.write('\n')
 
-    def split_train_test(self, *args, test_proportion=None):
-        train_test_args = train_test_split(*args, test_size=test_proportion or self.TESTSET_PROPORTION, random_state=42,
-                                           shuffle=True)
+    def split_train_test(self, wavscp, text, utt2spk, test_proportion=None, shuffle=False):
+        df = pd.DataFrame(data=[wavscp, text, utt2spk]).T
+        df.columns = ['wavscp', 'text', 'utt2spk']
+        df['speaker'] = df['utt2spk'].apply(lambda x: x.split(' ')[1])
+        df = df.sort_values('speaker')
+        wavscp, text, utt2spk = df['wavscp'].to_list(), df['text'].to_list(), df['utt2spk'].to_list()
+        train_test_args = train_test_split(wavscp,
+                                           text,
+                                           utt2spk, test_size=test_proportion or self.TESTSET_PROPORTION,
+                                           random_state=42,
+                                           shuffle=shuffle)
         return train_test_args
 
     def clean_text(self, text):
