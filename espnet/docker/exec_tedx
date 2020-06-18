@@ -1,1 +1,0 @@
-./run.sh --docker_gpu 0 --docker_egs spanish_tedx/asr1 --docker_env "ESPNET_SUBSET_SIZE=5000" --ngpu 1

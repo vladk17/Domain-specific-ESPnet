@@ -18,7 +18,7 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
             self.SUBSET_SIZE = int(SUBSET_SIZE)
 
     def transform(self, raw_data_path, espnet_kaldi_eg_directory, *args, **kwargs):
-
+        self.kaldi_eg_dir = espnet_kaldi_eg_directory
         self.kaldi_data_dir = os.path.join(espnet_kaldi_eg_directory, 'data')
         kaldi_audio_files_dir = os.path.join(espnet_kaldi_eg_directory, 'downloads')
         root_dir = os.path.join(raw_data_path, 'es_ES', 'by_book')
@@ -45,7 +45,7 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
             logger.info(f"Subset size: {self.SUBSET_SIZE}")
             if dataset_size < self.SUBSET_SIZE:
                 logger.info(
-                    f"ATTENTION! Provided subset size ({self.SUBSET_SIZE}) is less "
+                    f"ATTENTION! Provided subset size ({self.SUBSET_SIZE}) is more "
                     f"than overall dataset size ({dataset_size}). "
                     f"Taking all dataset")
             data = data[:self.SUBSET_SIZE]
@@ -108,17 +108,17 @@ class MailabsKaldiTransformer(AbstractDataTransformer):
         data = data.reset_index()
 
         for idx, row in tqdm(data.iterrows(), total=data.shape[0]):
-            transcript = self.clean_text(row['transcript_1'])
             file_path = row['path']
-
-            utt_id = idx+1
-            speaker_id = f"{self.prefix}sp{row['speaker']}"
-            utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'
-            wavscp.append(f'{utterance_id} {file_path}')
-            if row['speaker'] == 999:
-                utt2spk.append(f'{utterance_id} {utterance_id}')
-            else:
-                utt2spk.append(f'{utterance_id} {speaker_id}')
-            text.append(f'{utterance_id} {transcript}')
+            if os.path.exists(os.path.join(self.kaldi_eg_dir, file_path)):
+                transcript = self.clean_text(row['transcript_1'])
+                utt_id = idx+1
+                speaker_id = f"{self.prefix}sp{row['speaker']}"
+                utterance_id = f'{speaker_id}-{self.prefix}{utt_id}'
+                wavscp.append(f'{utterance_id} {file_path}')
+                if row['speaker'] == 999:
+                    utt2spk.append(f'{utterance_id} {utterance_id}')
+                else:
+                    utt2spk.append(f'{utterance_id} {speaker_id}')
+                text.append(f'{utterance_id} {transcript}')
 
         return wavscp, text, utt2spk

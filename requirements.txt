@@ -2,3 +2,4 @@ tqdm
 pydub
 num2words
 pandas
+sklearn

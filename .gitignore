@@ -18,3 +18,10 @@ __pycache__
 **/asr1/data/
 raw_data/
 .vscode/
+
+**/asr1/RIRS_NOISES
+**/asr1/rirs_noises.zip
+**/asr1/local/score.sh
+
+**/log
+

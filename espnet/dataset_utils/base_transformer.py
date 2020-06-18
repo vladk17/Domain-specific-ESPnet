@@ -1,11 +1,13 @@
 import os
 from abc import ABC, abstractmethod
+from copy import copy
 from distutils.dir_util import copy_tree
 from typing import List
 
 from pydub import AudioSegment
 from sklearn.model_selection import train_test_split
 import logging
+import pandas as pd
 
 logger = logging.root
 
@@ -17,6 +19,7 @@ class AbstractDataTransformer(ABC):
         self.SUBSET_SIZE: int = 999999999999999
         self.TESTSET_PROPORTION: float = 0.1
         self.kaldi_data_dir: str = None
+        self.kaldi_eg_dir: str = None
 
     @property
     def prefix(self):
@@ -49,9 +52,17 @@ class AbstractDataTransformer(ABC):
             f3.write('\n'.join(utt2spk))
             f3.write('\n')
 
-    def split_train_test(self, *args, test_proportion=None):
-        train_test_args = train_test_split(*args, test_size=test_proportion or self.TESTSET_PROPORTION, random_state=42,
-                                           shuffle=True)
+    def split_train_test(self, wavscp, text, utt2spk, test_proportion=None, shuffle=False):
+        df = pd.DataFrame(data=[wavscp, text, utt2spk]).T
+        df.columns = ['wavscp', 'text', 'utt2spk']
+        df['speaker'] = df['utt2spk'].apply(lambda x: x.split(' ')[1])
+        df = df.sort_values('speaker')
+        wavscp, text, utt2spk = df['wavscp'].to_list(), df['text'].to_list(), df['utt2spk'].to_list()
+        train_test_args = train_test_split(wavscp,
+                                           text,
+                                           utt2spk, test_size=test_proportion or self.TESTSET_PROPORTION,
+                                           random_state=42,
+                                           shuffle=shuffle)
         return train_test_args
 
     def clean_text(self, text):
@@ -69,14 +80,13 @@ class AbstractDataTransformer(ABC):
         for path in origin_paths:
             copy_tree(path, destination_path)
 
-    def downsample_audio(self, source_path: str, frequency=16000):
-        new_file_name = source_path.split("/")[-1][:-4] + '.wav'
-        origin_file_name = new_file_name + '.origin'
-        downsampled_wav_path = new_file_name
-        sound = AudioSegment.from_wav(source_path)
-        sound.export(origin_file_name, format="wav")
-        os.system(f"sox '%s' -r {frequency} -b 16 -c 1 %s" % (origin_file_name, downsampled_wav_path))
-        os.remove(origin_file_name)
+    def downsample_audio(self, source_path: str, frequency=16, channels=1):
+        downsampled_path = list(copy(source_path))
+        downsampled_path[-4:] = '.out.wav'
+        downsampled_path = ''.join(downsampled_path)
+        os.system("sox %s -r 16000 -b 16 -c 1 %s" % (source_path, downsampled_path))
+        os.remove(source_path)
+        os.rename(downsampled_path, source_path)
 
     def cut_audio_to_chunks(self, base_dir: str, wav_path: str, unprocessed_dir_prefix,
                             processed_dir_prefix, chunks=List[tuple]):

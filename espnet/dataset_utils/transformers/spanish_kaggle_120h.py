@@ -8,6 +8,7 @@ from dataset_utils.base_transformer import AbstractDataTransformer
 SUBSET_SIZE = os.environ.get("ESPNET_SUBSET_SIZE", None)
 logger = logging.root
 
+
 class Kaggle120hSpanish2KaldiTransformer(AbstractDataTransformer):
 
     def __init__(self):
@@ -34,7 +35,7 @@ class Kaggle120hSpanish2KaldiTransformer(AbstractDataTransformer):
         else:
             proc = subprocess.Popen([f'ls -l {destination_audio_dir} | wc -l'], stdout=subprocess.PIPE, shell=True)
             (out, _) = proc.communicate()
-            print (f"{destination_audio_dir} has {int(out[:-1])} entries")
+            print(f"{destination_audio_dir} has {int(out[:-1])} entries")
             if 112846 != int(out[:-1]):
                 should_cpy = True
 
@@ -77,11 +78,12 @@ class Kaggle120hSpanish2KaldiTransformer(AbstractDataTransformer):
 
         the_text_series = df['transcript'].apply(lambda x: x.lower())
         # the_text_series = the_text_series.apply(lambda x: x.lower())
-        the_text_series.index = [(lambda x: x+'_'+x)(ent.split('.')[0].split('/')[1]) for ent in df.index]
+        the_text_series.index = [(lambda x: x + '_' + x)(ent.split('.')[0].split('/')[1]) for ent in df.index]
         the_text_series_sorted = the_text_series.sort_index()
 
-        text = [index+' '+the_text_series_sorted.loc[index] for index in the_text_series_sorted.index]
-        wavscp = [index+' '+os.path.join('downloads',self._prefix, index.split('_')[1]+'.wav') for index in the_text_series_sorted.index]
-        utt2spk = [index+' '+index.split('_')[1] for index in the_text_series_sorted.index]
+        text = [index + ' ' + the_text_series_sorted.loc[index] for index in the_text_series_sorted.index]
+        wavscp = [index + ' ' + os.path.join('downloads', self._prefix, index.split('_')[1] + '.wav') for index in
+                  the_text_series_sorted.index]
+        utt2spk = [index + ' ' + index.split('_')[1] for index in the_text_series_sorted.index]
 
         return wavscp, text, utt2spk
