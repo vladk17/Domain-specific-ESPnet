@@ -1,0 +1,35 @@
+run.sh:
+  1) set verbose=1 #line 18
+  2) resume=        # Resume the training from snapshot #line 19
+  3) TBD: verify we do not do spaceaugmentation at the first phase (preprocess_config=conf/specaug.yaml # line 25)
+  4) study train.yaml params:  
+     4.1) batch-bins should correspond to the number of gpus (default in librispeech is 15000000, current setting is 1000000)
+     4.2) accum-grad: 4-default, current setting is 1
+     4.3) epochs: 120-defualt, current 20
+     4.4) model-module: espnet.nets.pytorch_backend.e2e_asr_transformer:E2E - TBD: study the code and model structure from the code
+     4.5) meaning of many other params is not clear - TBD: clarify the meaning
+
+  5) study lm.yaml params - TBD
+  6) study decode.yaml params:
+     6.1) beamsize 60-default, currently value is 5    
+     6.2) ctc-weight vs. lm-weight, should they sumup to 1 or what's important is the ratio between them, or something else? TBD - check
+  7) feature generation: # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
+     any ideas about speciality of spanish audio and corresponding tuning of the parameters of the feature generation for spanish?
+  8) accelerate decoding by commenting out the line below #### use CPU for decoding
+             8.1) #ngpu=0
+             8.2) Set 1 or more values for --batchsize option in asr_recog.py to enable GPU decoding
+             8.3) And execute the script (e.g., run.sh --stage 5 --ngpu 1)
+             You’ll achieve significant speed improvement by using the GPU decoding
+  9) TBD: clarify the meaning of "model to be used for decoding: 'model.acc.best' or 'model.loss.best'"
+ 10) TBD: prepare a schematic diagram of the pipeline and present it to the member of the project
+ 11) TBD: clarify what is CMVN (Cepstral mean and variance normalization), how is it calculated and how is it used? 
+          remember: Mel-Frequency Cepstral Coefficients (MFCCs)
+ 12) TBD: exercise transfer learning on publically available data; do not wait for the gong's labeled data
+ 13) TBD: listen to the data audio files
+ 14) TBD: prepare a schematic diagram of the data transformations along the pipeline; debug the pipeline by verifications of the format and content correctness 
+     of the data at each stage of the pipeline
+ 15) overfitting regularization loop
+ 16) stay in control at each stage of teh pipeline: 
+     16.1) clearly understand the optimization cretarium at the stage; 
+     16.2) measure and know the achieved optimization values
+     16.3) do one stage a time, analyze the results; zero step is listen to the samples 

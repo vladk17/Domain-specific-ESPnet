@@ -8,14 +8,14 @@
 
 # general configuration
 backend=pytorch
-stage=4      # start from -1 if you need to start from data download
-stop_stage=100
+stage=0 #4      # start from -1 if you need to start from data download
+stop_stage=0
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
 dumpdir=dump   # directory to dump full features
 N=0            # number of minibatches to be used (mainly for debugging). "0" uses all minibatches.
-verbose=0      # verbose option
+verbose=1      # verbose option
 resume=        # Resume the training from snapshot
 
 
@@ -131,10 +131,21 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     # remove utt having more than 400 characters
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_set}_tmp data/${train_set}
     remove_longshortdata.sh --maxframes 3000 --maxchars 400 data/${train_dev}_tmp data/${train_dev}
+
+    train_set_orig_size=$("ls -l data/${train_set}_tmp | wc -l")
+    train_set_wo_longshort_size=$("ls -l data/${train_set} | wc -l")
+    dev_set_orig_size=$("ls -l data/${dev_set}_tmp | wc -l")
+    dev_set_wo_longshort_size=$("ls -l data/${dev_set} | wc -l")
+    echo "train_set_orig_size is ${train_set_orig_size}"
+    echo "train_set_wo_longshort_size is ${train_set_wo_longshort_size}"
+    echo "dev_set_orig_size is ${dev_set_orig_size}"
+    echo "dev_set_wo_longshort_size is ${dev_set_wo_longshort_size}"
+
     rm -rf data/${train_set}_tmp
     rm -rf data/${train_dev}_tmp
 
     # Remove features with too long frames in training data
+    # vk this seem to be redundant (after execution of remove_longshortdata.sh), at least logically 
     max_len=3000
     mv data/${train_set}/utt2num_frames data/${train_set}/utt2num_frames.bak
     awk -v max_len=${max_len} '$2 < max_len {print $1, $2}' data/${train_set}/utt2num_frames.bak > data/${train_set}/utt2num_frames

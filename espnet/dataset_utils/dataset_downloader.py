@@ -1,4 +1,4 @@
-import os
+import os, sys
 import tarfile
 import urllib.request
 import zipfile
@@ -99,28 +99,36 @@ def download_from_s3(key, bucket, dataset_name, download_folder):
 
 
 def download_and_extract_data_from_kaggle_datasets(kuggle_dataset_name: str, kuggle_archive_name: str, dataset_name: str, download_folder: str):
-    print(f'kuggle_dataset_name: {kuggle_dataset_name}')
-    print(f'dataset_name: {dataset_name}')
-    print(f'download_folder: {download_folder}')
+    print(f'[vk]: kuggle_dataset_name: {kuggle_dataset_name}')
+    print(f'[vk]: dataset_name: {dataset_name}')
+    print(f'[vk]: download_folder: {download_folder}')
 
     if not os.path.exists(download_folder):
         os.makedirs(download_folder)
     dataset_dir = os.path.join(download_folder, dataset_name)
-    print(f'dataset_dir: {dataset_dir}')
+    print(f'[vk]: dataset_dir: {dataset_dir}')
     if not os.path.exists(os.path.join(dataset_dir, 'decompressed')):
         if None != kuggle_dataset_name:
-            dataset_path = os.path.join(dataset_dir, kuggle_dataset_name)
-            print('Dataset path:', dataset_path)
+            # dataset_path = os.path.join(dataset_dir, kuggle_dataset_name)
+            dataset_path = os.path.join(dataset_dir)
+            print('[vk]: Dataset path:', dataset_path)
 
             if not os.path.exists(dataset_path):
-                print(f"Downloading {kuggle_dataset_name}")
+                print(f"[vk]: Downloading {kuggle_dataset_name}")
                 if not os.path.exists(dataset_dir):
                     os.mkdir(dataset_dir)
+                # time.sleep(3) # sleep to allow stdout 
+                sys.stdout.flush()
                 download_kuggle_dataset_url(kuggle_dataset_name, dataset_path)
 
             dataset_path = os.path.join(dataset_path, kuggle_archive_name)
             directory_name = os.path.join(dataset_dir, 'decompressed')
-            print(f"Decompressing data: dataset_path = {dataset_path}")
+
+            print(f"[vk]: dataset_path = {dataset_path}; STOPPING HER")
+            return pathlib.Path(final_path).absolute()
+
+            print(f"[vk]: Decompressing data: dataset_path = {dataset_path}")
+            sys.stdout.flush()
             if dataset_path.endswith('zip'):
                 with zipfile.ZipFile(dataset_path, 'r') as zip_ref:
                     zip_ref.extractall(directory_name)
@@ -128,7 +136,7 @@ def download_and_extract_data_from_kaggle_datasets(kuggle_dataset_name: str, kug
                 with tarfile.open(dataset_path) as tar_ref:
                     tar_ref.extractall(directory_name)
     else:
-        print("Archive has been already decompressed")
+        print("[vk]: Archive has been already decompressed")
 
     final_path = os.path.join(dataset_dir, 'decompressed')
     return pathlib.Path(final_path).absolute()
