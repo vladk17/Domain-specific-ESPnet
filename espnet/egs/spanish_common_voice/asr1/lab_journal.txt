@@ -33,3 +33,34 @@ run.sh:
      16.1) clearly understand the optimization cretarium at the stage; 
      16.2) measure and know the achieved optimization values
      16.3) do one stage a time, analyze the results; zero step is listen to the samples 
+ 17) in common voice, waveforms have significant portion os silence at the start and the end of the recording
+ 18) nbpe=5000 (this paramter defines the size of the vacabular for the stage 2 "Dictionary and Json Data Preparation") what is the recommended value of this param?
+ 19) bpemode=unigram define the model type in the stage 2 "Dictionary and Json Data Preparation"; what does it mean, what are the options, and what is the recommended model type?
+     it is explained and implemented here https://arxiv.org/abs/1804.10959 and here https://github.com/google/sentencepiece and 
+ 20) stage 2: what is the meaning of the param --input_sentence_size=100000000
+ 21) stage 3: LM: lm.yaml model-module: transformer; epoch set to 20 while the default is 50; what are other options for model-module and preferable configuration settings?
+ 22) stage 3: get the exact meaning of the paramters in the log output: main/loss, main/count, main/nll
+ 23) stage 3: starting from 6th epoch the model starts to overfit in the case of small (5000 taken for development) dataset; echieved train perplexity is 57.3077, echieved 
+     validation perplexity is 193.023 
+ 24) paper: A COMPARATIVE STUDY ON TRANSFORMER VS RNN IN SPEECH APPLICATION (https://arxiv.org/abs/1909.06317) provides training tips; it also reveals superiority of transformer
+     in comparison to RNN; they prepared espnet recipes, which we actually use (espnet/espnet/nets/pytorch_backend/e2e_asr_transformer.py by Shigeki Karita)
+     in these recipes the model is sequence2sequence model, which predicts a target sequence of subwords ("SentencePiece") from an input sequence of (83-dim) log-mel filterbank frames with pitch features.
+     
+     see "A pitch extraction algorithm tuned for automatic speech recognition" by Povey et all
+
+     see "SPEECH-TRANSFORMER: A NO-RECURRENCE SEQUENCE-TO-SEQUENCE MODEL FOR SPEECH RECOGNITION", which explains transformations of the source sequence into a subsampled sequence by using 
+     two layer cnn 
+     
+ 25) not sure that the sub-words are better than characters for the asr: the length of the subwords varies significantly (they can be pretty long), which seem to be problematic 
+     for the acustic model as it outputs per time-frame
+ 26) train.yaml:  
+     26.1) mtlalpha: 0.3 (Multitask learning mode alpha) defines the weights between loss_att and loss_ctc in the joint loss function L_asr = - alpha * loss_ctc + (1 - alpha) * loss_att
+           see "JOINT CTC-ATTENTION BASED END-TO-END SPEECH RECOGNITION USING MULTI-TASK LEARNING"
+     26.2) num_spkrs: 1 - in our current setting (this assumes that there is only a single speaker in each utterance)
+     26.3) model_module: espnet.nets.pytorch_backend.e2e_asr_transformer:E2E
+     26.4) elayers: 12  defines the number of blocks in the transformer's encoder
+     26.5) dlayers: 6 defines tne number of blocks in the transformer's decoder
+     26.6) adim: 512 defines attention_dim - attantion dimention
+     26.7) aheads: 8 - number of attention heads
+     26.8) TBD: check what is the value of positionwise_layer_type and corresponding positionwise_layer, which is given as a feed_forward paramter to the Transformer's EncoderLayer
+ 27) 
