@@ -2,6 +2,7 @@ import logging
 import os
 import pandas as pd
 import subprocess
+import re
 
 from dataset_utils.base_transformer import AbstractDataTransformer
 
@@ -47,6 +48,9 @@ class Kaggle120hSpanish2KaldiTransformer(AbstractDataTransformer):
             print('all audio files are in place')
 
         wavscp, text, utt2spk = self.generate_arrays(raw_data_path)
+        print(f'[vk]: wavscp: \n {wavscp[:3]}')
+        print(f'[vk]: text: \n {text[:3]}')
+        print(f'[vk]: utt2spk: \n {utt2spk[:3]}')
 
         logger.info(f"Total dataset size: {len(text)}")
         if len(text) < self.SUBSET_SIZE:
@@ -81,9 +85,9 @@ class Kaggle120hSpanish2KaldiTransformer(AbstractDataTransformer):
         the_text_series.index = [(lambda x: x + '_' + x)(ent.split('.')[0].split('/')[1]) for ent in df.index]
         the_text_series_sorted = the_text_series.sort_index()
 
-        text = [index + ' ' + the_text_series_sorted.loc[index] for index in the_text_series_sorted.index]
-        wavscp = [index + ' ' + os.path.join('downloads', self._prefix, index.split('_')[1] + '.wav') for index in
+        text = [re.sub('-','_',index) + '-' + re.sub('-', '_', the_text_series_sorted.loc[index]) for index in the_text_series_sorted.index]
+        wavscp = [re.sub('-','_',index) + ' ' + re.sub('-','_',os.path.join('downloads', self._prefix, index.split('_')[1] + '.wav')) for index in
                   the_text_series_sorted.index]
-        utt2spk = [index + ' ' + index.split('_')[1] for index in the_text_series_sorted.index]
+        utt2spk = [re.sub('-','_',index) + ' ' + re.sub('-','_', index.split('_')[1]) for index in the_text_series_sorted.index]
 
         return wavscp, text, utt2spk

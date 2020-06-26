@@ -55,6 +55,7 @@ class AbstractDataTransformer(ABC):
     def split_train_test(self, wavscp, text, utt2spk, test_proportion=None, shuffle=False):
         df = pd.DataFrame(data=[wavscp, text, utt2spk]).T
         df.columns = ['wavscp', 'text', 'utt2spk']
+        print(f'[vk]: df[utt2spk].head()\n {df["utt2spk"].head()}')
         df['speaker'] = df['utt2spk'].apply(lambda x: x.split(' ')[1])
         df = df.sort_values('speaker')
         wavscp, text, utt2spk = df['wavscp'].to_list(), df['text'].to_list(), df['utt2spk'].to_list()

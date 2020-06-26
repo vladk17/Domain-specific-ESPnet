@@ -52,15 +52,42 @@ run.sh:
      two layer cnn 
      
  25) not sure that the sub-words are better than characters for the asr: the length of the subwords varies significantly (they can be pretty long), which seem to be problematic 
-     for the acustic model as it outputs per time-frame
+     for the acustic model as it outputs per time-frame. We may try "characters" and mixed "character" + "subwords" and compare performance
  26) train.yaml:  
-     26.1) mtlalpha: 0.3 (Multitask learning mode alpha) defines the weights between loss_att and loss_ctc in the joint loss function L_asr = - alpha * loss_ctc + (1 - alpha) * loss_att
+     26.1) mtlalpha: 0.3 (Multitask learning mode alpha) defines the weights between loss_att and loss_ctc in the joint loss function L_asr = alpha * loss_ctc + (1 - alpha) * loss_att, 
+           where loss_xyz = log(P_xyz)
            see "JOINT CTC-ATTENTION BASED END-TO-END SPEECH RECOGNITION USING MULTI-TASK LEARNING"
      26.2) num_spkrs: 1 - in our current setting (this assumes that there is only a single speaker in each utterance)
      26.3) model_module: espnet.nets.pytorch_backend.e2e_asr_transformer:E2E
      26.4) elayers: 12  defines the number of blocks in the transformer's encoder
      26.5) dlayers: 6 defines tne number of blocks in the transformer's decoder
+           it looks like the CTC log below outputs the input and output sequence lengths for each of the (6) dlayers 
+           "
+           2020-06-26 06:48:15,536 (ctc:83) INFO: CTC input lengths:  tensor([154, 154, 154, 154, 154, 154], dtype=torch.int32)
+           2020-06-26 06:48:15,536 (ctc:84) INFO: CTC output lengths: tensor([17, 17, 16,  9, 15, 21], dtype=torch.int32)
+           "
      26.6) adim: 512 defines attention_dim - attantion dimention
      26.7) aheads: 8 - number of attention heads
      26.8) TBD: check what is the value of positionwise_layer_type and corresponding positionwise_layer, which is given as a feed_forward paramter to the Transformer's EncoderLayer
- 27) 
+           from the code it looks that in the current implementation the default value is taken: positionwise_layer_type="linear",
+ 27) define and implement a data-cleaning mechanism, so that a new experiment could be started from the "clean page" 
+ 28) define and implement data-saving mechanism, so that results of an experiment could be saved 
+ 29) getting lot's of following wordings: "sox WARN rate: rate clipped 12 samples; decrease volume?", changing the command to os.system("sox -v 0.80 '%s' -r 16000 -b 16 -c 1 %s" % (upsampled_wav_path, downsampled_wav_path)), which is the decrising of volume by 20% is almost removed these warings
+ 30) we may find a way to visualize attention mapping in our specific case of transformer used for ASR task.I guess, we will observe locality of this mapping.
+ 31) stage 2: for the case of 15000 utterances produced the following output 
+     sym2int.pl: replacing ı with 1
+     sym2int.pl: replacing ı with 1
+     sym2int.pl: replacing ò with 1
+     ** Replaced 3 instances of OOVs with 1
+     /espnet/egs/spanish_common_voice/asr1/../../../utils/data2json.sh --feat dump/test/deltafalse/feats.scp --bpecode data/lang_char/train_set_unigram5000.model data/test data/lang_char/train_set_unigram5000_units.txt
+     /espnet/egs/spanish_common_voice/asr1/../../../utils/feat_to_shape.sh --cmd run.pl --nj 1 --filetype  --preprocess-conf  --verbose 0 dump/test/deltafalse/feats.scp data/test/tmp-12Uij/input_1/shape.scp
+     skipped 0 empty lines
+     filtered 0 lines
+     sym2int.pl: replacing — with 1
+     sym2int.pl: replacing — with 1
+     sym2int.pl: replacing — with 1
+     sym2int.pl: replacing ő with 1
+     sym2int.pl: replacing ồ with 1
+     sym2int.pl: replacing ı with 1
+     can it be fixed by proper preprocessing?
+ 32)  

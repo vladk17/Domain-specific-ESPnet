@@ -22,7 +22,8 @@ resume=        # Resume the training from snapshot
 # feature configuration
 do_delta=false
 
-preprocess_config=conf/specaug.yaml
+# preprocess_config=conf/specaug.yaml
+preprocess_config=
 train_config=conf/train.yaml # current default recipe requires 4 gpus.
                              # if you do not have 4 gpus, please reconfigure the `batch-bins`
                              # and `accum-grad` parameters in config.
@@ -169,7 +170,7 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
         ${feat_dt_dir}/storage
     fi
     dump.sh --cmd "$train_cmd" --nj ${nj} --do_delta ${do_delta} \
-        data/${train_set}/feats.scp data/${train_set}/cmvn.ark exp/dump_feats/train ${feat_tr_dir}
+        data/${train_set}/feats.scp data/${train_set}/cmvn.ark exp/dump_feats/train ${feat_tr_dir} 
     dump.sh --cmd "$train_cmd" --nj ${nj} --do_delta ${do_delta} \
         data/${train_dev}/feats.scp data/${train_set}/cmvn.ark exp/dump_feats/dev ${feat_dt_dir}
     for rtask in ${recog_set}; do
@@ -262,6 +263,7 @@ expdir=exp/${expname}
 mkdir -p ${expdir}
 
 if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
+    start_time=$(date)
     printf "\n\n"
     echo "stage 4: Network Training"
     ${cuda_cmd} --gpu ${ngpu} ${expdir}/train.log \
@@ -280,6 +282,8 @@ if [ ${stage} -le 4 ] && [ ${stop_stage} -ge 4 ]; then
         --resume ${resume} \
         --train-json ${feat_tr_dir}/data_${bpemode}${nbpe}.json \
         --valid-json ${feat_dt_dir}/data_${bpemode}${nbpe}.json
+    end_time=$(date)
+    echo "start_time: ${start_time}, end_time: ${end_time}"
 fi
 
 if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
@@ -332,7 +336,7 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
         echo "Success splitting"
 
         #### use CPU for decoding
-        ngpu=0
+        #ngpu=0 vk let's use gpu to save time
         echo "Decode cmd: ${decode_cmd}"
         # set batchsize 0 to disable batch decoding
 
