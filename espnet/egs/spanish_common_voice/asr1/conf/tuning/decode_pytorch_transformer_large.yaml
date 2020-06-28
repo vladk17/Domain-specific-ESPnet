@@ -1,7 +1,7 @@
-batchsize: 1 #0 0 is for cpu
+batchsize: 0 #0 0 is for cpu
 beam-size: 6 #60
-ctc-weight: 0.4
-lm-weight: 0.6
+ctc-weight: 0.99 #0.4
+lm-weight: 0.01 #0.6
 maxlenratio: 0.0
 minlenratio: 0.0
 penalty: 0.0

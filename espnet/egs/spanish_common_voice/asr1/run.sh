@@ -4,12 +4,14 @@
 #  Apache 2.0  (http://www.apache.org/licenses/LICENSE-2.0)
 
 . ./path.sh || exit 1;
+pip install pip --upgrade; pip uninstall matplotlib --y; pip --no-cache-dir install matplotlib
+
 . ./cmd.sh || exit 1;
 
 # general configuration
 backend=pytorch
-stage=4 #4      # start from -1 if you need to start from data download
-stop_stage=4
+stage=5 #4      # start from -1 if you need to start from data download
+stop_stage=5
 ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
@@ -336,7 +338,7 @@ if [ ${stage} -le 5 ] && [ ${stop_stage} -ge 5 ]; then
         echo "Success splitting"
 
         #### use CPU for decoding
-        #ngpu=0 vk let's use gpu to save time
+        ngpu=0 
         echo "Decode cmd: ${decode_cmd}"
         # set batchsize 0 to disable batch decoding
 

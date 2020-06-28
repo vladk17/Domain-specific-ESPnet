@@ -90,4 +90,13 @@ run.sh:
      sym2int.pl: replacing ồ with 1
      sym2int.pl: replacing ı with 1
      can it be fixed by proper preprocessing?
- 32)  
+ 32) we may optimize the data preparation phase as follows: reformat entire dataset according to kaldi, based on ESPNET_SUBSET_SIZE paramter select a subset the dataset for a specific experiment
+ 33) so, the common_voice description files are dev.tsv, invalidated.tsv, other.tsv, test.tsv, train.tsv, validated.tsv: what is invalidated.tsv? what is other.tsv? how the audio files where divided
+     between the rest of the files? what is useful/importent for our case? 
+     the fields in the train.tsv are: client_id, path, sentence, up_votes, down_votes, age, gender, accent. What are up_votesm, and down_votes? Can/should we do anything with age, gender, accent?
+ 34) Note: the download and reformating of the spanish_common_voice from mp3 22KHz to wav 16KHz takes ~7 hours
+ 35) stage 4 - acoustic model learning. 
+     35.1) an attemt to run 16 GPUs did not work, but 8 GPU configuration worked flawlessly. I guess, the SW is not ready for 16 GPUs.
+     35.2) 10 epochs: start_time: Sat Jun 27 12:13:50 UTC 2020, end_time: Sat Jun 27 17:29:44 UTC 2020 (on 8 GPUs) - the recognition is bad
+     35.3) 20 epochs: Ended (code 0) at Sun Jun 28 04:50:05 UTC 2020, elapsed time 38222 seconds. No signs of overfitting 
+ 36)  

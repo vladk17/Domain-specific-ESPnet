@@ -1,14 +1,14 @@
 # This configuration requires 4 gpus with 12GB memory # vk: the original configuration has been changed for a single gpu
-accum-grad: 1
+accum-grad: 4 #1
 adim: 512
 aheads: 8
 backend: pytorch
-batch-bins: 1000000
+batch-bins: 15000000 #1000000
 dlayers: 6
 dropout-rate: 0.1
 dunits: 2048
 elayers: 12
-epochs: 10 #20 #120 originally
+epochs: 20 #20 #120 originally
 eunits: 2048
 grad-clip: 5
 lsm-weight: 0.1
