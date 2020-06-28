@@ -97,6 +97,11 @@ run.sh:
  34) Note: the download and reformating of the spanish_common_voice from mp3 22KHz to wav 16KHz takes ~7 hours
  35) stage 4 - acoustic model learning. 
      35.1) an attemt to run 16 GPUs did not work, but 8 GPU configuration worked flawlessly. I guess, the SW is not ready for 16 GPUs.
-     35.2) 10 epochs: start_time: Sat Jun 27 12:13:50 UTC 2020, end_time: Sat Jun 27 17:29:44 UTC 2020 (on 8 GPUs) - the recognition is bad
-     35.3) 20 epochs: Ended (code 0) at Sun Jun 28 04:50:05 UTC 2020, elapsed time 38222 seconds. No signs of overfitting 
+     35.2) 10 epochs: start_time: Sat Jun 27 12:13:50 UTC 2020, end_time: Sat Jun 27 17:29:44 UTC 2020 (on 8 GPUs). The recognition (the test) is bad
+     35.3) 20 epochs: Ended (code 0) at Sun Jun 28 04:50:05 UTC 2020, elapsed time 38222 seconds. No signs of overfitting. The validation 'wer' plot looks like a knee: it has constant, 
+           close to 100% value for 3.5K steps (6 hours), and then starts olmost linear descend up to 95% after 5.3k steps (10 hours). I would say that the 95% is to high in comparison to the 
+           recognition phase results. Also the validation acc changes from 0.1 to almost 0.8, validation cer changes from 0.8 to 0.2, val_cer_ctc from 1 to 0.35, 
+           val_loss_att drops from 100 to 20, val_loss_ctc drops from 120 to 40, val_loss drops from 100 to 30. Train acc and loss change monotonically each one in the right direction. 
+           Once more: No signs of overfitting => more epochs should be productive
+           The recognition is very meaninful;   
  36)  
