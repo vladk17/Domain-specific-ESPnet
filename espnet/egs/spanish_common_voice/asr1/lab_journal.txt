@@ -57,6 +57,7 @@ run.sh:
      26.1) mtlalpha: 0.3 (Multitask learning mode alpha) defines the weights between loss_att and loss_ctc in the joint loss function L_asr = alpha * loss_ctc + (1 - alpha) * loss_att, 
            where loss_xyz = log(P_xyz)
            see "JOINT CTC-ATTENTION BASED END-TO-END SPEECH RECOGNITION USING MULTI-TASK LEARNING"
+           Note: the values of loss_att ~ 14, while ctc_loss ~ 28 after 40 epochs, so the value of mtlalpha seem to be selected correctly or can be even smaller
      26.2) num_spkrs: 1 - in our current setting (this assumes that there is only a single speaker in each utterance)
      26.3) model_module: espnet.nets.pytorch_backend.e2e_asr_transformer:E2E
      26.4) elayers: 12  defines the number of blocks in the transformer's encoder
@@ -103,13 +104,44 @@ run.sh:
            recognition phase results. Also the validation acc changes from 0.1 to almost 0.8, validation cer changes from 0.8 to 0.2, val_cer_ctc from 1 to 0.35, 
            val_loss_att drops from 100 to 20, val_loss_ctc drops from 120 to 40, val_loss drops from 100 to 30. Train acc and loss change monotonically each one in the right direction. 
            Once more: No signs of overfitting => more epochs should be productive
-           The recognition is very meaninful:
 
+           The recognition is very meaninful:
+           ctc-weight: 0.99, lm-weight: 0.01, beam-size: 6
            write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
            | SPKR            | # Snt # Wrd  | Corr    Sub     Del    Ins     Err  S.Err  |
            | Sum/Avg         |11213  178861 | 62.7   25.4    11.9    6.8    44.1   95.8  |
            write a WER result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
            | SPKR            | # Snt  # Wrd  | Corr     Sub     Del     Ins     Err   S.Err  |
            | Sum/Avg         |11213   107268 | 64.0    31.6     4.5     7.3    43.3    95.1  |
-   
+  
+     35.4) 40 epochs: 
+           plots show signes of saturation, but I would do 10-20 more epochs to find point where the system starts overfitting 
+
+           ctc-weight: 0.99, lm-weight: 0.01, beam-size: 6
+           write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
+           | SPKR            | # Snt # Wrd  | Corr    Sub     Del    Ins     Err  S.Err  |
+           | Sum/Avg         |11213  178861 | 75.8   15.4     8.8    3.3    27.5   86.4  |
+           write a WER result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
+           | SPKR            | # Snt  # Wrd  | Corr     Sub     Del     Ins     Err   S.Err  |
+           | Sum/Avg         |11213   107268 | 75.9    20.8     3.4     3.3    27.4    84.8  |
+     35.5)
+          ctc-weight: 0.4, lm-weight: 0.6, beam-size: 6 
+           write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
+          | SPKR            | # Snt # Wrd  | Corr    Sub     Del    Ins     Err  S.Err  |
+          | Sum/Avg         |11213  178861 | 81.3   13.0     5.8    4.8    23.5   69.4  |
+          write a WER result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
+          | SPKR            | # Snt  # Wrd  | Corr     Sub     Del     Ins     Err   S.Err  |
+          | Sum/Avg         |11213   107268 | 82.6    15.1     2.4     2.3    19.8    66.9  |
+     35.6) recognition with beam-seze 6 on 32 running CPU-cores (total numb of the cores is 64, but half of them are not active) takes 5088 sec
+           recognition with beam-size 20 on 32 running CPU-cores (...)                                                          takes 15177 sec
+     35.7) 
+          ctc-weight: 0.4, lm-weight: 0.6, beam-size: 20 - the results below should be verified
+          write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
+          | SPKR            | # Snt  # Wrd | Corr    Sub     Del    Ins     Err  S.Err  |
+          | Sum/Avg         |11213   178861| 80.0   11.9     8.0    3.2    23.2   69.3  |
+          write a WER result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
+          | SPKR            | # Snt  # Wrd  | Corr     Sub     Del     Ins     Err   S.Err  |
+          | Sum/Avg         |11213   107268 | 82.2    14.5     3.3     1.8    19.6    67.3  |
+
+ 
  36)  
