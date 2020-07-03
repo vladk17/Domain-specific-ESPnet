@@ -174,6 +174,31 @@ run.sh:
            | SPKR            | # Snt  # Wrd  | Corr     Sub     Del     Ins     Err   S.Err  |
            | Sum/Avg         |11213   107268 | 79.4    17.8     2.8     2.7    23.2    78.4  |
 
-
  36) model snapshots are in exp/train_set_pytorch_train/results/
- 37) get model summary and visualization using pytorch and tensorboard apis 
+ 37) get model summary and visualization using pytorch and tensorboard apis
+ 38) selesction from the stage 5 log:
+	dictionary: data/lang_char/train_set_unigram5000_units.txt
+
+
+	stage 5: Decoding
+	best val scores = [0.85404511 0.85185841 0.85165279 0.85099028 0.84982956]
+	selected epochs = [98 97 92 91 89]
+	average over ['exp/train_set_pytorch_train/results/snapshot.ep.98', 'exp/train_set_pytorch_train/results/snapshot.ep.97', 'exp/train_set_pytorch_train/results/snapshot.ep.92', 'exp/train_set_pytorch_train/results/snapshot.ep.91', 'exp/train_set_pytorch_train/results/snapshot.ep.89']
+	2020-07-03 05:44:40,596 (splitjson:40) INFO: /espnet/tools/venv/bin/python3 /espnet/egs/spanish_common_voice/asr1/../../../utils/splitjson.py --parts 32 dump/test/deltafalse/data_unigram5000.json
+	2020-07-03 05:44:40,713 (splitjson:52) INFO: number of utterances = 11213
+  39) how to copy the model:
+      language model is here: exp/train_rnnlm_pytorch_lm_unigram5000_ngpu16/  
+      acoustic model is here: exp/train_set_pytorch_train/results/
+      lang_char model is here data/lang_char
+
+  40) test set from Gong
+          the model is taken from spanish_common_voice 100 epochs 
+          ctc-weight: 0.99, lm-weight: 0.01, beam-size: 6
+
+          write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
+          | SPKR                      | # Snt # Wrd | Corr    Sub    Del    Ins    Err  S.Err |
+          | Sum/Avg                   |  187   2513 | 36.8   48.0   15.2   17.5   80.7   99.5 |
+          write a WER result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
+          | SPKR                      | # Snt # Wrd | Corr    Sub    Del    Ins    Err  S.Err |
+          | Sum/Avg                   |  187   1824 | 33.7   49.5   16.9    8.0   74.3   99.5 |
+ 

@@ -8,9 +8,9 @@
 
 # general configuration
 backend=pytorch
-stage=1      # start from -1 if you need to start from data download
-stop_stage=100
-ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
+stage=5      # start from -1 if you need to start from data download
+stop_stage=5
+ngpu=16         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
 dumpdir=dump   # directory to dump full features
@@ -21,7 +21,8 @@ resume=        # Resume the training from snapshot
 # feature configuration
 do_delta=false
 
-preprocess_config=conf/specaug.yaml
+# preprocess_config=conf/specaug.yaml
+preprocess_config=
 train_config=conf/train.yaml # current default recipe requires 4 gpus.
                              # if you do not have 4 gpus, please reconfigure the `batch-bins` and `accum-grad` parameters in config.
 lm_config=conf/lm.yaml
@@ -52,7 +53,7 @@ datadir=/export/a15/vpanayotov/data
 data_url=www.openslr.org/resources/12
 
 # bpemode (unigram or bpe)
-nbpe=3000
+nbpe=5000
 bpemode=unigram
 
 # exp tag
@@ -66,10 +67,12 @@ set -e
 set -u
 set -o pipefail
 
-datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_tedx test_tedx train_comvoice test_comvoice
-          test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
+# datasets='train_mailabs test_mailabs train_crowdsource test_crowdsource train_tedx test_tedx train_comvoice test_comvoice
+#           test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
 
-train_set='train'
+datasets='test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
+
+train_set='train_set'
 train_dev='dev'
 recog_set="test"
 
@@ -97,9 +100,12 @@ if [ ${stage} -le 1 ] && [ ${stop_stage} -ge 1 ]; then
     fbankdir=fbank
 
     # select datasets for train, dev, test. You can choose any dataset from "datasets" variable which was preprocessed earlier
-    utils/combine_data.sh  data/${train_set}_org data/train_crowdsource
-    utils/combine_data.sh  data/${train_dev}_org data/test_crowdsource
-    utils/combine_data.sh  data/${recog_set}_org data/train_gong
+    # utils/combine_data.sh  data/${train_set}_org data/train_crowdsource
+    # utils/combine_data.sh  data/${train_dev}_org data/test_crowdsource
+
+    utils/combine_data.sh  data/${train_set}_org data/train_gong
+    utils/combine_data.sh  data/${train_dev}_org data/train_gong
+    utils/combine_data.sh  data/${recog_set}_org data/test_gong
 
     # Generate the fbank features; by default 80-dimensional fbanks with pitch on each frame
     for x in ${train_set} ${train_dev} ${recog_set}; do
@@ -150,17 +156,17 @@ if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
     ### Task dependent. You have to check non-linguistic symbols used in the corpus.
     echo "stage 2: Dictionary and Json Data Preparation"
     mkdir -p data/lang_char/
-    echo "<unk> 1" > ${dict} # <unk> must be 1, 0 will be used for "blank" in CTC
-    cut -f 2- -d" " data/${train_set}/text > data/lang_char/input.txt
-    spm_train --input=data/lang_char/input.txt --vocab_size=${nbpe} --model_type=${bpemode} --model_prefix=${bpemodel} --input_sentence_size=100000000
-    spm_encode --model=${bpemodel}.model --output_format=piece < data/lang_char/input.txt | tr ' ' '\n' | sort | uniq | awk '{print $0 " " NR+1}' >> ${dict}
-    wc -l ${dict}
+    # echo "<unk> 1" > ${dict} # <unk> must be 1, 0 will be used for "blank" in CTC
+    # cut -f 2- -d" " data/${train_set}/text > data/lang_char/input.txt
+    # spm_train --input=data/lang_char/input.txt --vocab_size=${nbpe} --model_type=${bpemode} --model_prefix=${bpemodel} --input_sentence_size=100000000
+    # spm_encode --model=${bpemodel}.model --output_format=piece < data/lang_char/input.txt | tr ' ' '\n' | sort | uniq | awk '{print $0 " " NR+1}' >> ${dict}
+    # wc -l ${dict}
 
     # make json labels
-    data2json.sh --feat ${feat_tr_dir}/feats.scp --bpecode ${bpemodel}.model \
-        data/${train_set} ${dict} > ${feat_tr_dir}/data_${bpemode}${nbpe}.json
-    data2json.sh --feat ${feat_dt_dir}/feats.scp --bpecode ${bpemodel}.model \
-        data/${train_dev} ${dict} > ${feat_dt_dir}/data_${bpemode}${nbpe}.json
+    # data2json.sh --feat ${feat_tr_dir}/feats.scp --bpecode ${bpemodel}.model \
+    #     data/${train_set} ${dict} > ${feat_tr_dir}/data_${bpemode}${nbpe}.json
+    # data2json.sh --feat ${feat_dt_dir}/feats.scp --bpecode ${bpemodel}.model \
+    #     data/${train_dev} ${dict} > ${feat_dt_dir}/data_${bpemode}${nbpe}.json
 
     for rtask in ${recog_set}; do
         feat_recog_dir=${dumpdir}/${rtask}/delta${do_delta}
