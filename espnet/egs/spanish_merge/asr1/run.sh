@@ -47,10 +47,10 @@ use_lm_valbest_average=false # if true, the validation `lm_n_average`-best langu
 # Set this to somewhere where you want to put your data, or where
 # someone else has already put it.  You'll want to change this
 # if you're not on the CLSP grid.
-datadir=/export/a15/vpanayotov/data
+# datadir=/export/a15/vpanayotov/data
 
 # base url for downloads.
-data_url=www.openslr.org/resources/12
+# data_url=www.openslr.org/resources/12
 
 # bpemode (unigram or bpe)
 nbpe=5000
@@ -73,9 +73,10 @@ set -o pipefail
 datasets='test_gong train_gong test_gong_unsupervised train_gong_unsupervised'
 
 train_set='train_set'
-train_dev='dev'
+train_dev='train_dev'
 recog_set="test"
 
+train_dev_proportion=0.1
 
 if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
    printf "\n\n"

@@ -45,6 +45,8 @@ run.sh:
  24) paper: A COMPARATIVE STUDY ON TRANSFORMER VS RNN IN SPEECH APPLICATION (https://arxiv.org/abs/1909.06317) provides training tips; it also reveals superiority of transformer
      in comparison to RNN; they prepared espnet recipes, which we actually use (espnet/espnet/nets/pytorch_backend/e2e_asr_transformer.py by Shigeki Karita)
      in these recipes the model is sequence2sequence model, which predicts a target sequence of subwords ("SentencePiece") from an input sequence of (83-dim) log-mel filterbank frames with pitch features.
+     Questions: how sensitive the model to the selected subwords-dict? What are the pros and cons of setting the alphabet characters as a subwords-dict (the minimal (?) "full",so that any word can
+     be created, subwords-dict)?
      
      see "A pitch extraction algorithm tuned for automatic speech recognition" by Povey et all
 
@@ -201,4 +203,17 @@ run.sh:
           write a WER result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
           | SPKR                      | # Snt # Wrd | Corr    Sub    Del    Ins    Err  S.Err |
           | Sum/Avg                   |  187   1824 | 33.7   49.5   16.9    8.0   74.3   99.5 |
+
+
+  41) train and test set is from Gong unsupervised
+         the model is train on Gong unsupervised for 80 epochs
+         ctc-weight: 0.99, lm-weight: 0.01, beam-size: 6
+
+         write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
+         | SPKR                       | # Snt # Wrd | Corr    Sub    Del    Ins    Err  S.Err |
+         | Sum/Avg                    | 8481  200714| 53.0   35.5   11.4    7.2   54.2   87.9 |
+         write a WER result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
+         | SPKR                       | # Snt # Wrd | Corr    Sub    Del    Ins    Err  S.Err |
+         | Sum/Avg                    | 8481  178196| 56.1   35.5    8.4    7.6   51.5   87.9 |
+
  

@@ -12,13 +12,13 @@ pip install pip --upgrade; pip uninstall matplotlib --y; pip --no-cache-dir inst
 backend=pytorch
 stage=5 #4      # start from -1 if you need to start from data download
 stop_stage=5
-ngpu=4         # number of gpus ("0" uses cpu, otherwise use gpu)
+ngpu=16         # number of gpus ("0" uses cpu, otherwise use gpu)
 nj=32
 debugmode=1
 dumpdir=dump   # directory to dump full features
 N=0            # number of minibatches to be used (mainly for debugging). "0" uses all minibatches.
 verbose=1      # verbose option
-resume=        # Resume the training from snapshot
+resume=exp/train_set_pytorch_train/results/snapshot.ep.86        # Resume the training from snapshot
 
 
 # feature configuration
@@ -95,6 +95,7 @@ if [ ${stage} -le 0 ] && [ ${stop_stage} -ge 0 ]; then
         # use underscore-separated names in data directories.
         utils/fix_data_dir.sh data/${part}
         utils/utt2spk_to_spk2utt.pl data/${part}/utt2spk > data/${part}/spk2utt
+        python3 local/normalize_text.py data/${part}/text --lang es --format acoustic #VK: added based on comparison with spanish_merge
         utils/validate_data_dir.sh --no-feats data/$part || exit 1
     done
 fi
