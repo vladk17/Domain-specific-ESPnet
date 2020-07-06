@@ -193,7 +193,7 @@ run.sh:
       acoustic model is here: exp/train_set_pytorch_train/results/
       lang_char model is here data/lang_char
 
-  40) test set from Gong
+  40) test set from Gong "second path"
           the model is taken from spanish_common_voice 100 epochs 
           ctc-weight: 0.99, lm-weight: 0.01, beam-size: 6
 
@@ -206,7 +206,7 @@ run.sh:
 
 
   41) train and test set is from Gong unsupervised
-         the model is train on Gong unsupervised for 80 epochs
+         the model is trained on Gong unsupervised for 80 epochs
          ctc-weight: 0.99, lm-weight: 0.01, beam-size: 6
 
          write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
@@ -216,4 +216,15 @@ run.sh:
          | SPKR                       | # Snt # Wrd | Corr    Sub    Del    Ins    Err  S.Err |
          | Sum/Avg                    | 8481  178196| 56.1   35.5    8.4    7.6   51.5   87.9 |
 
- 
+  42) test set is from Gong "second path"
+         the model is trained on Gong unsupervised for 80 epochs
+         ctc-weight: 0.99, lm-weight: 0.01, beam-size: 6
+
+         write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
+         | SPKR                      | # Snt # Wrd | Corr    Sub    Del    Ins    Err  S.Err |
+         | Sum/Avg                   |  187   2513 | 39.6   29.4   31.0    1.6   62.0   98.4 |
+         write a WER result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
+         | SPKR                      | # Snt # Wrd | Corr    Sub    Del    Ins    Err  S.Err |
+         | Sum/Avg                   |  187   1824 | 58.6   29.2   12.3    4.6   46.1   96.3 |
+
+
