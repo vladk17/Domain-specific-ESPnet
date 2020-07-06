@@ -227,4 +227,6 @@ run.sh:
          | SPKR                      | # Snt # Wrd | Corr    Sub    Del    Ins    Err  S.Err |
          | Sum/Avg                   |  187   1824 | 58.6   29.2   12.3    4.6   46.1   96.3 |
 
-
+  43) planned experiments: 
+      43.1) train lm and am for spanish_common_voice, while the subwords-dict is taken from gong_unsupervised; test on gong_test  
+      43.2) train am for spanish_common_voice, while subwirds-dict is taken from gong unsupervised; test on gong_test using this am in combination with lm from gong-unsupervised
