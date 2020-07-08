@@ -230,3 +230,25 @@ run.sh:
   43) planned experiments: 
       43.1) train lm and am for spanish_common_voice, while the subwords-dict is taken from gong_unsupervised; test on gong_test  
       43.2) train am for spanish_common_voice, while subwirds-dict is taken from gong unsupervised; test on gong_test using this am in combination with lm from gong-unsupervised
+      43.3) reduce the size of the subwords dict to the size of alphabet (or a bit higher), verify that it has all the charaters of the alphabet. 
+            learn the cspanish_common_voice and spanish_cong_unsupervised with this subword-dict and see the results 
+      43.4) take the best spanish_common_voice model (with subwords-dict from spanish_gong_unsupervised) and do tranfer learn for gong first_path or subset of the gong second_path.
+            try the following transfer-learning strategies: 
+            a) unfreeze last layer(s) of the decoder; 
+            b) unfreeze last layers of the encoder; 
+            c) unfreeze everything but use very small learning rate
+   44) implementing 43.1) "train lm and am for spanish_common_voice, while the subwords-dict is taken from gong_unsupervised; test on gong_test"
+      44.1) lm training:
+            epoch       iteration   main/loss   perplexity  val_perplexity  elapsed_time
+            0           100         6.60049     728.885                     92.9827       
+            0           200         5.8641      338.312                     144.886       
+            0           300         5.42299     215.843                     197.603       
+            1           400         5.16045     169.309     161.09          262.026       
+            2           800         4.50149     88.5554     96.7707         487.134       
+            3           1100        4.1431      62.433      71.9046         659.578       
+            4           1500        3.75335     44.0624     59.7008         884.279       
+            5           1800        3.49552     34.461      52.7506         1056.31       
+            6           2200        3.15814     25.8888     48.8274         1280.05       
+            7           2500        2.96206     21.2424     47.3234         1453.43       
+            8           2900        2.69402     16.7335     47.6169         1678.61       
+            9           3300        2.45741     13.2071     48.9845         1905.24       
