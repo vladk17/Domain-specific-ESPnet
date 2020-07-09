@@ -234,9 +234,10 @@ run.sh:
             learn the cspanish_common_voice and spanish_cong_unsupervised with this subword-dict and see the results 
       43.4) take the best spanish_common_voice model (with subwords-dict from spanish_gong_unsupervised) and do tranfer learn for gong first_path or subset of the gong second_path.
             try the following transfer-learning strategies: 
-            a) unfreeze last layer(s) of the decoder; 
-            b) unfreeze last layers of the encoder; 
-            c) unfreeze everything but use very small learning rate
+            a) unfreeze the last layer(s) of the decoder attention; 
+            b) unfreeze the last layer(s) of the encoder attention; 
+            c) unfreeze the last layer(s) of the encoder-decoder attention;
+            d) unfreeze everything but use very small learning rate
    44) implementing 43.1) "train lm and am for spanish_common_voice, while the subwords-dict is taken from gong_unsupervised; test on gong_test"
       44.1) lm training:
             epoch       iteration   main/loss   perplexity  val_perplexity  elapsed_time
