@@ -256,7 +256,7 @@ run.sh:
 
       44.2) test set is from spanish_common_voice
             the model is "train lm and am for spanish_common_voice, while the subwords-dict is taken from gong_unsupervised after 60 epochs
-            ctc-weight: 0.99, lm-weight: 0.01, beam-size: 6
+            ctc-weight: 0.99, lm-weight: 0.01, beam-size: 5
 
          write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
          | SPKR            | # Snt # Wrd  | Corr    Sub     Del    Ins     Err  S.Err  |
@@ -264,4 +264,27 @@ run.sh:
          write a WER result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
          | SPKR            | # Snt  # Wrd  | Corr     Sub     Del     Ins     Err   S.Err  |
          | Sum/Avg         |11213   106544 | 82.7    14.8     2.5     2.2    19.5    70.0  |
+
+   45) from Stas: test set is Gong "second path"
+       the model is trained on Gong unsupervised + part of the "second path" after 60 epochs 
+
+       ctc-weight: 0.99, lm-weight: 0.01, beam-size: 6
+        | SPKR                      | # Snt # Wrd  | Corr    Sub    Del    Ins     Err  S.Err |
+        | Sum/Avg                   |  187   1824  | 67.1   24.7    8.3    8.4    41.4   93.6 |
+
+       ctc-weight: 0.4, lm-weight: 0.6, beam-size: 20
+        | SPKR                      | # Snt # Wrd  | Corr    Sub    Del    Ins     Err  S.Err |
+        | Sum/Avg                   |  187   1824  | 58.3   24.1   17.5    3.5    45.1   96.8 |
+
+        lm training: 
+        epoch       iteration   main/loss   perplexity  val_perplexity  elapsed_time
+        1           400         5.53858     260.304     238.009         158.518
+        2           800         5.03653     157.693     160.119         308.356
+        3           1200        4.70864     113.94      129.4           459.669
+        4           1600        4.41538     85.9739     114.145         608.809
+        5           2000        4.14418     66.4352     106.376         758.732
+        6           2400        3.86634     50.146      103.094         907.932
+        7           2800        3.56963     37.3255     101.225         1057.31
+        8           3100        3.37352     31.382      105.839         1171.54
+        9           3500        3.09786     24.0359     111.113         1321.82
 
