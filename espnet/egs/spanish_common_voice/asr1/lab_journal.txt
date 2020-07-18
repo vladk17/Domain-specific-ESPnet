@@ -346,7 +346,7 @@ run.sh:
         8           3100        3.37352     31.382      105.839         1171.54
         9           3500        3.09786     24.0359     111.113         1321.82
 
-   46) "tedx" with specaug (train set i 21.955 hours, test set is 2.5 hours)
+   46) "tedx" with specaug (train set is 21.955 hours, test set is 2.5 hours)
       46.1) lm training: - note val perplexity is worse than in the "gong" and "common voice"
         epoch       iteration   main/loss   perplexity  val_perplexity  elapsed_time
         2           100         6.42578     613.325     477.262         111.274       
@@ -382,6 +382,25 @@ run.sh:
 
    47) common voice duration: train 147.6 hours, test 17.5 hours
    48) gong unsupervised duration: train 175 hours, test 18.76 hours
+
+   49) "crowdspurce" (train set is 22.64 hours, test set is 2.3 hours) 
+      49.1) lm training 
+      epoch       iteration   main/loss   perplexity  val_perplexity  elapsed_time
+      1           100         6.01156     450.579     378.094         99.2414       
+      3           200         3.97982     65.3992     89.5308         160.853       
+      5           300         2.87604     22.2586     30.1342         222.536       
+      7           400         2.11761     10.2103     13.413          284.582       
+      9           500         1.62016     5.9073      7.65594         346.138       
+      11          600         1.30324     4.09022     5.15334         409.097       
+      13          700         1.10439     3.19253     3.90788         470.463       
+      15          800         0.983358    2.71573     3.27007         532.113       
+      17          900         0.912814    2.48546     2.90892         594.318       
+      19          1000        0.859612    2.31353     2.65487         656.377       
+      21          1100        0.822165    2.19253     2.4923          717.422       
+      23          1200        0.786432    2.09148     2.34582         777.923       
+      25          1300        0.768305    2.0328      2.27833         838.22        
+      27          1400        0.75121     1.98469     2.23873         898.917       
+      29          1500        0.73268     1.94088     2.17974         959.597   
 
 [========== our am:
 E2E(
