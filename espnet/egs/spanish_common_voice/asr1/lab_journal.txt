@@ -206,6 +206,7 @@ run.sh:
 
 
   41) train and test set is from Gong unsupervised
+      41.1) train and test set is from Gong unsupervised
          the model is trained on Gong unsupervised for 80 epochs
          ctc-weight: 0.99, lm-weight: 0.01, beam-size: 6
 
@@ -215,6 +216,16 @@ run.sh:
          write a WER result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
          | SPKR                       | # Snt # Wrd | Corr    Sub    Del    Ins    Err  S.Err |
          | Sum/Avg                    | 8481  178196| 56.1   35.5    8.4    7.6   51.5   87.9 |
+
+      41.2) train and test set is from Gong unsupervised; the model is trained for 80 epochs
+            ctc-weight: 0.3, lm-weight: 0.01, beam-size: 6
+         write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
+         | SPKR                       | # Snt # Wrd | Corr    Sub    Del    Ins    Err  S.Err |
+         | Sum/Avg                    | 8481  200714| 53.7   35.9   10.4    7.2   53.4   86.4 |
+         write a WER result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
+         | SPKR                       | # Snt # Wrd | Corr    Sub    Del    Ins    Err  S.Err |
+         | Sum/Avg                    | 8481  178196| 57.1   35.5    7.4    7.9   50.8   86.4 |
+
 
   42) test set is from Gong "second path"
          the model is trained on Gong unsupervised for 80 epochs
@@ -359,8 +370,7 @@ run.sh:
         19          800         3.27504     28.6317     248.92          585.976        
 
        the model is trained on "tedx" and tested on "tedx"
-      46.2)
-       the model is trained on "tedx" with specaug for 160 epochs and tested on "tedx"
+      46.2) the model is trained on "tedx" with specaug for 160 epochs and tested on "tedx"
        ctc-weight: 0.99, lm-weight: 0.01, beam-size: 6
        write a CER (or TER) result in exp/train_set_pytorch_train_specaug/decode_test_model.val5.avg.best_decode_lm/result.txt
        |  SPKR        |  # Snt   # Wrd  |  Corr      Sub      Del     Ins      Err    S.Err  |
@@ -369,7 +379,25 @@ run.sh:
        |  SPKR        |  # Snt    # Wrd   |  Corr      Sub      Del      Ins       Err    S.Err  |
        |  Sum/Avg     |  1125     23403   |  58.2     33.2      8.6      7.5      49.3     99.6  |
 
-      46.3) 
+      46.3) the model is trained on "tedx" with specaug for 160 epochs and tested on "tedx"
+      ctc-weight: 0.3, lm-weight: 0.01, beam-size: 6
+      write a CER (or TER) result in exp/train_set_pytorch_train_specaug/decode_test_model.val5.avg.best_decode_lm/result.txt
+      |  SPKR        |  # Snt   # Wrd  |  Corr      Sub      Del     Ins      Err    S.Err  |
+      |  Sum/Avg     |  1125    30383  |  54.0     31.3     14.7     6.9     52.9     99.4  |
+      write a WER result in exp/train_set_pytorch_train_specaug/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
+      |  SPKR        |  # Snt    # Wrd   |  Corr      Sub      Del      Ins       Err    S.Err  |
+      |  Sum/Avg     |  1125     23403   |  58.9     32.3      8.8      7.6      48.7     99.3  |
+
+      46.3) the model is trained on "tedx" with specaug for 160 epochs and tested on "tedx"
+      ctc-weight: 0.3, lm-weight: 0.6, beam-size: 6
+      write a CER (or TER) result in exp/train_set_pytorch_train_specaug/decode_test_model.val5.avg.best_decode_lm/result.txt
+      |  SPKR        |  # Snt   # Wrd  |  Corr      Sub      Del     Ins      Err    S.Err  |
+      |  Sum/Avg     |  1125    30383  |  50.7     34.7     14.6     9.2     58.5     99.7  |
+      write a WER result in exp/train_set_pytorch_train_specaug/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
+      |  SPKR        |  # Snt    # Wrd   |  Corr      Sub      Del      Ins       Err    S.Err  |
+      |  Sum/Avg     |  1125     23403   |  55.4     34.9      9.7      9.9      54.5     99.7  |
+
+      46.5) 
       the model is trained on "tedx" with specaug for 160 epochs and tested on "gong second pass"
       ctc-weight: 0.99, lm-weight: 0.01, beam-size: 6
       write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
@@ -411,7 +439,44 @@ run.sh:
       | SPKR               | # Snt  # Wrd  | Corr    Sub     Del    Ins     Err  S.Err  |
       | Sum/Avg            | 1593   14573  | 77.5   14.2     8.2    2.0    24.4   63.7  |
 
-      49.3) the model is trained on "crowdsource" with specaug for 120 epochs and tested on "gong second pass"
+     49.3) the model is trained on "crowdsource" with specaug for 120 epochs and tested on "crowdsource"
+      ctc-weight: 0.3, lm-weight: 0.01, beam-size: 6
+      write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
+      | SPKR              | # Snt  # Wrd  | Corr    Sub    Del    Ins    Err  S.Err |
+      | Sum/Avg           | 1593   20164  | 89.8    4.3    5.9    0.7   10.8   31.6 |
+      write a WER result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
+      | SPKR               | # Snt  # Wrd  | Corr    Sub     Del    Ins     Err  S.Err  |
+      | Sum/Avg            | 1593   14573  | 90.6    5.7     3.7    0.7    10.1   31.6  |
+
+      49.4) the model is trained on "crowdsource" with specaug for 120 epochs and tested on "crowdsource"
+      ctc-weight: 0.3, lm-weight: 0.0, beam-size: 6
+      write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
+      | SPKR              | # Snt  # Wrd  | Corr    Sub    Del    Ins    Err  S.Err |
+      | Sum/Avg           | 1593   20164  | 89.7    4.3    5.9    0.7   10.9   32.0 |
+      write a WER result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
+      | SPKR               | # Snt  # Wrd  | Corr    Sub     Del    Ins     Err  S.Err  |
+      | Sum/Avg            | 1593   14573  | 90.5    5.8     3.7    0.8    10.2   32.0  |
+
+      49.5) the model is trained on "crowdsource" with specaug for 120 epochs and tested on "crowdsource"
+      ctc-weight: 0.3, lm-weight: 1., beam-size: 6
+      write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
+      | SPKR              | # Snt  # Wrd  | Corr    Sub    Del    Ins    Err  S.Err |
+      | Sum/Avg           | 1593   20164  | 88.6    6.4    5.0    0.7   12.2   25.6 |
+      write a WER result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
+      | SPKR               | # Snt  # Wrd  | Corr    Sub     Del    Ins     Err  S.Err  |
+      | Sum/Avg            | 1593   14573  | 89.1    7.3     3.6    0.7    11.6   25.6  |
+
+      49.6) the model is trained on "crowdsource" with specaug for 120 epochs and tested on "crowdsource"
+      ctc-weight: 0.3, lm-weight: 0.6, beam-size: 6
+      write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
+      | SPKR              | # Snt  # Wrd  | Corr    Sub    Del    Ins    Err  S.Err |
+      | Sum/Avg           | 1593   20164  | 90.8    5.0    4.1    0.7    9.9   24.9 |
+      write a WER result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.wrd.txt
+      | SPKR               | # Snt  # Wrd  | Corr    Sub     Del    Ins     Err  S.Err  |
+      | Sum/Avg            | 1593   14573  | 91.3    6.0     2.7    0.7     9.4   24.9  |
+
+
+      49.7) the model is trained on "crowdsource" with specaug for 120 epochs and tested on "gong second pass"
       ctc-weight: 0.99, lm-weight: 0.01, beam-size: 6 ; attempts to change the ctc- and lm- weights have not changed the results 
       write a CER (or TER) result in exp/train_set_pytorch_train/decode_test_model.val5.avg.best_decode_lm/result.txt
       | SPKR                      | # Snt # Wrd | Corr    Sub    Del    Ins    Err  S.Err |
@@ -817,375 +882,4 @@ E2E(
   )
 )
 ]==========
-
-[=========am layers' sizes
-   415 2020-07-11 17:55:27,133 (recog:50) INFO: torch.Size([512, 1, 3, 3])
-    416 2020-07-11 17:55:27,133 (recog:50) INFO: torch.Size([512])
-    417 2020-07-11 17:55:27,134 (recog:50) INFO: torch.Size([512, 512, 3, 3])
-    418 2020-07-11 17:55:27,134 (recog:50) INFO: torch.Size([512])
-    419 2020-07-11 17:55:27,134 (recog:50) INFO: torch.Size([512, 10240])
-    420 2020-07-11 17:55:27,134 (recog:50) INFO: torch.Size([512])
-    421 2020-07-11 17:55:27,134 (recog:50) INFO: torch.Size([512, 512])
-    422 2020-07-11 17:55:27,134 (recog:50) INFO: torch.Size([512])
-    423 2020-07-11 17:55:27,134 (recog:50) INFO: torch.Size([512, 512])
-    424 2020-07-11 17:55:27,134 (recog:50) INFO: torch.Size([512])
-    425 2020-07-11 17:55:27,134 (recog:50) INFO: torch.Size([512, 512])
-    426 2020-07-11 17:55:27,134 (recog:50) INFO: torch.Size([512])
-    427 2020-07-11 17:55:27,134 (recog:50) INFO: torch.Size([512, 512])
-    428 2020-07-11 17:55:27,134 (recog:50) INFO: torch.Size([512])
-    429 2020-07-11 17:55:27,134 (recog:50) INFO: torch.Size([2048, 512])
-    430 2020-07-11 17:55:27,134 (recog:50) INFO: torch.Size([2048])
-    431 2020-07-11 17:55:27,135 (recog:50) INFO: torch.Size([512, 2048])
-    432 2020-07-11 17:55:27,135 (recog:50) INFO: torch.Size([512])
-    433 2020-07-11 17:55:27,135 (recog:50) INFO: torch.Size([512])
-    434 2020-07-11 17:55:27,135 (recog:50) INFO: torch.Size([512])
-    435 2020-07-11 17:55:27,135 (recog:50) INFO: torch.Size([512])
-    436 2020-07-11 17:55:27,135 (recog:50) INFO: torch.Size([512])
-    437 2020-07-11 17:55:27,135 (recog:50) INFO: torch.Size([512, 512])
-    438 2020-07-11 17:55:27,135 (recog:50) INFO: torch.Size([512])
-    439 2020-07-11 17:55:27,135 (recog:50) INFO: torch.Size([512, 512])
-    440 2020-07-11 17:55:27,135 (recog:50) INFO: torch.Size([512])
-    441 2020-07-11 17:55:27,135 (recog:50) INFO: torch.Size([512, 512])
-    442 2020-07-11 17:55:27,135 (recog:50) INFO: torch.Size([512])
-    443 2020-07-11 17:55:27,135 (recog:50) INFO: torch.Size([512, 512])
-    444 2020-07-11 17:55:27,135 (recog:50) INFO: torch.Size([512])
-    445 2020-07-11 17:55:27,135 (recog:50) INFO: torch.Size([2048, 512])
-    446 2020-07-11 17:55:27,136 (recog:50) INFO: torch.Size([2048])
-    447 2020-07-11 17:55:27,136 (recog:50) INFO: torch.Size([512, 2048])
-    448 2020-07-11 17:55:27,136 (recog:50) INFO: torch.Size([512])
-    449 2020-07-11 17:55:27,136 (recog:50) INFO: torch.Size([512])
-    450 2020-07-11 17:55:27,136 (recog:50) INFO: torch.Size([512])
-    451 2020-07-11 17:55:27,136 (recog:50) INFO: torch.Size([512])
-    452 2020-07-11 17:55:27,136 (recog:50) INFO: torch.Size([512])
-    453 2020-07-11 17:55:27,136 (recog:50) INFO: torch.Size([512, 512])
-    454 2020-07-11 17:55:27,136 (recog:50) INFO: torch.Size([512])
-    455 2020-07-11 17:55:27,136 (recog:50) INFO: torch.Size([512, 512])
-    456 2020-07-11 17:55:27,136 (recog:50) INFO: torch.Size([512])
-    457 2020-07-11 17:55:27,136 (recog:50) INFO: torch.Size([512, 512])
-    458 2020-07-11 17:55:27,136 (recog:50) INFO: torch.Size([512])
-    459 2020-07-11 17:55:27,136 (recog:50) INFO: torch.Size([512, 512])
-    460 2020-07-11 17:55:27,136 (recog:50) INFO: torch.Size([512])
-    461 2020-07-11 17:55:27,137 (recog:50) INFO: torch.Size([2048, 512])
-    462 2020-07-11 17:55:27,137 (recog:50) INFO: torch.Size([2048])
-    463 2020-07-11 17:55:27,137 (recog:50) INFO: torch.Size([512, 2048])
-    464 2020-07-11 17:55:27,137 (recog:50) INFO: torch.Size([512])
-    465 2020-07-11 17:55:27,137 (recog:50) INFO: torch.Size([512])
-    466 2020-07-11 17:55:27,137 (recog:50) INFO: torch.Size([512])
-    467 2020-07-11 17:55:27,137 (recog:50) INFO: torch.Size([512])
-    468 2020-07-11 17:55:27,137 (recog:50) INFO: torch.Size([512])
-    469 2020-07-11 17:55:27,137 (recog:50) INFO: torch.Size([512, 512])
-    470 2020-07-11 17:55:27,137 (recog:50) INFO: torch.Size([512])
-    471 2020-07-11 17:55:27,137 (recog:50) INFO: torch.Size([512, 512])
-    472 2020-07-11 17:55:27,137 (recog:50) INFO: torch.Size([512])
-    473 2020-07-11 17:55:27,137 (recog:50) INFO: torch.Size([512, 512])
-    474 2020-07-11 17:55:27,137 (recog:50) INFO: torch.Size([512])
-    475 2020-07-11 17:55:27,137 (recog:50) INFO: torch.Size([512, 512])
-    476 2020-07-11 17:55:27,138 (recog:50) INFO: torch.Size([512])
-    477 2020-07-11 17:55:27,138 (recog:50) INFO: torch.Size([2048, 512])
-    478 2020-07-11 17:55:27,138 (recog:50) INFO: torch.Size([2048])
-    479 2020-07-11 17:55:27,138 (recog:50) INFO: torch.Size([512, 2048])
-    480 2020-07-11 17:55:27,138 (recog:50) INFO: torch.Size([512])
-    481 2020-07-11 17:55:27,138 (recog:50) INFO: torch.Size([512])
-    482 2020-07-11 17:55:27,138 (recog:50) INFO: torch.Size([512])
-    483 2020-07-11 17:55:27,138 (recog:50) INFO: torch.Size([512])
-    484 2020-07-11 17:55:27,138 (recog:50) INFO: torch.Size([512])
-    485 2020-07-11 17:55:27,138 (recog:50) INFO: torch.Size([512, 512])
-    486 2020-07-11 17:55:27,138 (recog:50) INFO: torch.Size([512])
-    487 2020-07-11 17:55:27,138 (recog:50) INFO: torch.Size([512, 512])
-    488 2020-07-11 17:55:27,138 (recog:50) INFO: torch.Size([512])
-    489 2020-07-11 17:55:27,139 (recog:50) INFO: torch.Size([512, 512])
-    490 2020-07-11 17:55:27,139 (recog:50) INFO: torch.Size([512])
-    491 2020-07-11 17:55:27,139 (recog:50) INFO: torch.Size([512, 512])
-    492 2020-07-11 17:55:27,139 (recog:50) INFO: torch.Size([512])
-    493 2020-07-11 17:55:27,139 (recog:50) INFO: torch.Size([2048, 512])
-    494 2020-07-11 17:55:27,139 (recog:50) INFO: torch.Size([2048])
-    495 2020-07-11 17:55:27,139 (recog:50) INFO: torch.Size([512, 2048])
-    496 2020-07-11 17:55:27,139 (recog:50) INFO: torch.Size([512])
-    497 2020-07-11 17:55:27,139 (recog:50) INFO: torch.Size([512])
-    498 2020-07-11 17:55:27,139 (recog:50) INFO: torch.Size([512])
-    499 2020-07-11 17:55:27,139 (recog:50) INFO: torch.Size([512])
-    500 2020-07-11 17:55:27,139 (recog:50) INFO: torch.Size([512])
-    501 2020-07-11 17:55:27,139 (recog:50) INFO: torch.Size([512, 512])
-    502 2020-07-11 17:55:27,139 (recog:50) INFO: torch.Size([512])
-    503 2020-07-11 17:55:27,139 (recog:50) INFO: torch.Size([512, 512])
-    504 2020-07-11 17:55:27,140 (recog:50) INFO: torch.Size([512])
-    505 2020-07-11 17:55:27,140 (recog:50) INFO: torch.Size([512, 512])
-    506 2020-07-11 17:55:27,140 (recog:50) INFO: torch.Size([512])
-    507 2020-07-11 17:55:27,140 (recog:50) INFO: torch.Size([512, 512])
-    508 2020-07-11 17:55:27,140 (recog:50) INFO: torch.Size([512])
-    509 2020-07-11 17:55:27,140 (recog:50) INFO: torch.Size([2048, 512])
-    510 2020-07-11 17:55:27,140 (recog:50) INFO: torch.Size([2048])
-    511 2020-07-11 17:55:27,140 (recog:50) INFO: torch.Size([512, 2048])
-    512 2020-07-11 17:55:27,140 (recog:50) INFO: torch.Size([512])
-    513 2020-07-11 17:55:27,140 (recog:50) INFO: torch.Size([512])
-    514 2020-07-11 17:55:27,140 (recog:50) INFO: torch.Size([512])
-    515 2020-07-11 17:55:27,140 (recog:50) INFO: torch.Size([512])
-    516 2020-07-11 17:55:27,140 (recog:50) INFO: torch.Size([512])
-    517 2020-07-11 17:55:27,140 (recog:50) INFO: torch.Size([512, 512])
-    518 2020-07-11 17:55:27,140 (recog:50) INFO: torch.Size([512])
-    519 2020-07-11 17:55:27,141 (recog:50) INFO: torch.Size([512, 512])
-    520 2020-07-11 17:55:27,141 (recog:50) INFO: torch.Size([512])
-    521 2020-07-11 17:55:27,141 (recog:50) INFO: torch.Size([512, 512])
-    522 2020-07-11 17:55:27,141 (recog:50) INFO: torch.Size([512])
-    523 2020-07-11 17:55:27,141 (recog:50) INFO: torch.Size([512, 512])
-    524 2020-07-11 17:55:27,141 (recog:50) INFO: torch.Size([512])
-    525 2020-07-11 17:55:27,141 (recog:50) INFO: torch.Size([2048, 512])
-    526 2020-07-11 17:55:27,141 (recog:50) INFO: torch.Size([2048])
-    527 2020-07-11 17:55:27,141 (recog:50) INFO: torch.Size([512, 2048])
-    528 2020-07-11 17:55:27,141 (recog:50) INFO: torch.Size([512])
-    529 2020-07-11 17:55:27,141 (recog:50) INFO: torch.Size([512])
-    530 2020-07-11 17:55:27,141 (recog:50) INFO: torch.Size([512])
-    531 2020-07-11 17:55:27,141 (recog:50) INFO: torch.Size([512])
-    532 2020-07-11 17:55:27,141 (recog:50) INFO: torch.Size([512])
-    533 2020-07-11 17:55:27,141 (recog:50) INFO: torch.Size([512, 512])
-    534 2020-07-11 17:55:27,142 (recog:50) INFO: torch.Size([512])
-    535 2020-07-11 17:55:27,142 (recog:50) INFO: torch.Size([512, 512])
-    536 2020-07-11 17:55:27,142 (recog:50) INFO: torch.Size([512])
-    537 2020-07-11 17:55:27,142 (recog:50) INFO: torch.Size([512, 512])
-    538 2020-07-11 17:55:27,142 (recog:50) INFO: torch.Size([512])
-    539 2020-07-11 17:55:27,142 (recog:50) INFO: torch.Size([512, 512])
-    540 2020-07-11 17:55:27,142 (recog:50) INFO: torch.Size([512])
-    541 2020-07-11 17:55:27,142 (recog:50) INFO: torch.Size([2048, 512])
-    542 2020-07-11 17:55:27,142 (recog:50) INFO: torch.Size([2048])
-    543 2020-07-11 17:55:27,142 (recog:50) INFO: torch.Size([512, 2048])
-    544 2020-07-11 17:55:27,142 (recog:50) INFO: torch.Size([512])
-    545 2020-07-11 17:55:27,142 (recog:50) INFO: torch.Size([512])
-    546 2020-07-11 17:55:27,142 (recog:50) INFO: torch.Size([512])
-    547 2020-07-11 17:55:27,142 (recog:50) INFO: torch.Size([512])
-    548 2020-07-11 17:55:27,143 (recog:50) INFO: torch.Size([512])
-    549 2020-07-11 17:55:27,143 (recog:50) INFO: torch.Size([512, 512])
-    550 2020-07-11 17:55:27,143 (recog:50) INFO: torch.Size([512])
-    551 2020-07-11 17:55:27,143 (recog:50) INFO: torch.Size([512, 512])
-    552 2020-07-11 17:55:27,143 (recog:50) INFO: torch.Size([512])
-    553 2020-07-11 17:55:27,143 (recog:50) INFO: torch.Size([512, 512])
-    554 2020-07-11 17:55:27,143 (recog:50) INFO: torch.Size([512])
-    555 2020-07-11 17:55:27,143 (recog:50) INFO: torch.Size([512, 512])
-    556 2020-07-11 17:55:27,143 (recog:50) INFO: torch.Size([512])
-    557 2020-07-11 17:55:27,143 (recog:50) INFO: torch.Size([2048, 512])
-    558 2020-07-11 17:55:27,143 (recog:50) INFO: torch.Size([2048])
-    559 2020-07-11 17:55:27,143 (recog:50) INFO: torch.Size([512, 2048])
-    560 2020-07-11 17:55:27,143 (recog:50) INFO: torch.Size([512])
-    561 2020-07-11 17:55:27,143 (recog:50) INFO: torch.Size([512])
-    562 2020-07-11 17:55:27,143 (recog:50) INFO: torch.Size([512])
-    563 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([512])
-    564 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([512])
-    565 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([512, 512])
-    566 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([512])
-    567 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([512, 512])
-    568 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([512])
-    569 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([512, 512])
-    570 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([512])
-    571 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([512, 512])
-    572 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([512])
-    573 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([2048, 512])
-    574 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([2048])
-    575 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([512, 2048])
-    576 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([512])
-    577 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([512])
-    578 2020-07-11 17:55:27,144 (recog:50) INFO: torch.Size([512])
-    579 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([512])
-    580 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([512])
-    581 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([512, 512])
-    582 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([512])
-    583 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([512, 512])
-    584 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([512])
-    585 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([512, 512])
-    586 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([512])
-    587 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([512, 512])
-    588 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([512])
-    589 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([2048, 512])
-    590 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([2048])
-    591 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([512, 2048])
-    592 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([512])
-    593 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([512])
-    594 2020-07-11 17:55:27,145 (recog:50) INFO: torch.Size([512])
-    595 2020-07-11 17:55:27,146 (recog:50) INFO: torch.Size([512])
-    596 2020-07-11 17:55:27,146 (recog:50) INFO: torch.Size([512])
-    597 2020-07-11 17:55:27,146 (recog:50) INFO: torch.Size([512, 512])
-    598 2020-07-11 17:55:27,146 (recog:50) INFO: torch.Size([512])
-    599 2020-07-11 17:55:27,146 (recog:50) INFO: torch.Size([512, 512])
-    600 2020-07-11 17:55:27,146 (recog:50) INFO: torch.Size([512])
-    601 2020-07-11 17:55:27,146 (recog:50) INFO: torch.Size([512, 512])
-    602 2020-07-11 17:55:27,146 (recog:50) INFO: torch.Size([512])
-    603 2020-07-11 17:55:27,146 (recog:50) INFO: torch.Size([512, 512])
-    604 2020-07-11 17:55:27,146 (recog:50) INFO: torch.Size([512])
-    605 2020-07-11 17:55:27,146 (recog:50) INFO: torch.Size([2048, 512])
-    606 2020-07-11 17:55:27,146 (recog:50) INFO: torch.Size([2048])
-    607 2020-07-11 17:55:27,146 (recog:50) INFO: torch.Size([512, 2048])
-    608 2020-07-11 17:55:27,146 (recog:50) INFO: torch.Size([512])
-    609 2020-07-11 17:55:27,146 (recog:50) INFO: torch.Size([512])
-    610 2020-07-11 17:55:27,147 (recog:50) INFO: torch.Size([512])
-    611 2020-07-11 17:55:27,147 (recog:50) INFO: torch.Size([512])
-    612 2020-07-11 17:55:27,147 (recog:50) INFO: torch.Size([512])
-    613 2020-07-11 17:55:27,147 (recog:50) INFO: torch.Size([512])
-    614 2020-07-11 17:55:27,147 (recog:50) INFO: torch.Size([512])
-    615 2020-07-11 17:55:27,147 (recog:50) INFO: torch.Size([5002, 512])
-    616 2020-07-11 17:55:27,147 (recog:50) INFO: torch.Size([512, 512])
-    617 2020-07-11 17:55:27,147 (recog:50) INFO: torch.Size([512])
-    618 2020-07-11 17:55:27,147 (recog:50) INFO: torch.Size([512, 512])
-    619 2020-07-11 17:55:27,147 (recog:50) INFO: torch.Size([512])
-    620 2020-07-11 17:55:27,147 (recog:50) INFO: torch.Size([512, 512])
-    621 2020-07-11 17:55:27,147 (recog:50) INFO: torch.Size([512])
-    622 2020-07-11 17:55:27,147 (recog:50) INFO: torch.Size([512, 512])
-    623 2020-07-11 17:55:27,147 (recog:50) INFO: torch.Size([512])
-    624 2020-07-11 17:55:27,147 (recog:50) INFO: torch.Size([512, 512])
-    625 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([512])
-    626 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([512, 512])
-    627 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([512])
-    628 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([512, 512])
-    629 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([512])
-    630 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([512, 512])
-    631 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([512])
-    632 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([2048, 512])
-    633 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([2048])
-    634 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([512, 2048])
-    635 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([512])
-    636 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([512])
-    637 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([512])
-    638 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([512])
-    639 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([512])
-    640 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([512])
-    641 2020-07-11 17:55:27,148 (recog:50) INFO: torch.Size([512])
-    642 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512, 512])
-    643 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512])
-    644 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512, 512])
-    645 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512])
-    646 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512, 512])
-    647 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512])
-    648 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512, 512])
-    649 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512])
-    650 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512, 512])
-    651 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512])
-    652 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512, 512])
-    653 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512])
-    654 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512, 512])
-    655 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512])
-    656 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512, 512])
-    657 2020-07-11 17:55:27,149 (recog:50) INFO: torch.Size([512])
-    658 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([2048, 512])
-    659 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([2048])
-    660 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([512, 2048])
-    661 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([512])
-    662 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([512])
-    662 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([512])
-    663 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([512])
-    664 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([512])
-    665 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([512])
-    666 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([512])
-    667 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([512])
-    668 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([512, 512])
-    669 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([512])
-    670 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([512, 512])
-    671 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([512])
-    672 2020-07-11 17:55:27,150 (recog:50) INFO: torch.Size([512, 512])
-    673 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([512])
-    674 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([512, 512])
-    675 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([512])
-    676 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([512, 512])
-    677 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([512])
-    678 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([512, 512])
-    679 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([512])
-    680 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([512, 512])
-    681 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([512])
-    682 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([512, 512])
-    683 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([512])
-    684 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([2048, 512])
-    685 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([2048])
-    686 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([512, 2048])
-    687 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([512])
-    688 2020-07-11 17:55:27,151 (recog:50) INFO: torch.Size([512])
-    689 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512])
-    690 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512])
-    691 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512])
-    692 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512])
-    693 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512])
-    694 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512, 512])
-    695 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512])
-    696 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512, 512])
-    697 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512])
-    698 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512, 512])
-    699 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512])
-    700 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512, 512])
-    701 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512])
-    702 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512, 512])
-    703 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512])
-    704 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512, 512])
-    705 2020-07-11 17:55:27,152 (recog:50) INFO: torch.Size([512])
-    706 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([512, 512])
-    707 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([512])
-    708 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([512, 512])
-    709 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([512])
-    710 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([2048, 512])
-    711 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([2048])
-    712 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([512, 2048])
-    713 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([512])
-    714 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([512])
-    715 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([512])
-    716 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([512])
-    717 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([512])
-    718 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([512])
-    719 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([512])
-    720 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([512, 512])
-    721 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([512])
-    722 2020-07-11 17:55:27,153 (recog:50) INFO: torch.Size([512, 512])
-    723 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([512])
-    724 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([512, 512])
-    725 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([512])
-    726 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([512, 512])
-    727 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([512])
-    728 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([512, 512])
-    729 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([512])
-    730 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([512, 512])
-    731 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([512])
-    732 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([512, 512])
-    733 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([512])
-    734 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([512, 512])
-    735 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([512])
-    736 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([2048, 512])
-    737 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([2048])
-    738 2020-07-11 17:55:27,154 (recog:50) INFO: torch.Size([512, 2048])
-    739 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512])
-    740 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512])
-    741 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512])
-    742 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512])
-    743 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512])
-    744 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512])
-    745 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512])
-    746 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512, 512])
-    747 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512])
-    748 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512, 512])
-    749 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512])
-    750 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512, 512])
-    751 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512])
-    752 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512, 512])
-    753 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512])
-    754 2020-07-11 17:55:27,155 (recog:50) INFO: torch.Size([512, 512])
-    755 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([512])
-    756 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([512, 512])
-    757 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([512])
-    758 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([512, 512])
-    759 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([512])
-    760 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([512, 512])
-    761 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([512])
-    762 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([2048, 512])
-    763 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([2048])
-    764 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([512, 2048])
-    765 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([512])
-    766 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([512])
-    767 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([512])
-    768 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([512])
-    769 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([512])
-    770 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([512])
-    771 2020-07-11 17:55:27,156 (recog:50) INFO: torch.Size([512])
-    772 2020-07-11 17:55:27,157 (recog:50) INFO: torch.Size([512])
-    773 2020-07-11 17:55:27,157 (recog:50) INFO: torch.Size([512])
-    774 2020-07-11 17:55:27,157 (recog:50) INFO: torch.Size([5002, 512])
-    775 2020-07-11 17:55:27,157 (recog:50) INFO: torch.Size([5002])
-    776 2020-07-11 17:55:27,157 (recog:50) INFO: torch.Size([5002, 512])
-    777 2020-07-11 17:55:27,157 (recog:50) INFO: torch.Size([5002])
-]=========am layers' sizes
-
-
-
-
 
